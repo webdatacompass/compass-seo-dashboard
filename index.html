@@ -3,256 +3,522 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SEO Dashboard — Compass Group</title>
+<title>Compass Group — SEO Performance Dashboard</title>
 <style>
-  :root{--bg:#0f1521;--card:#182030;--card2:#1f2a3d;--line:#2a3650;--text:#e8edf6;--muted:#93a1bd;--accent:#4f8cff;--good:#34c759;--warn:#ff9f0a;--bad:#ff453a;}
+  :root{
+    --bg:#0d1117; --panel:#161b22; --panel2:#1c2230; --border:#2a3140;
+    --txt:#e6edf3; --muted:#8b949e; --accent:#3b82f6; --accent2:#8b5cf6;
+    --green:#3fb950; --lime:#a3e635; --amber:#f59e0b; --red:#f85149;
+    --teal:#2dd4bf;
+  }
   *{box-sizing:border-box}
-  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.45;padding:28px 32px 60px}
-  h1{font-size:22px;margin:0 0 2px}
-  .sub{color:var(--muted);font-size:13px}.sub b{color:var(--text)}
-  header{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:12px;margin-bottom:20px;border-bottom:1px solid var(--line);padding-bottom:16px}
-  select{background:var(--card2);border:1px solid var(--line);color:var(--text);border-radius:9px;padding:10px 14px;font-size:14px;font-weight:600;outline:none;cursor:pointer}
-  .overview{margin-bottom:26px}
-  .overview h2,.section-h{font-size:13px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin:0 0 12px}
-  .ovtable{width:100%;border-collapse:collapse;font-size:13px;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden}
-  .ovtable th,.ovtable td{padding:11px 14px;border-bottom:1px solid var(--line);text-align:right}
-  .ovtable th:first-child,.ovtable td:first-child{text-align:left}
-  .ovtable th{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.4px}
-  .ovtable tbody tr{cursor:pointer}.ovtable tbody tr:hover{background:var(--card2)}.ovtable tr.active{background:#21304d}
-  .site-name{font-weight:600;color:var(--text)}
-  .switcher-row{display:flex;align-items:center;gap:14px;margin-bottom:18px;flex-wrap:wrap}
-  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
-  .kpi{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
-  .kpi .label{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.5px}
-  .kpi .val{font-size:30px;font-weight:700;margin-top:6px}
-  .kpi .prev{font-size:12px;color:var(--muted);margin-top:2px}
-  .kpi .delta{font-size:12.5px;margin-top:6px;font-weight:600}
-  .grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:24px}
-  .panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px}
-  .panel h3{font-size:14px;margin:0 0 14px;font-weight:600}.panel h3 span{color:var(--muted);font-weight:400;font-size:12px}
-  .barwrap{padding-top:4px}
-  .barrow{display:flex;align-items:center;gap:10px;margin-bottom:9px;font-size:12px}
-  .barlabel{width:210px;flex-shrink:0;color:#cdd7e8;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .bartrack{flex:1;background:#0f1521;border-radius:5px;height:18px;overflow:hidden}
-  .barfill{height:100%;border-radius:5px;min-width:2px}
-  .barval{width:52px;text-align:right;color:var(--muted);flex-shrink:0}
-  .recs{background:linear-gradient(135deg,#1a2740,#1f2a3d);border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:24px}
-  .recs h3{font-size:15px;margin:0 0 12px}.recs ul{margin:0;padding-left:20px}.recs li{margin-bottom:9px;font-size:13.5px}.recs li::marker{color:var(--accent)}
-  .pos{display:inline-block;min-width:42px;text-align:center;padding:3px 8px;border-radius:8px;font-size:12px;font-weight:700}
-  .controls{display:flex;gap:10px;align-items:center;margin-bottom:12px;flex-wrap:wrap}
-  input[type=search]{background:var(--card2);border:1px solid var(--line);color:var(--text);border-radius:9px;padding:9px 12px;font-size:13px;width:260px;outline:none}
-  input[type=search]:focus{border-color:var(--accent)}
-  table.data{width:100%;border-collapse:collapse;font-size:13px}
-  table.data th,table.data td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line)}
-  table.data th.num,table.data td.num{text-align:right}
-  table.data th{color:var(--muted);font-weight:600;font-size:11.5px;text-transform:uppercase;letter-spacing:.4px;cursor:pointer;white-space:nowrap}
-  table.data tbody tr:hover{background:var(--card2)}
-  td.q{max-width:340px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  body{margin:0;background:var(--bg);color:var(--txt);font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;font-size:14px;line-height:1.5}
   a{color:var(--accent);text-decoration:none}
-  footer{color:var(--muted);font-size:11.5px;margin-top:26px;border-top:1px solid var(--line);padding-top:14px}
-  @media(max-width:820px){.kpis{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:1fr}body{padding:18px}}
+  .wrap{max-width:1200px;margin:0 auto;padding:24px 20px 60px}
+  header h1{margin:0 0 4px;font-size:22px;font-weight:700}
+  header p{margin:0;color:var(--muted);font-size:13px}
+  .lag{margin-top:6px;font-size:12px;color:var(--amber)}
+  h2{font-size:16px;font-weight:600;margin:28px 0 12px;border-left:3px solid var(--accent);padding-left:10px}
+  .panel{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:16px 18px;margin-bottom:14px}
+  /* at a glance */
+  .glance{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+  .gcard{background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:14px 16px}
+  .gcard .lbl{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.04em}
+  .gcard .val{font-size:26px;font-weight:700;margin-top:4px}
+  .gcard .sub{font-size:12px;color:var(--muted);margin-top:4px}
+  .chips{margin-top:6px}
+  .chip{display:inline-block;background:#21304a;color:var(--txt);border:1px solid #2f4564;border-radius:20px;padding:3px 10px;margin:3px 4px 0 0;font-size:12px}
+  .chip b{color:var(--lime)}
+  /* table */
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--border)}
+  th{color:var(--muted);font-weight:600;cursor:pointer;user-select:none;white-space:nowrap}
+  th.num,td.num{text-align:right}
+  tbody tr:hover{background:var(--panel2)}
+  .arrow-up{color:var(--green)}
+  .arrow-down{color:var(--red)}
+  .arrow-new{color:var(--accent2)}
+  /* bars */
+  .bar-row{display:flex;align-items:center;gap:10px;margin:6px 0}
+  .bar-lbl{flex:0 0 230px;font-size:12px;color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .bar-track{flex:1;background:var(--panel2);border-radius:5px;height:16px;overflow:hidden}
+  .bar-fill{height:100%;border-radius:5px;background:linear-gradient(90deg,var(--accent),var(--accent2))}
+  .bar-val{flex:0 0 54px;text-align:right;font-size:12px;color:var(--muted)}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  /* kpi cards */
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+  .kpi{background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:14px}
+  .kpi .lbl{color:var(--muted);font-size:12px;text-transform:uppercase}
+  .kpi .val{font-size:24px;font-weight:700;margin-top:4px}
+  .kpi .prev{font-size:12px;color:var(--muted);margin-top:2px}
+  .kpi .chg{font-size:13px;font-weight:600;margin-top:4px}
+  .pos{color:var(--green)} .neg{color:var(--red)} .neu{color:var(--muted)}
+  select,input{background:var(--panel2);color:var(--txt);border:1px solid var(--border);border-radius:8px;padding:8px 10px;font-size:14px}
+  select:focus,input:focus{outline:1px solid var(--accent)}
+  .switchbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+  .recs li{margin:6px 0}
+  .badge{display:inline-block;font-size:11px;padding:2px 8px;border-radius:12px;margin-left:8px;vertical-align:middle}
+  .b-up{background:#13351f;color:var(--green)}
+  .b-new{background:#27203d;color:var(--accent2)}
+  .pill{display:inline-block;width:34px;text-align:center;border-radius:6px;padding:2px 0;font-weight:600;font-size:12px}
+  .p-g{background:#13351f;color:var(--green)}
+  .p-l{background:#27310f;color:var(--lime)}
+  .p-a{background:#3a2b08;color:var(--amber)}
+  .p-r{background:#3a1414;color:var(--red)}
+  @media(max-width:820px){.grid2{grid-template-columns:1fr}.bar-lbl{flex:0 0 150px}}
+  .foot{margin-top:30px;color:var(--muted);font-size:12px;text-align:center}
 </style>
 </head>
 <body>
-<header>
-  <div>
-    <h1>SEO Performance Dashboard</h1>
-    <div class="sub">Google Search Console · 5 verified properties · last 28 days vs previous 28 days · pulled <b id="pulled"></b></div>
+<div class="wrap">
+  <header>
+    <h1>Compass Group — SEO Performance Dashboard</h1>
+    <p>Google Search Console · last 28 days vs previous 28 days · 5 verified properties</p>
+    <p class="lag" id="genline"></p>
+  </header>
+
+  <h2>At a glance</h2>
+  <div class="glance" id="glance"></div>
+  <div class="panel" style="margin-top:14px">
+    <div style="color:var(--muted);font-size:12px;text-transform:uppercase;margin-bottom:6px">Top quick-win keywords (position 4–20, highest impressions)</div>
+    <div class="chips" id="quickwins"></div>
   </div>
-  <div class="sub" style="text-align:right"><span style="font-size:11px">Search Console data lags ~2 days.<br>Lower average position = better ranking.</span></div>
-</header>
 
-<div class="recs" id="highlights">
-  <h3>📊 This period at a glance</h3>
-  <div id="hlBody"></div>
-</div>
-
-<div class="overview">
-  <h2>All properties — last 28 days</h2>
-  <table class="ovtable" id="ovtable">
-    <thead><tr><th>Property</th><th>Clicks</th><th>vs prev</th><th>Impressions</th><th>Avg CTR</th><th>Avg position</th><th>Trend</th></tr></thead>
-    <tbody></tbody>
-  </table>
-</div>
-
-<div class="switcher-row">
-  <span class="section-h" style="margin:0">View property:</span>
-  <select id="siteSel"></select>
-</div>
-
-<div class="kpis" id="kpis"></div>
-
-<div class="recs">
-  <h3>💡 Recommendations to improve <span id="recsSite"></span></h3>
-  <ul id="recsList"></ul>
-</div>
-
-<div class="grid">
-  <div class="panel"><h3>Top queries by clicks</h3><div id="clicksChart" class="barwrap"></div></div>
-  <div class="panel"><h3>Ranking distribution <span>(impressions by avg position)</span></h3><div id="posChart" class="barwrap"></div></div>
-</div>
-
-<div class="panel" style="margin-bottom:24px">
-  <h3>Keywords <span id="qcount"></span></h3>
-  <div class="controls"><input type="search" id="search" placeholder="Filter keywords…"><span class="sub">Click a column to sort</span></div>
-  <div style="overflow:auto;max-height:520px">
-    <table class="data" id="qtable">
-      <thead><tr><th data-k="q">Keyword</th><th class="num" data-k="clicks">Clicks</th><th class="num" data-k="impr">Impr.</th><th class="num" data-k="ctr">CTR</th><th class="num" data-k="pos">Position</th></tr></thead>
+  <h2>All properties overview</h2>
+  <div class="panel" style="overflow-x:auto">
+    <table id="ovtable">
+      <thead>
+        <tr>
+          <th data-k="site">Property</th>
+          <th class="num" data-k="clicks">Clicks</th>
+          <th class="num" data-k="cpct">% vs prev</th>
+          <th class="num" data-k="impr">Impressions</th>
+          <th class="num" data-k="ctr">CTR</th>
+          <th class="num" data-k="pos">Avg pos</th>
+          <th class="num" data-k="trend">Trend</th>
+        </tr>
+      </thead>
       <tbody></tbody>
     </table>
   </div>
-</div>
 
-<div class="panel">
-  <h3>Top pages</h3>
-  <div style="overflow:auto">
-    <table class="data" id="ptable">
-      <thead><tr><th data-k="url">Page</th><th class="num" data-k="clicks">Clicks</th><th class="num" data-k="impr">Impr.</th><th class="num" data-k="ctr">CTR</th><th class="num" data-k="pos">Position</th></tr></thead>
-      <tbody></tbody>
-    </table>
+  <h2>Per-property detail</h2>
+  <div class="switchbar">
+    <label for="siteSel" style="color:var(--muted)">Property:</label>
+    <select id="siteSel"></select>
+  </div>
+
+  <div class="kpis" id="kpis"></div>
+
+  <div class="grid2">
+    <div class="panel">
+      <div style="font-weight:600;margin-bottom:10px">Top queries by clicks</div>
+      <div id="qchart"></div>
+    </div>
+    <div class="panel">
+      <div style="font-weight:600;margin-bottom:10px">Impressions by ranking position</div>
+      <div id="pchart"></div>
+    </div>
+  </div>
+
+  <div class="panel recs">
+    <div style="font-weight:600;margin-bottom:8px">Recommendations to improve</div>
+    <ul id="recs"></ul>
+  </div>
+
+  <div class="panel">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:10px">
+      <div style="font-weight:600">Keywords</div>
+      <input id="kwsearch" type="text" placeholder="Filter keywords…" style="min-width:220px">
+    </div>
+    <div style="overflow-x:auto">
+      <table id="kwtable">
+        <thead><tr>
+          <th data-k="0">Query</th>
+          <th class="num" data-k="1">Clicks</th>
+          <th class="num" data-k="2">Impr</th>
+          <th class="num" data-k="3">CTR</th>
+          <th class="num" data-k="4">Pos</th>
+        </tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div style="font-weight:600;margin-bottom:10px">Top pages</div>
+    <div style="overflow-x:auto">
+      <table id="pgtable">
+        <thead><tr>
+          <th>Page</th>
+          <th class="num">Clicks</th>
+          <th class="num">Impr</th>
+          <th class="num">CTR</th>
+          <th class="num">Pos</th>
+        </tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="foot">
+    Search Console data lags ~2 days. Generated automatically from the webdata.compass GSC account.
   </div>
 </div>
-
-<footer id="foot"></footer>
 
 <script>
-const PULLED = "2026-06-27";
 const SITES = {
-"compass-arabia.com":{
-  base:"https://compass-arabia.com",
-  cur:{clicks:184,impr:7110,ctr:2.6,pos:9.8}, prev:{clicks:100,impr:6540,ctr:1.5,pos:7.6},
-  queries:[["compass arabia",26,82,31.7,4.0],["compass",6,348,1.7,8.3],["compass saudi arabia",4,32,12.5,2.9],["compass contracting",3,28,10.7,7.7],["survey companies in qatar",2,15,13.3,2.3],["compass surveying",2,5,40.0,2.6],["compass qatar",1,128,0.8,8.5],["contracting company in saudi arabia",1,38,2.6,9.6],["3d laser scanning services",1,31,3.2,6.6],["aerial lidar survey company gcc",1,23,4.3,11.4],["land surveyor",1,19,5.3,3.6],["best contracting companies in saudi arabia",1,18,5.6,7.1],["road construction companies in qatar",1,18,5.6,8.8],["contracting companies in saudi arabia",1,15,6.7,10.4],["bathymetric survey",1,14,7.1,8.6],["building surveyor qatar",1,13,7.7,2.5],["contractors in saudi arabia",1,7,14.3,54.7],["qatar compass",1,5,20.0,7.6],["compas",1,3,33.3,6.7],["geotechnical companies in dubai",1,1,100.0,1.0],["site survey services",1,1,100.0,10.0],["3d laser scanning services in uae",0,79,0.0,8.1],["3d laser scanning services in qatar",0,66,0.0,4.1],["surveyor",0,58,0.0,2.0],["aerial 3d laser scanning services",0,50,0.0,18.6],["terrestrial scanning services in uae",0,34,0.0,17.2],["utility mapping survey in abu dhabi",0,34,0.0,23.0],["utility survey services in uae",0,31,0.0,15.7],["utility survey services in abu dhabi",0,31,0.0,16.5],["utility mapping survey in uae",0,31,0.0,18.4],["geotechnical investigation uae",0,30,0.0,14.7],["terrestrial scanning services in abu dhabi",0,28,0.0,15.6],["saudi contracting company",0,27,0.0,8.7],["3d scanning services in uae",0,27,0.0,45.3],["3d laser scanning in saudi arabia",0,26,0.0,25.2],["underground utility detection (gpr survey)survey services",0,26,0.0,43.7],["compass company",0,25,0.0,6.9],["compass survey data evaluation",0,25,0.0,7.3],["land surveyor company qatar",0,23,0.0,2.2],["ground investigation uae",0,23,0.0,21.6]],
-  pages:[["/",119,2698,4.4,6.4],["/a-full-overview-to-selecting-a-leading-contracting-company-in-saudi-arabia/",15,809,1.9,10.8],["/contact-us/",6,520,1.2,11.0],["/underground-utilities-survey-services-in-qatar-saudi-arabia-uae/",6,321,1.9,20.2],["/about-us/",6,290,2.1,10.6],["/bathymetric-survey-for-saudi-arabia-and-qatar-accurately-charting-the-underground/",5,142,3.5,17.8],["/3d-laser-scanning-in-qatar-and-saudi-arabia-discovering-performance/",4,167,2.4,10.0],["/professional-surveying-services-in-qatar-accurate-solutions-for-modern-construction/",4,157,2.5,8.8],["/3d-laser-scanning-in-saudi-arabia-and-qatar-accuracy-for-contemporary-building/",3,201,1.5,10.1],["/construction-surveying-infrastructure-services-in-qatar-saudi-arabia-uae/",3,196,1.5,6.9]],
-  recs:["Your single biggest lever: the keyword \"compass\" pulls 348 impressions at position 8.3 but only 1.7% CTR. Push that page into the top 5 and rewrite its title/meta — it's your largest untapped impression source.","Average position slipped this month (7.6 → 9.8) even though clicks rose. Identify which contracting/survey pages lost ranking and refresh their content and internal links.","The \"contracting company in Saudi Arabia\" article (809 impressions, position 10.8) and the underground-utilities page (321 impressions, position 20.2) sit just off page 1 — targeted on-page optimization could move them up fast.","Site-wide CTR is low (2.6%). Improving meta titles and descriptions on your top 5 pages is the quickest win for converting existing visibility into clicks."]
-},
-"compassfmgcc.com":{
-  base:"https://compassfmgcc.com",
-  cur:{clicks:75,impr:1124,ctr:6.7,pos:11.2}, prev:null,
-  queries:[["compass facility management",10,96,10.4,6.9],["facility management companies in qatar",7,101,6.9,4.0],["compass cleaning company qatar",2,24,8.3,10.1],["compass fm",2,9,22.2,20.2],["list of facility management companies in qatar",2,3,66.7,1.0],["compass management consulting",1,25,4.0,5.2],["facility management",1,17,5.9,19.2],["top 10 facility management companies in qatar",1,12,8.3,33.9],["facility management company in qatar",1,11,9.1,22.7],["compass management consulting qatar",1,5,20.0,1.4],["real estate facility management",1,4,25.0,1.2],["compass cleaning",1,4,25.0,1.5],["maintenance company in qatar",1,4,25.0,36.5],["company in qatar list",1,1,100.0,1.0],["contracting companies in qatar",1,1,100.0,1.0],["hospitality companies in qatar",1,1,100.0,1.0],["list of cleaning companies in qatar",1,1,100.0,1.0],["facilities management services",1,1,100.0,26.0],["qatar facility management company",0,15,0.0,20.1],["facilities management companies in qatar",0,14,0.0,1.0],["fmgcc",0,13,0.0,5.3],["top 20 facility management companies in qatar",0,11,0.0,4.7],["facility management companies near me",0,11,0.0,19.7],["best facility management companies in qatar",0,9,0.0,3.8],["fm companies in qatar",0,9,0.0,9.2],["facility management companies",0,9,0.0,35.6],["top facility management companies in qatar",0,8,0.0,5.9],["compass janitorial",0,8,0.0,46.4],["compass cleaning company",0,6,0.0,7.0],["facility management companies in qatar list",0,6,0.0,8.8],["facility management in qatar",0,4,0.0,3.8],["compass",0,4,0.0,5.0],["qatar facilities management companies",0,4,0.0,7.5],["compass group facility management",0,4,0.0,38.8],["facility management qatar",0,4,0.0,40.2],["facility management company",0,4,0.0,43.8],["compass real estate",0,3,0.0,3.3],["facilities management company in qatar",0,3,0.0,3.7],["compass facilities management",0,3,0.0,19.3],["compass catering company qatar",0,3,0.0,46.7],["compass catering services wll",0,3,0.0,52.0],["contracting company in qatar",0,2,0.0,1.0],["facility management companies in europe",0,2,0.0,1.0],["facility management building maintenance",0,2,0.0,1.5],["compass cleaners",0,2,0.0,3.0],["compass building",0,2,0.0,6.0],["facilities management",0,2,0.0,6.0],["property management",0,2,0.0,16.0],["property management companies in qatar",0,2,0.0,21.5],["compass company qatar",0,2,0.0,33.5],["facility management services",0,2,0.0,57.5],["compass group esfm",0,2,0.0,62.0],["qatar facility management market",0,2,0.0,75.5],["facility management service",0,2,0.0,94.5],["companies in qatar",0,1,0.0,1.0],["compass cleaning services",0,1,0.0,1.0],["compass landscaping",0,1,0.0,1.0],["compass property management",0,1,0.0,1.0],["cornish companies",0,1,0.0,1.0],["facilities management qatar",0,1,0.0,1.0],["facility maintenance",0,1,0.0,1.0],["facility maintenance companies",0,1,0.0,1.0],["facility management companies in usa",0,1,0.0,1.0],["facility management company qatar",0,1,0.0,1.0],["leading facility management company qatar",0,1,0.0,1.0],["list of facility management companies in uae",0,1,0.0,1.0],["operation management company qatar",0,1,0.0,1.0],["quest management",0,1,0.0,1.0],["real estate companies in qatar",0,1,0.0,1.0],["facility building",0,1,0.0,2.0],["property facility management",0,1,0.0,2.0],["compass company",0,1,0.0,3.0],["compass office",0,1,0.0,5.0],["facilities or facility",0,1,0.0,5.0],["facility management cleaning services",0,1,0.0,5.0],["facility management companies in dubai",0,1,0.0,5.0],["compass qatar",0,1,0.0,6.0],["fm professionals",0,1,0.0,6.0],["facility management soft services",0,1,0.0,7.0],["facility services company",0,1,0.0,7.0],["compas",0,1,0.0,8.0],["maintenance management group qatar",0,1,0.0,8.0],["management facility",0,1,0.0,8.0],["compass group cleaning",0,1,0.0,11.0],["qatar top 10 facility management company",0,1,0.0,12.0],["qatar facility management",0,1,0.0,18.0],["facility company",0,1,0.0,19.0],["facility management company doha",0,1,0.0,27.0],["property management company",0,1,0.0,27.0],["facility maintenance companies in qatar",0,1,0.0,29.0],["list of facilities management companies in qatar",0,1,0.0,45.0],["compass catering services",0,1,0.0,53.0],["asean facility management & catering consulting",0,1,0.0,68.0],["facility management companies in doha qatar",0,1,0.0,87.0]],
-  pages:[["/",66,996,6.6,9.3],["/qatar/",6,107,5.6,5.4],["/about/",1,46,2.2,12.5],["/cleaning-housekeeping-services/",1,13,7.7,8.2],["/pest-control-services/",1,12,8.3,55.9],["/contact/",0,45,0.0,26.8],["/uae/",0,42,0.0,6.0],["/saudi/",0,38,0.0,8.5],["/hvac-maintenance-repair-services/",0,19,0.0,30.9],["/customer-cabinet/",0,15,0.0,6.3]],
-  recs:["Biggest quick win: \"facility management companies in qatar\" ranks position 4 with 101 impressions but only 7 clicks. Rewrite the page title and meta description to capture far more of that demand.","Several commercial keywords rank just outside the top 3 — \"compass management consulting\" (pos 5.2), \"fm companies in qatar\" (pos 9.2), \"best facility management companies in qatar\" (pos 3.8). Small content and internal-linking improvements could break them into the top 3.","The homepage takes 66 of 75 clicks. Build out dedicated service pages (cleaning, HVAC, pest control) with their own optimized content so each service query ranks independently.","Indexing is limiting reach (only 8 of 40 pages indexed at last check). Submit/refresh your sitemap and request indexing for the key service and region pages."]
-},
-"compasswaterproof.com":{
-  base:"https://compasswaterproof.com",
-  cur:{clicks:26,impr:535,ctr:4.9,pos:10.8}, prev:{clicks:11,impr:42,ctr:26.2,pos:15.6},
-  queries:[["waterproofing companies in qatar",1,18,5.6,8.8],["pu foam waterproofing",1,12,8.3,3.8],["what type of waterproofing should be specified for a rooftop terrace exposed to extreme uv in the gcc?",0,27,0.0,1.9],["what are the consultant-approved waterproofing systems for infrastructure bridges and overpasses in gcc?",0,17,0.0,6.1],["importance of waterproofing in the gcc",0,11,0.0,32.7],["waterproofing",0,8,0.0,3.2],["which cementitious or membrane waterproofing system performs best in qatar's high humidity and heat?",0,7,0.0,2.4],["polyurethane foam waterproofing",0,4,0.0,10.0],["metprime",0,3,0.0,1.0],["compass",0,3,0.0,8.0],["water proofing",0,3,0.0,14.0],["what are the typical failure points in waterproofing systems for gcc high-rise buildings and how are they addressed?",0,2,0.0,1.0],["what waterproofing solution is recommended for a desalination plant or large-scale water infrastructure in gcc?",0,2,0.0,1.0],["water proofing phone",0,2,0.0,2.0],["polyurea waterproofing",0,2,0.0,10.5],["waterproof company",0,2,0.0,13.5],["polyurea coating",0,2,0.0,15.0],["bitumen waterproofing",0,1,0.0,1.0],["bitumen waterproofing membrane",0,1,0.0,1.0],["can pu foam be used for waterproofing",0,1,0.0,1.0],["compass building",0,1,0.0,1.0],["concrete spalling repair",0,1,0.0,1.0],["roof waterproofing qatar",0,1,0.0,1.0],["waterproofing company in dubai",0,1,0.0,1.0],["waterproofing company in sharjah",0,1,0.0,1.0],["which waterproofing system is recommended for highway tunnel construction in gcc?",0,1,0.0,1.0],["compass waterproof",0,1,0.0,2.0],["contact details",0,1,0.0,2.0],["damp proofing",0,1,0.0,2.0],["liquid membrane waterproofing",0,1,0.0,2.0]],
-  pages:[["/",22,308,7.1,5.1],["/services/pu-foam-waterproofing/",3,142,2.1,7.5],["/contact/",1,96,1.0,17.9],["/services/roof-waterproofing/",0,119,0.0,6.6],["/about/",0,101,0.0,16.0],["/concrete-repair-restoration-qatar/",0,3,0.0,7.0]],
-  recs:["Strong momentum: impressions jumped to 535 (from 42) and average position improved to 10.8 (from 15.6). Keep publishing waterproofing content — the strategy is working.","Featured-snippet opportunity: several question-style queries already rank in the top 5 with 0 clicks (rooftop-terrace UV at pos 1.9, cementitious system at pos 2.4). Format that content as clear, direct Q&A to win the snippet and the click.","CTR dropped to 4.9% (from 26.2%) only because impressions grew much faster than clicks — normal at this stage. Tighten meta descriptions on the new ranking pages to convert the added visibility.","\"waterproofing companies in qatar\" (pos 8.8) is a high-intent commercial keyword — give it a dedicated, fully optimized landing page to climb into the top 3."]
-},
-"compass-lg.com":{
-  base:"https://compass-lg.com",
-  cur:{clicks:1,impr:136,ctr:0.7,pos:10.0}, prev:{clicks:0,impr:0,ctr:0,pos:0},
-  queries:[["compass logistics",0,19,0.0,10.1],["compass saudi arabia",0,4,0.0,8.5],["compass global logistics",0,2,0.0,21.0],["compass logistics company",0,1,0.0,6.0],["compass ocean logistics",0,1,0.0,6.0],["instagram",0,1,0.0,8.0],["compass group saudi arabia",0,1,0.0,11.0],["compass sea & air cargo llc",0,1,0.0,41.0],["compass global solutions",0,1,0.0,43.0],["compass logistics international",0,1,0.0,44.0]],
-  pages:[["/",1,136,0.7,10.0]],
-  recs:["Brand new — only about a week of data so far. Priority one is getting indexed: submit a sitemap and request indexing for your key pages in Search Console.","You already appear for \"compass logistics\" (pos 10, 19 impressions). Build a keyword-rich homepage and dedicated services content to climb toward page 1.","Create individual landing pages for your core services and regions (e.g. Saudi Arabia logistics, ocean/air freight) to capture the queries already surfacing.","Set up internal linking and clear title tags now while the site is small — it compounds as more pages get indexed."]
-},
-"sunsetmediame.com":{
-  base:"https://sunsetmediame.com",
-  cur:{clicks:0,impr:9,ctr:0,pos:14.6}, prev:{clicks:0,impr:0,ctr:0,pos:0},
-  queries:[["sunset media",0,2,0.0,58.0]],
-  pages:[],
-  recs:["Almost no search presence yet (9 impressions, 0 clicks). The foundation needs attention before traffic will come.","Submit a sitemap and confirm pages are indexable (no noindex, accessible to Googlebot) — this is the first blocker to fix.","Add descriptive title tags, an H1, and real content targeting your core services so Google understands what the site offers.","Even the brand term \"sunset media\" ranks position 58 — basic on-page SEO should lift brand visibility quickly."]
-}
+  "compass-arabia.com": {
+    base:"https://compass-arabia.com/", label:"Compass Arabia (surveying / contracting)",
+    cur:{clicks:184,impr:7110,ctr:2.6,pos:9.8},
+    prev:{clicks:100,impr:6540,ctr:1.5,pos:7.6},
+    queries:[
+      ["compass arabia",26,82,31.7,4.0],["compass",6,348,1.7,8.3],["compass saudi arabia",4,32,12.5,2.9],
+      ["compass contracting",3,28,10.7,7.7],["survey companies in qatar",2,15,13.3,2.3],["compass surveying",2,5,40,2.6],
+      ["compass qatar",1,128,0.8,8.5],["contracting company in saudi arabia",1,38,2.6,9.6],["3d laser scanning services",1,31,3.2,6.6],
+      ["aerial lidar survey company gcc",1,23,4.3,11.4],["land surveyor",1,19,5.3,3.6],["best contracting companies in saudi arabia",1,18,5.6,7.1],
+      ["road construction companies in qatar",1,18,5.6,8.8],["contracting companies in saudi arabia",1,15,6.7,10.4],["bathymetric survey",1,14,7.1,8.6],
+      ["building surveyor qatar",1,13,7.7,2.5],["contractors in saudi arabia",1,7,14.3,54.7],["qatar compass",1,5,20,7.6],
+      ["compas",1,3,33.3,6.7],["geotechnical companies in dubai",1,1,100,1.0],["3d laser scanning services in uae",0,79,0,8.1],
+      ["3d laser scanning services in qatar",0,66,0,4.1],["surveyor",0,58,0,2.0],["aerial 3d laser scanning services",0,50,0,18.6],
+      ["terrestrial scanning services in uae",0,34,0,17.2],["utility mapping survey in abu dhabi",0,34,0,23.0],["utility survey services in uae",0,31,0,15.7],
+      ["utility survey services in abu dhabi",0,31,0,16.5],["utility mapping survey in uae",0,31,0,18.4],["geotechnical investigation uae",0,30,0,14.7],
+      ["terrestrial scanning services in abu dhabi",0,28,0,15.6],["saudi contracting company",0,27,0,8.7],["3d scanning services in uae",0,27,0,45.3],
+      ["3d laser scanning in saudi arabia",0,26,0,25.2],["underground utility detection (gpr survey) survey services",0,26,0,43.7],["compass company",0,25,0,6.9],
+      ["compass survey data evaluation",0,25,0,7.3],["land surveyor company qatar",0,23,0,2.2],["ground investigation uae",0,23,0,21.6]
+    ],
+    pages:[
+      ["https://compass-arabia.com/",119,2698,4.4,6.4],
+      ["https://compass-arabia.com/a-full-overview-to-selecting-a-leading-contracting-company-in-saudi-arabia/",15,809,1.9,10.8],
+      ["https://compass-arabia.com/contact-us/",6,520,1.2,11.0],
+      ["https://compass-arabia.com/underground-utilities-survey-services-in-qatar-saudi-arabia-uae/",6,321,1.9,20.2],
+      ["https://compass-arabia.com/about-us/",6,290,2.1,10.6],
+      ["https://compass-arabia.com/bathymetric-survey-for-saudi-arabia-and-qatar-accurately-charting-the-underground/",5,142,3.5,17.8],
+      ["https://compass-arabia.com/3d-laser-scanning-in-qatar-and-saudi-arabia-discovering-performance/",4,167,2.4,10.0],
+      ["https://compass-arabia.com/professional-surveying-services-in-qatar-accurate-solutions-for-modern-construction/",4,157,2.5,8.8],
+      ["https://compass-arabia.com/3d-laser-scanning-in-saudi-arabia-and-qatar-accuracy-for-contemporary-building/",3,201,1.5,10.1],
+      ["https://compass-arabia.com/construction-surveying-infrastructure-services-in-qatar-saudi-arabia-uae/",3,196,1.5,6.9]
+    ],
+    recs:[
+      "Quick win: \"compass\" (348 impressions, pos 8.3) and \"compass qatar\" (128 impr, pos 8.5) sit on the page-1 border — tighten homepage title/meta and add internal links to push into the top 5.",
+      "High-impression, zero-click terms \"3d laser scanning services in uae\" (79 impr, pos 8.1) and \"…in qatar\" (66 impr, pos 4.1) need better titles/meta descriptions to lift CTR.",
+      "Average position slipped from 7.6 to 9.8 even as clicks rose — monitor ranking volatility on core surveying queries and refresh thin pages.",
+      "Utility-survey queries cluster at position 15–23 (UAE/Abu Dhabi mapping) — build a dedicated UAE utility-mapping landing page.",
+      "The Saudi contracting-company article ranks 10.8 with 809 impressions — strengthen on-page SEO and internal linking to break into the top 10."
+    ]
+  },
+  "compassfmgcc.com": {
+    base:"https://compassfmgcc.com/", label:"Compass FM GCC (facility management)",
+    cur:{clicks:75,impr:1120,ctr:6.7,pos:11.2},
+    prev:null,
+    queries:[
+      ["compass facility management",10,96,10.4,6.9],["facility management companies in qatar",7,101,6.9,4.0],["compass cleaning company qatar",2,24,8.3,10.1],
+      ["compass fm",2,9,22.2,20.2],["list of facility management companies in qatar",2,3,66.7,1.0],["compass management consulting",1,25,4,5.2],
+      ["facility management",1,17,5.9,19.2],["top 10 facility management companies in qatar",1,12,8.3,33.9],["facility management company in qatar",1,11,9.1,22.7],
+      ["compass management consulting qatar",1,5,20,1.4],["real estate facility management",1,4,25,1.2],["compass cleaning",1,4,25,1.5],
+      ["maintenance company in qatar",1,4,25,36.5],["company in qatar list",1,1,100,1.0],["contracting companies in qatar",1,1,100,1.0],
+      ["hospitality companies in qatar",1,1,100,1.0],["list of cleaning companies in qatar",1,1,100,1.0],["facilities management services",1,1,100,26.0],
+      ["qatar facility management company",0,15,0,20.1],["facilities management companies in qatar",0,14,0,1.0],["fmgcc",0,13,0,5.3],
+      ["top 20 facility management companies in qatar",0,11,0,4.7],["facility management companies near me",0,11,0,19.7],["best facility management companies in qatar",0,9,0,3.8],
+      ["fm companies in qatar",0,9,0,9.2],["facility management companies",0,9,0,35.6],["top facility management companies in qatar",0,8,0,5.9],
+      ["compass janitorial",0,8,0,46.4],["compass cleaning company",0,6,0,7.0],["facility management companies in qatar list",0,6,0,8.8],
+      ["facility management in qatar",0,4,0,3.8],["compass",0,4,0,5.0],["qatar facilities management companies",0,4,0,7.5],
+      ["compass group facility management",0,4,0,38.8],["facility management qatar",0,4,0,40.2],["facility management company",0,4,0,43.8],
+      ["compass real estate",0,3,0,3.3],["facilities management company in qatar",0,3,0,3.7],["compass facilities management",0,3,0,19.3],
+      ["compass catering company qatar",0,3,0,46.7]
+    ],
+    pages:[
+      ["https://compassfmgcc.com/",66,996,6.6,9.3],
+      ["https://compassfmgcc.com/qatar/",6,107,5.6,5.4],
+      ["https://compassfmgcc.com/about/",1,46,2.2,12.5],
+      ["https://compassfmgcc.com/cleaning-housekeeping-services/",1,13,7.7,8.2],
+      ["https://compassfmgcc.com/pest-control-services/",1,12,8.3,55.9],
+      ["https://compassfmgcc.com/contact/",0,45,0,26.8],
+      ["https://compassfmgcc.com/uae/",0,42,0,6.0],
+      ["https://compassfmgcc.com/saudi/",0,38,0,8.5],
+      ["https://compassfmgcc.com/hvac-maintenance-repair-services/",0,19,0,30.9],
+      ["https://compassfmgcc.com/customer-cabinet/",0,15,0,6.3]
+    ],
+    recs:[
+      "Strongest quick win: \"facility management companies in qatar\" (101 impr, pos 4.0) — optimize the /qatar/ page to capture positions 1–3.",
+      "New property already at 75 clicks/month. The \"best/top facility management companies in qatar\" cluster ranks 3.8–5.9 but earns few clicks — improve list-style content and titles.",
+      "Pest-control (pos 55.9) and HVAC (pos 30.9) service pages rank poorly — add depth, FAQs and internal links from the homepage.",
+      "Brand term \"compass fm\" ranks 20.2 — strengthen brand signals (consistent name, schema, internal anchors).",
+      "UAE (pos 6.0) and Saudi (pos 8.5) landing pages get impressions but 0 clicks — expand content and CTAs to convert them."
+    ]
+  },
+  "compasswaterproof.com": {
+    base:"https://compasswaterproof.com/", label:"Compass Waterproofing",
+    cur:{clicks:26,impr:535,ctr:4.9,pos:10.8},
+    prev:{clicks:11,impr:42,ctr:26.2,pos:15.6},
+    queries:[
+      ["waterproofing companies in qatar",1,18,5.6,8.8],["pu foam waterproofing",1,12,8.3,3.8],
+      ["what type of waterproofing should be specified for a rooftop terrace exposed to extreme uv in the gcc?",0,27,0,1.9],
+      ["what are the consultant-approved waterproofing systems for infrastructure bridges and overpasses in gcc?",0,17,0,6.1],
+      ["importance of waterproofing in the gcc",0,11,0,32.7],["waterproofing",0,8,0,3.2],
+      ["which cementitious or membrane waterproofing system performs best in qatar's high humidity and heat?",0,7,0,2.4],
+      ["polyurethane foam waterproofing",0,4,0,10.0],["metprime",0,3,0,1.0],["compass",0,3,0,8.0],
+      ["water proofing",0,3,0,14.0],
+      ["what are the typical failure points in waterproofing systems for gcc high-rise buildings and how are they addressed?",0,2,0,1.0],
+      ["what waterproofing solution is recommended for a desalination plant or large-scale water infrastructure in gcc?",0,2,0,1.0],
+      ["water proofing phone",0,2,0,2.0],["polyurea waterproofing",0,2,0,10.5],["waterproof company",0,2,0,13.5],
+      ["polyurea coating",0,2,0,15.0],["bitumen waterproofing",0,1,0,1.0],["bitumen waterproofing membrane",0,1,0,1.0],
+      ["can pu foam be used for waterproofing",0,1,0,1.0]
+    ],
+    pages:[
+      ["https://compasswaterproof.com/",22,308,7.1,5.1],
+      ["https://compasswaterproof.com/services/pu-foam-waterproofing/",3,142,2.1,7.5],
+      ["https://compasswaterproof.com/contact/",1,96,1.0,17.9],
+      ["https://compasswaterproof.com/services/roof-waterproofing/",0,119,0,6.6],
+      ["https://compasswaterproof.com/about/",0,101,0,16.0],
+      ["https://compasswaterproof.com/concrete-repair-restoration-qatar/",0,3,0,7.0]
+    ],
+    recs:[
+      "Momentum is strong: clicks grew 11 → 26 and average position improved 15.6 → 10.8. CTR fell only because impressions expanded 12× — keep publishing.",
+      "Long FAQ-style queries (rooftop UV, bridge waterproofing, humidity systems) rank position 2–6 with 0 clicks — add concise answer snippets and FAQ schema to win those clicks.",
+      "Core terms \"waterproofing\" (pos 3.2) and \"waterproofing companies in qatar\" (pos 8.8) — push the homepage toward the top 3 with stronger title/H1.",
+      "The PU-foam page ranks 7.5 with 142 impressions — strengthen it to own \"pu foam waterproofing\" (pos 3.8).",
+      "Roof-waterproofing page has 119 impressions but 0 clicks at pos 6.6 — rewrite title/meta to improve CTR."
+    ]
+  },
+  "compass-lg.com": {
+    base:"https://compass-lg.com/", label:"Compass Logistics (new)",
+    cur:{clicks:1,impr:136,ctr:0.7,pos:10.0},
+    prev:null,
+    queries:[
+      ["compass logistics",0,19,0,10.1],["compass saudi arabia",0,4,0,8.5],["compass global logistics",0,2,0,21.0],
+      ["compass logistics company",0,1,0,6.0],["compass ocean logistics",0,1,0,6.0],["instagram",0,1,0,8.0],
+      ["compass group saudi arabia",0,1,0,11.0],["compass sea & air cargo llc",0,1,0,41.0],["compass global solutions",0,1,0,43.0],
+      ["compass logistics international",0,1,0,44.0]
+    ],
+    pages:[
+      ["https://compass-lg.com/",1,136,0.7,10.0]
+    ],
+    recs:[
+      "Brand-new property (data only since ~June 19) with a single click — priority is indexing and content build-out.",
+      "\"compass logistics\" (pos 10.1, 19 impr) is the key brand term — add a clear homepage H1/title targeting it.",
+      "Only one page is indexed — publish dedicated service pages (freight forwarding, sea/air cargo, customs) to expand coverage.",
+      "Submit and verify a sitemap and use URL Inspection to request indexing and accelerate coverage.",
+      "Build initial backlinks and Google Business Profile to establish brand signals."
+    ]
+  },
+  "sunsetmediame.com": {
+    base:"https://sunsetmediame.com/", label:"Sunset Media ME (new)",
+    cur:{clicks:0,impr:9,ctr:0,pos:14.6},
+    prev:null,
+    queries:[
+      ["sunset media",0,2,0,58.0]
+    ],
+    pages:[
+      ["https://sunsetmediame.com/",0,8,0,16.1],
+      ["https://sunsetmediame.com/project/social-media-management/",0,6,0,2.0]
+    ],
+    recs:[
+      "Essentially no search presence yet (9 impressions, 0 clicks) — the site is new or only just indexed.",
+      "Brand query \"sunset media\" ranks position 58 — create clear brand pages and keep name/address/phone consistent across the web.",
+      "Build foundational service content; the social-media-management project page already ranks pos 2 for its query, so expand that into a full service page.",
+      "Submit a sitemap and request indexing of all key pages via URL Inspection.",
+      "Earn a few initial backlinks (directories, partners) to start building authority."
+    ]
+  }
 };
 
-document.getElementById('pulled').textContent = PULLED;
-const fmt = n => n>=1000 ? (n/1000).toFixed(2)+"K" : n;
-function posColor(p){ if(p<=0)return'var(--muted)'; if(p<=3)return'var(--good)'; if(p<=10)return'#9bd64a'; if(p<=20)return'var(--warn)'; return'var(--bad)'; }
-function posChip(p){ return '<span class="pos" style="background:'+posColor(p)+'22;color:'+posColor(p)+'">'+(p>0?p.toFixed(1):'—')+'</span>'; }
-function pct(c,o){ if(o===0||o==null) return null; return Math.round((c-o)/o*100); }
-function trendArrow(c,p){ if(!p||p.clicks===0){ return c.clicks>0?'<span style="color:var(--good)">▲ new</span>':'<span style="color:var(--muted)">—</span>'; } const d=c.clicks-p.clicks; if(d>0)return'<span style="color:var(--good)">▲</span>'; if(d<0)return'<span style="color:var(--bad)">▼</span>'; return'<span style="color:var(--muted)">—</span>'; }
+const fmt = n => n>=1000 ? (n/1000).toFixed(2).replace(/\.?0+$/,'')+"K" : ""+n;
+const pct = v => (v>0?"+":"")+v.toFixed(0)+"%";
 
-const keys=Object.keys(SITES).sort((a,b)=>SITES[b].cur.clicks-SITES[a].cur.clicks);
-document.querySelector('#ovtable tbody').innerHTML = keys.map(k=>{
-  const s=SITES[k]; const p=pct(s.cur.clicks, s.prev?s.prev.clicks:null);
-  const vs = s.prev&&s.prev.clicks>0 ? (p>=0?'+'+p+'%':p+'%') : (s.cur.clicks>0?'new':'—');
-  const vsCol = p==null?'var(--muted)':(p>=0?'var(--good)':'var(--bad)');
-  return '<tr data-k="'+k+'"><td class="site-name">'+k+'</td><td>'+s.cur.clicks+'</td><td style="color:'+vsCol+'">'+vs+'</td><td>'+fmt(s.cur.impr)+'</td><td>'+s.cur.ctr+'%</td><td>'+(s.cur.pos>0?s.cur.pos:'—')+'</td><td>'+trendArrow(s.cur,s.prev)+'</td></tr>';
-}).join('');
-document.querySelectorAll('#ovtable tbody tr').forEach(tr=>tr.onclick=()=>{document.getElementById('siteSel').value=tr.dataset.k; render();});
-
-const sel=document.getElementById('siteSel');
-sel.innerHTML = keys.map(k=>'<option value="'+k+'">'+k+'</option>').join('');
-sel.onchange=render;
-
-let clicksChart, posChart;
-let qSort={k:'clicks',dir:-1}, pSort={k:'clicks',dir:-1};
-
-function render(){
-  const s=SITES[sel.value];
-  document.querySelectorAll('#ovtable tbody tr').forEach(tr=>tr.classList.toggle('active',tr.dataset.k===sel.value));
-  const defs=[["Clicks",fmt(s.cur.clicks),s.prev?s.prev.clicks:null,false,'clicks'],["Impressions",fmt(s.cur.impr),s.prev?s.prev.impr:null,false,'impr'],["Avg CTR",s.cur.ctr+"%",s.prev?s.prev.ctr:null,false,'ctr'],["Avg Position",s.cur.pos>0?s.cur.pos:'—',s.prev?s.prev.pos:null,true,'pos']];
-  document.getElementById('kpis').innerHTML = defs.map(d=>{
-    let delta='—', prevStr='';
-    if(d[2]!=null){
-      prevStr='prev: '+(d[4]==='impr'?fmt(d[2]):d[2])+(d[4]==='ctr'?'%':'');
-      const cv=s.cur[d[4]], ov=d[2];
-      if(ov===0 && cv>0){ delta='<span style="color:var(--good)">▲ new</span>'; }
-      else if(ov===0){ delta='—'; }
-      else { const diff=cv-ov; const better=d[3]?diff<0:diff>0; const p=Math.round(diff/ov*100); delta='<span style="color:'+(better?'var(--good)':'var(--bad)')+'">'+(diff>0?'▲':'▼')+' '+Math.abs(p)+'%</span>'; }
-    } else { prevStr='no prior data (new)'; }
-    return '<div class="kpi"><div class="label">'+d[0]+'</div><div class="val">'+d[1]+'</div><div class="prev">'+prevStr+'</div><div class="delta">'+delta+'</div></div>';
-  }).join('');
-
-  document.getElementById('recsSite').textContent = sel.value;
-  document.getElementById('recsList').innerHTML = s.recs.map(r=>'<li>'+r+'</li>').join('');
-
-  const Q=s.queries.map(r=>({q:r[0],clicks:r[1],impr:r[2],ctr:r[3],pos:r[4]}));
-  const P=s.pages.map(r=>({url:r[0],clicks:r[1],impr:r[2],ctr:r[3],pos:r[4]}));
-
-  const tc=Q.filter(r=>r.clicks>0).sort((a,b)=>b.clicks-a.clicks).slice(0,10);
-  const useClicks=tc.length>0;
-  const tcData=useClicks?tc:[...Q].sort((a,b)=>b.impr-a.impr).slice(0,10);
-  const maxV=Math.max(1,...tcData.map(r=>useClicks?r.clicks:r.impr));
-  document.getElementById('clicksChart').innerHTML = tcData.length?(tcData.map(r=>{
-    const v=useClicks?r.clicks:r.impr; const w=Math.max(2,Math.round(v/maxV*100));
-    return '<div class="barrow"><div class="barlabel" title="'+r.q+'">'+(r.q.length>36?r.q.slice(0,36)+'…':r.q)+'</div><div class="bartrack"><div class="barfill" style="width:'+w+'%;background:#4f8cff"></div></div><div class="barval">'+v+'</div></div>';
-  }).join('')+(useClicks?'':'<div class="sub" style="margin-top:8px">No clicks yet — showing impressions.</div>')):'<div class="sub">No data.</div>';
-
-  const bk=[['1–3',0,'#34c759'],['4–10',0,'#9bd64a'],['11–20',0,'#ff9f0a'],['21–50',0,'#ff7a45'],['50+',0,'#ff453a']];
-  Q.forEach(r=>{const p=r.pos; if(p<=0)return; if(p<=3)bk[0][1]+=r.impr; else if(p<=10)bk[1][1]+=r.impr; else if(p<=20)bk[2][1]+=r.impr; else if(p<=50)bk[3][1]+=r.impr; else bk[4][1]+=r.impr;});
-  const maxB=Math.max(1,...bk.map(x=>x[1]));
-  document.getElementById('posChart').innerHTML = bk.map(x=>{
-    const w=Math.max(2,Math.round(x[1]/maxB*100));
-    return '<div class="barrow"><div class="barlabel" style="width:64px">'+x[0]+'</div><div class="bartrack"><div class="barfill" style="width:'+w+'%;background:'+x[2]+'"></div></div><div class="barval">'+x[1]+'</div></div>';
-  }).join('');
-
-  function renderQ(){
-    const term=document.getElementById('search').value.toLowerCase();
-    let rows=Q.filter(r=>r.q.toLowerCase().includes(term));
-    rows.sort((a,b)=>a[qSort.k]<b[qSort.k]?qSort.dir:a[qSort.k]>b[qSort.k]?-qSort.dir:0);
-    document.querySelector('#qtable tbody').innerHTML=rows.length?rows.map(r=>'<tr><td class="q" title="'+r.q+'">'+r.q+'</td><td class="num">'+r.clicks+'</td><td class="num">'+r.impr+'</td><td class="num">'+r.ctr+'%</td><td class="num">'+posChip(r.pos)+'</td></tr>').join(''):'<tr><td colspan="5" style="color:var(--muted)">No keyword data.</td></tr>';
-    document.getElementById('qcount').textContent='('+rows.length+' of '+Q.length+')';
-  }
-  document.querySelectorAll('#qtable th').forEach(th=>th.onclick=()=>{const k=th.dataset.k;qSort.dir=qSort.k===k?-qSort.dir:(k==='q'?1:-1);qSort.k=k;renderQ();});
-  document.getElementById('search').oninput=renderQ;
-  renderQ();
-
-  function renderP(){
-    let rows=[...P].sort((a,b)=>a[pSort.k]<b[pSort.k]?pSort.dir:a[pSort.k]>b[pSort.k]?-pSort.dir:0);
-    document.querySelector('#ptable tbody').innerHTML = rows.length?rows.map(r=>'<tr><td class="q" title="'+r.url+'"><a href="'+s.base+r.url+'" target="_blank">'+r.url+'</a></td><td class="num">'+r.clicks+'</td><td class="num">'+r.impr+'</td><td class="num">'+r.ctr+'%</td><td class="num">'+posChip(r.pos)+'</td></tr>').join(''):'<tr><td colspan="5" style="color:var(--muted)">No page-level data yet.</td></tr>';
-  }
-  document.querySelectorAll('#ptable th').forEach(th=>th.onclick=()=>{const k=th.dataset.k;pSort.dir=pSort.k===k?-pSort.dir:(k==='url'?1:-1);pSort.k=k;renderP();});
-  renderP();
-
-  document.getElementById('foot').textContent='Source: Google Search Console (account webdata.compass@gmail.com). Property: '+s.base+'/. Snapshot pulled '+PULLED+'. Lower average position = better ranking.';
+function posPill(p){
+  let c="p-r"; if(p<=3)c="p-g"; else if(p<=10)c="p-l"; else if(p<=20)c="p-a";
+  return '<span class="pill '+c+'">'+p.toFixed(1)+'</span>';
 }
-render();
 
-(function(){
-  let totalCur=0,totalPrev=0,improved=0,withPrev=0,mover=null,moverPct=-Infinity;
-  keys.forEach(k=>{const s=SITES[k]; totalCur+=s.cur.clicks;
-    if(s.prev){withPrev++; totalPrev+=s.prev.clicks;
-      if(s.cur.clicks>=s.prev.clicks)improved++;
-      if(s.prev.clicks>0){const p=(s.cur.clicks-s.prev.clicks)/s.prev.clicks*100; if(p>moverPct){moverPct=p;mover=k;}}}});
-  let wins=[];
-  keys.forEach(k=>SITES[k].queries.forEach(r=>{if(r[4]>=4&&r[4]<=20&&r[2]>=10)wins.push({site:k,q:r[0],impr:r[2],pos:r[4],clicks:r[1]});}));
-  wins.sort((a,b)=>b.impr-a.impr); wins=wins.slice(0,3);
-  let html='<p style="margin:0 0 10px;font-size:13.5px">Across all 5 properties: <b>'+totalCur+' clicks</b> in the last 28 days'+(withPrev?', vs <b>'+totalPrev+'</b> in the prior period (sites with history). '+improved+' of '+withPrev+' established sites held or improved their clicks.':'.')+'</p>';
-  if(mover) html+='<p style="margin:0 0 10px;font-size:13.5px">Biggest mover: <b>'+mover+'</b> ('+(moverPct>=0?'+':'')+Math.round(moverPct)+'% clicks vs last period).</p>';
-  if(wins.length){ html+='<p style="margin:0 0 6px;font-size:13.5px"><b>Top quick wins to action:</b></p><ul style="margin:0;padding-left:20px">'+wins.map(w=>'<li style="margin-bottom:6px;font-size:13px">"'+w.q+'" — <span style="color:var(--muted)">'+w.site+' · '+w.impr+' impressions at position '+w.pos.toFixed(1)+' · '+w.clicks+' clicks</span></li>').join('')+'</ul>'; }
-  document.getElementById('hlBody').innerHTML=html;
-})();
+// ---------- At a glance ----------
+function buildGlance(){
+  const keys=Object.keys(SITES);
+  let totalClicks=0, improved=0, comparable=0, mover=null, moverPct=-1e9;
+  keys.forEach(k=>{
+    const s=SITES[k]; totalClicks+=s.cur.clicks;
+    if(s.prev){
+      comparable++;
+      const base=s.prev.clicks||0.0001;
+      const ch=((s.cur.clicks-s.prev.clicks)/base)*100;
+      if(s.cur.clicks>s.prev.clicks) improved++;
+      const absCh=s.cur.clicks-s.prev.clicks;
+      if(absCh>moverPct){moverPct=absCh;mover={k,absCh,ch};}
+    }
+  });
+  const g=document.getElementById('glance');
+  g.innerHTML=
+    card("Total clicks (28d)", totalClicks, "across all 5 properties")+
+    card("Sites improved", improved+" / "+comparable, "vs previous 28 days (with comparison data)")+
+    card("Biggest mover", mover?mover.k:"—", mover?("+"+mover.absCh+" clicks ("+pct(mover.ch)+")"):"")+
+    card("New properties", "3", "compass-lg, sunsetmediame, compassfmgcc (no prior period)");
+}
+function card(lbl,val,sub){
+  return '<div class="gcard"><div class="lbl">'+lbl+'</div><div class="val">'+val+'</div><div class="sub">'+sub+'</div></div>';
+}
+
+// ---------- Quick wins ----------
+function buildQuickWins(){
+  let all=[];
+  Object.keys(SITES).forEach(k=>{
+    SITES[k].queries.forEach(q=>{
+      if(q[4]>=4 && q[4]<=20) all.push({site:k,q:q[0],impr:q[2],pos:q[4]});
+    });
+  });
+  all.sort((a,b)=>b.impr-a.impr);
+  const el=document.getElementById('quickwins');
+  el.innerHTML=all.slice(0,6).map(x=>
+    '<span class="chip"><b>'+x.q+'</b> · '+x.impr+' impr · pos '+x.pos.toFixed(1)+' · <span style="color:var(--muted)">'+x.site+'</span></span>'
+  ).join('');
+}
+
+// ---------- Overview table ----------
+let ovSort={k:'clicks',asc:false};
+function buildOverview(){
+  const tb=document.querySelector('#ovtable tbody');
+  let rows=Object.keys(SITES).map(k=>{
+    const s=SITES[k];
+    const cpct = s.prev ? ((s.cur.clicks-(s.prev.clicks||0))/((s.prev.clicks)||1))*100 : null;
+    let trend;
+    if(!s.prev) trend={t:'new',v:0};
+    else if(s.cur.clicks>s.prev.clicks) trend={t:'up',v:cpct};
+    else if(s.cur.clicks<s.prev.clicks) trend={t:'down',v:cpct};
+    else trend={t:'flat',v:0};
+    return {site:k,clicks:s.cur.clicks,cpct:cpct,impr:s.cur.impr,ctr:s.cur.ctr,pos:s.cur.pos,trend:trend};
+  });
+  const k=ovSort.k;
+  rows.sort((a,b)=>{
+    let av,bv;
+    if(k==='site'){av=a.site;bv=b.site;return ovSort.asc?av.localeCompare(bv):bv.localeCompare(av);}
+    if(k==='trend'){av=a.cpct==null?-1e9:a.cpct;bv=b.cpct==null?-1e9:b.cpct;}
+    else if(k==='cpct'){av=a.cpct==null?-1e9:a.cpct;bv=b.cpct==null?-1e9:b.cpct;}
+    else {av=a[k];bv=b[k];}
+    return ovSort.asc?av-bv:bv-av;
+  });
+  tb.innerHTML=rows.map(r=>{
+    let ar = r.trend.t==='up'?'<span class="arrow-up">▲ '+pct(r.trend.v)+'</span>'
+      : r.trend.t==='down'?'<span class="arrow-down">▼ '+pct(r.trend.v)+'</span>'
+      : r.trend.t==='new'?'<span class="arrow-new">● new</span>'
+      : '<span class="neu">– 0%</span>';
+    let cpctTxt = r.cpct==null?'<span class="neu">new</span>':(r.cpct>=0?'<span class="pos">'+pct(r.cpct)+'</span>':'<span class="neg">'+pct(r.cpct)+'</span>');
+    return '<tr><td>'+r.site+'</td><td class="num">'+r.clicks+'</td><td class="num">'+cpctTxt+'</td><td class="num">'+fmt(r.impr)+'</td><td class="num">'+r.ctr.toFixed(1)+'%</td><td class="num">'+r.pos.toFixed(1)+'</td><td class="num">'+ar+'</td></tr>';
+  }).join('');
+}
+document.querySelectorAll('#ovtable th').forEach(th=>{
+  th.addEventListener('click',()=>{
+    const k=th.dataset.k;
+    if(ovSort.k===k) ovSort.asc=!ovSort.asc; else {ovSort.k=k;ovSort.asc=(k==='site');}
+    buildOverview();
+  });
+});
+
+// ---------- Per site ----------
+let curSite=null, kwSort={k:1,asc:false};
+function buildKpis(s){
+  const el=document.getElementById('kpis');
+  function kc(lbl,cur,prev,unit,lowerBetter){
+    let chg='';
+    if(prev!=null){
+      const diff=cur-prev;
+      let p = prev!==0 ? (diff/Math.abs(prev))*100 : (cur!==0?100:0);
+      const good = lowerBetter ? diff<0 : diff>0;
+      const bad = lowerBetter ? diff>0 : diff<0;
+      const cls = diff===0?'neu':(good?'pos':'neg');
+      const sym = diff>0?'▲':(diff<0?'▼':'–');
+      chg='<div class="chg '+cls+'">'+sym+' '+pct(p)+'</div>';
+    } else {
+      chg='<div class="chg neu">no prior data</div>';
+    }
+    const prevTxt = prev!=null ? ('prev: '+(unit==='K'?fmt(prev):prev)+(unit&&unit!=='K'?unit:'')) : 'prev: —';
+    const valTxt = unit==='K'?fmt(cur):cur+(unit&&unit!=='K'?unit:'');
+    return '<div class="kpi"><div class="lbl">'+lbl+'</div><div class="val">'+valTxt+'</div><div class="prev">'+prevTxt+'</div>'+chg+'</div>';
+  }
+  const p=s.prev;
+  el.innerHTML=
+    kc("Clicks", s.cur.clicks, p?p.clicks:null, "", false)+
+    kc("Impressions", s.cur.impr, p?p.impr:null, "K", false)+
+    kc("CTR", s.cur.ctr, p?p.ctr:null, "%", false)+
+    kc("Avg position", s.cur.pos, p?p.pos:null, "", true);
+}
+
+function bar(label,val,max,sub){
+  const w=Math.max(2,(val/max)*100);
+  return '<div class="bar-row"><div class="bar-lbl" title="'+label.replace(/"/g,'&quot;')+'">'+label+'</div><div class="bar-track"><div class="bar-fill" style="width:'+w+'%"></div></div><div class="bar-val">'+sub+'</div></div>';
+}
+function buildQChart(s){
+  const top=s.queries.filter(q=>q[1]>0).sort((a,b)=>b[1]-a[1]).slice(0,10);
+  const data = top.length? top : s.queries.slice().sort((a,b)=>b[2]-a[2]).slice(0,10).map(q=>q);
+  const useClicks = top.length>0;
+  const max=Math.max(1,...data.map(q=>useClicks?q[1]:q[2]));
+  const el=document.getElementById('qchart');
+  if(!data.length){el.innerHTML='<div style="color:var(--muted)">No query data.</div>';return;}
+  el.innerHTML=(useClicks?'':'<div style="color:var(--muted);font-size:12px;margin-bottom:6px">No clicks yet — showing impressions.</div>')+
+    data.map(q=>bar(q[0],useClicks?q[1]:q[2],max,(useClicks?q[1]+' clk':q[2]+' imp'))).join('');
+}
+function buildPChart(s){
+  const buckets={"1–3":0,"4–10":0,"11–20":0,"21+":0};
+  s.queries.forEach(q=>{
+    const p=q[4];
+    if(p<=3)buckets["1–3"]+=q[2];
+    else if(p<=10)buckets["4–10"]+=q[2];
+    else if(p<=20)buckets["11–20"]+=q[2];
+    else buckets["21+"]+=q[2];
+  });
+  const max=Math.max(1,...Object.values(buckets));
+  const el=document.getElementById('pchart');
+  el.innerHTML=Object.keys(buckets).map(b=>bar("Position "+b,buckets[b],max,buckets[b]+' imp')).join('');
+}
+function buildRecs(s){
+  document.getElementById('recs').innerHTML=s.recs.map(r=>'<li>'+r+'</li>').join('');
+}
+function buildKwTable(s){
+  const tb=document.querySelector('#kwtable tbody');
+  const term=(document.getElementById('kwsearch').value||'').toLowerCase();
+  let rows=s.queries.filter(q=>q[0].toLowerCase().includes(term));
+  const k=kwSort.k;
+  rows.sort((a,b)=>{
+    if(k===0)return kwSort.asc?a[0].localeCompare(b[0]):b[0].localeCompare(a[0]);
+    return kwSort.asc?a[k]-b[k]:b[k]-a[k];
+  });
+  tb.innerHTML=rows.map(q=>
+    '<td>'+q[0]+'</td><td class="num">'+q[1]+'</td><td class="num">'+q[2]+'</td><td class="num">'+q[3]+'%</td><td class="num">'+posPill(q[4])+'</td>'
+  ).map(r=>'<tr>'+r+'</tr>').join('');
+}
+document.querySelectorAll('#kwtable th').forEach(th=>{
+  th.addEventListener('click',()=>{
+    const k=parseInt(th.dataset.k);
+    if(kwSort.k===k)kwSort.asc=!kwSort.asc; else {kwSort.k=k;kwSort.asc=(k===0);}
+    buildKwTable(curSite);
+  });
+});
+document.getElementById('kwsearch').addEventListener('input',()=>buildKwTable(curSite));
+
+function buildPgTable(s){
+  const tb=document.querySelector('#pgtable tbody');
+  tb.innerHTML=s.pages.map(p=>{
+    const short=p[0].replace(s.base,'/').replace(/^\/\//,'/');
+    return '<tr><td><a href="'+p[0]+'" target="_blank" title="'+p[0]+'">'+ (short==='/'? '/ (home)':short) +'</a></td><td class="num">'+p[1]+'</td><td class="num">'+p[2]+'</td><td class="num">'+p[3]+'%</td><td class="num">'+posPill(p[4])+'</td></tr>';
+  }).join('');
+}
+
+function selectSite(k){
+  curSite=SITES[k];
+  buildKpis(curSite); buildQChart(curSite); buildPChart(curSite);
+  buildRecs(curSite); buildKwTable(curSite); buildPgTable(curSite);
+  try{localStorage.setItem('compass_seo_site',k);}catch(e){}
+}
+
+function init(){
+  document.getElementById('genline').textContent='Search Console data lags ~2 days · dashboard generated '+new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+  buildGlance(); buildQuickWins(); buildOverview();
+  const sel=document.getElementById('siteSel');
+  sel.innerHTML=Object.keys(SITES).map(k=>'<option value="'+k+'">'+k+' — '+SITES[k].label+'</option>').join('');
+  let saved=null; try{saved=localStorage.getItem('compass_seo_site');}catch(e){}
+  if(saved&&SITES[saved])sel.value=saved;
+  sel.addEventListener('change',()=>selectSite(sel.value));
+  selectSite(sel.value);
+}
+init();
 </script>
 </body>
 </html>
