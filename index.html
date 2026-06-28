@@ -51,6 +51,12 @@
   .kpi .chg{font-size:13px;font-weight:600;margin-top:4px}
   .kpi.ga4k{border-color:#1f4a44}
   .kpi.ga4k .val{color:var(--teal)}
+  .bl-sec{border:1px solid var(--amber);border-radius:10px;padding:16px 18px;margin-bottom:14px;background:linear-gradient(180deg,rgba(245,158,11,0.06),rgba(245,158,11,0))}
+  .bl-hdr{font-weight:700;font-size:15px;color:var(--amber);margin-bottom:2px}
+  .bl-subt{font-weight:400;color:var(--muted);font-size:12px;margin-bottom:12px}
+  .kpi.blk{border-color:#4a3a1f}
+  .kpi.blk .val{color:var(--amber)}
+  .bar-fill.bl{background:linear-gradient(90deg,var(--amber),#fbbf24)}
   .pos{color:var(--green)} .neg{color:var(--red)} .neu{color:var(--muted)}
   select,input{background:var(--panel2);color:var(--txt);border:1px solid var(--border);border-radius:8px;padding:8px 10px;font-size:14px}
   select:focus,input:focus{outline:1px solid var(--accent)}
@@ -176,6 +182,27 @@
         <div style="overflow-x:auto">
           <table id="ga4pages">
             <thead><tr><th>Page</th><th class="num">Views</th><th class="num">Users</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bl-sec">
+    <div class="bl-hdr">Backlinks (Search Console)</div>
+    <div class="bl-subt">External links Google has discovered for this site. Counts are approximate and update in irregular batches, so weekly/monthly change is more reliable than day-to-day. Velocity builds from 28 Jun 2026 onward.</div>
+    <div class="kpis" id="blkpis"></div>
+    <div class="grid2" style="margin-top:14px">
+      <div class="panel" style="margin-bottom:0">
+        <div style="font-weight:600;margin-bottom:10px">Total backlinks over time</div>
+        <div id="blchart"></div>
+      </div>
+      <div class="panel" style="margin-bottom:0">
+        <div style="font-weight:600;margin-bottom:10px">Top linking domains</div>
+        <div style="overflow-x:auto">
+          <table id="bltable">
+            <thead><tr><th>Linking domain</th><th class="num">Links</th></tr></thead>
             <tbody></tbody>
           </table>
         </div>
@@ -360,6 +387,17 @@ const SITES = {
   }
 };
 
+// Backlink history from Search Console "Links" report. history = [[YYYY-MM-DD, total], …] appended daily.
+// total:null means GSC had no link data yet (still processing) on the snapshot date.
+const BACKLINKS = {
+  "compass-arabia.com":   {total:21, topSites:[["gorgeoustip.com",7],["linkedin.com",5],["linkdoctor.io",2],["2ip.ru",1],["blogs-collection.com",1]], history:[["2026-06-28",21]]},
+  "compassfmgcc.com":     {total:2,  topSites:[["compass-fm.com",1],["gorgeoustip.com",1]], history:[["2026-06-28",2]]},
+  "compasswaterproof.com":{total:2,  topSites:[["2ip.ru",1],["jenius196sukses.sbs",1]], history:[["2026-06-28",2]]},
+  "compass-lg.com":       {total:null, topSites:[], history:[], note:"GSC link data still processing"},
+  "sunsetmediame.com":    {total:0,  topSites:[], history:[["2026-06-28",0]]},
+  "compass-its.com":      {total:36, topSites:[["compass-arabia.com",18],["compassfmgcc.com",7],["compasswaterproof.com",5],["sunsetmediame.com",3],["2ip.ru",1]], history:[["2026-06-28",36]]}
+};
+
 const fmt = n => n>=1000 ? (n/1000).toFixed(2).replace(/\.?0+$/,'')+"K" : ""+n;
 const pct = v => (v>0?"+":"")+v.toFixed(0)+"%";
 
@@ -381,9 +419,11 @@ function buildGlance(){
       if(absCh>moverAbs){moverAbs=absCh;mover={k,absCh,ch};}
     }
   });
+  let totalBacklinks=0; Object.keys(BACKLINKS).forEach(k=>{ if(BACKLINKS[k].total) totalBacklinks+=BACKLINKS[k].total; });
   document.getElementById('glance').innerHTML=
-    card("GSC clicks (28d)", totalClicks, "total across all 5 properties")+
+    card("GSC clicks (28d)", totalClicks, "total across all properties")+
     card("GA4 sessions (28d)", fmt(totalSessions), "on-site visits across all sites")+
+    card("Backlinks (total)", totalBacklinks, "external links Google sees")+
     card("Sites improved", improved+" / "+comparable, "GSC clicks vs previous 28 days")+
     card("Biggest mover", mover?mover.k:"—", mover?("+"+mover.absCh+" clicks ("+pct(mover.ch)+")"):"");
 }
@@ -549,10 +589,52 @@ function buildGA4(s){
   }).join('');
 }
 
+function blDelta(hist, days){
+  if(!hist || hist.length<2) return null;
+  const last=hist[hist.length-1];
+  const lastDate=new Date(last[0]);
+  const target=new Date(lastDate.getTime()-days*86400000);
+  let base=null;
+  for(let i=hist.length-1;i>=0;i--){ if(new Date(hist[i][0])<=target){ base=hist[i]; break; } }
+  if(base===null) base=hist[0]; // not enough history yet — compare to earliest
+  if(base[1]===null || last[1]===null) return null;
+  return last[1]-base[1];
+}
+function buildBacklinks(k){
+  const b=BACKLINKS[k];
+  const kp=document.getElementById('blkpis');
+  const ch=document.getElementById('blchart');
+  const tb=document.querySelector('#bltable tbody');
+  if(!b || b.total===null){
+    kp.innerHTML='<div class="kpi blk"><div class="lbl">Backlinks</div><div class="val">—</div><div class="prev">'+((b&&b.note)?b.note:'no data yet')+'</div></div>';
+    ch.innerHTML='<div style="color:var(--muted)">No backlink history yet.</div>';
+    tb.innerHTML=''; return;
+  }
+  function dcard(lbl,d){
+    if(d===null) return '<div class="kpi blk"><div class="lbl">'+lbl+'</div><div class="val">—</div><div class="prev">building history</div></div>';
+    const cls=d>0?'pos':(d<0?'neg':'neu'); const sym=d>0?'▲ +':(d<0?'▼ ':'– ');
+    return '<div class="kpi blk"><div class="lbl">'+lbl+'</div><div class="val">'+(d>0?'+':'')+d+'</div><div class="prev '+cls+'">'+sym+Math.abs(d)+' links</div></div>';
+  }
+  kp.innerHTML=
+    '<div class="kpi blk"><div class="lbl">Total backlinks</div><div class="val">'+b.total+'</div><div class="prev">external links (GSC)</div></div>'+
+    dcard("Added · 1 day", blDelta(b.history,1))+
+    dcard("Added · 7 days", blDelta(b.history,7))+
+    dcard("Added · 30 days", blDelta(b.history,30));
+  if(!b.history.length){ ch.innerHTML='<div style="color:var(--muted)">No history yet.</div>'; }
+  else {
+    const max=Math.max(1,...b.history.map(h=>h[1]||0));
+    ch.innerHTML=b.history.slice(-30).map(h=>{
+      const d=new Date(h[0]).toLocaleDateString('en-GB',{day:'numeric',month:'short'});
+      return '<div class="bar-row"><div class="bar-lbl" style="flex:0 0 70px">'+d+'</div><div class="bar-track"><div class="bar-fill bl" style="width:'+Math.max(2,((h[1]||0)/max)*100)+'%"></div></div><div class="bar-val">'+(h[1]===null?'—':h[1])+'</div></div>';
+    }).join('');
+  }
+  tb.innerHTML = b.topSites.length ? b.topSites.map(s=>'<tr><td>'+s[0]+'</td><td class="num">'+s[1]+'</td></tr>').join('') : '<tr><td colspan="2" style="color:var(--muted)">No linking domains reported.</td></tr>';
+}
+
 function selectSite(k){
   curSite=SITES[k];
   buildKpis(curSite); buildQChart(curSite); buildPChart(curSite);
-  buildRecs(curSite); buildKwTable(curSite); buildPgTable(curSite); buildGA4(curSite);
+  buildRecs(curSite); buildKwTable(curSite); buildPgTable(curSite); buildGA4(curSite); buildBacklinks(k);
   try{localStorage.setItem('compass_seo_site',k);}catch(e){}
 }
 
