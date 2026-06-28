@@ -479,7 +479,7 @@ document.querySelectorAll('#ovtable th').forEach(th=>{
 });
 
 let curSite=null, kwSort={k:1,asc:false};
-function buildKpis(s){
+function buildKpis(s,k){
   const el=document.getElementById('kpis');
   function kc(lbl,cur,prev,unit,lowerBetter){
     let chg='';
@@ -497,12 +497,23 @@ function buildKpis(s){
     const valTxt = unit==='K'?fmt(cur):cur+(unit&&unit!=='K'?unit:'');
     return '<div class="kpi"><div class="lbl">'+lbl+'</div><div class="val">'+valTxt+'</div><div class="prev">'+prevTxt+'</div>'+chg+'</div>';
   }
+  function blCard(){
+    const b = k ? BACKLINKS[k] : null;
+    if(!b || b.total===null){
+      return '<div class="kpi"><div class="lbl">Backlinks</div><div class="val">—</div><div class="prev">'+((b&&b.note)?b.note:'no data yet')+'</div><div class="chg neu">—</div></div>';
+    }
+    const d7=blDelta(b.history,7);
+    let chg = d7===null ? '<div class="chg neu">building history</div>'
+      : '<div class="chg '+(d7>0?'pos':(d7<0?'neg':'neu'))+'">'+(d7>0?'▲ +'+d7:(d7<0?'▼ '+Math.abs(d7):'– 0'))+' / 7d</div>';
+    return '<div class="kpi"><div class="lbl">Backlinks</div><div class="val">'+b.total+'</div><div class="prev">external links (GSC)</div>'+chg+'</div>';
+  }
   const p=s.prev;
   el.innerHTML=
     kc("Clicks", s.cur.clicks, p?p.clicks:null, "", false)+
     kc("Impressions", s.cur.impr, p?p.impr:null, "K", false)+
     kc("CTR", s.cur.ctr, p?p.ctr:null, "%", false)+
-    kc("Avg position", s.cur.pos, p?p.pos:null, "", true);
+    kc("Avg position", s.cur.pos, p?p.pos:null, "", true)+
+    blCard();
 }
 
 function bar(label,val,max,sub){
@@ -633,7 +644,7 @@ function buildBacklinks(k){
 
 function selectSite(k){
   curSite=SITES[k];
-  buildKpis(curSite); buildQChart(curSite); buildPChart(curSite);
+  buildKpis(curSite,k); buildQChart(curSite); buildPChart(curSite);
   buildRecs(curSite); buildKwTable(curSite); buildPgTable(curSite); buildGA4(curSite); buildBacklinks(k);
   try{localStorage.setItem('compass_seo_site',k);}catch(e){}
 }
