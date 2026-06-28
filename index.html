@@ -57,6 +57,12 @@
   .kpi.blk{border-color:#4a3a1f}
   .kpi.blk .val{color:var(--amber)}
   .bar-fill.bl{background:linear-gradient(90deg,var(--amber),#fbbf24)}
+  .serp-sec{border:1px solid var(--accent2);border-radius:10px;padding:16px 18px;margin-bottom:14px;background:linear-gradient(180deg,rgba(139,92,246,0.07),rgba(139,92,246,0))}
+  .serp-hdr{font-weight:700;font-size:15px;color:#a78bfa}
+  .serp-subt{font-weight:400;color:var(--muted);font-size:12px;margin:6px 0 12px}
+  .ctry-switch{display:flex;gap:6px;flex-wrap:wrap}
+  .ctry-btn{background:var(--panel2);color:var(--muted);border:1px solid var(--border);border-radius:8px;padding:5px 12px;font-size:13px;cursor:pointer}
+  .ctry-btn.active{background:var(--accent2);color:#fff;border-color:var(--accent2)}
   .pos{color:var(--green)} .neg{color:var(--red)} .neu{color:var(--muted)}
   select,input{background:var(--panel2);color:var(--txt);border:1px solid var(--border);border-radius:8px;padding:8px 10px;font-size:14px}
   select:focus,input:focus{outline:1px solid var(--accent)}
@@ -165,6 +171,35 @@
         </tr></thead>
         <tbody></tbody>
       </table>
+    </div>
+  </div>
+
+  <div class="serp-sec">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+      <div class="serp-hdr">SERP rankings by country (Search Console)</div>
+      <div class="ctry-switch" id="ctrySwitch">
+        <button class="ctry-btn active" data-c="GCC">GCC / all</button>
+        <button class="ctry-btn" data-c="QA">Qatar</button>
+        <button class="ctry-btn" data-c="SA">Saudi</button>
+        <button class="ctry-btn" data-c="AE">UAE</button>
+      </div>
+    </div>
+    <div class="serp-subt">Where this site ranks for its top queries in the selected market, last 28 days. Lower position is better (green ≤3, lime ≤10, amber ≤20, red beyond). This is GSC's averaged position per market — not a live SERP check — so the day-by-day trend is the signal; it builds from 28 Jun 2026.</div>
+    <div class="kpis" id="serpkpis"></div>
+    <div class="grid2" style="margin-top:14px">
+      <div class="panel" style="margin-bottom:0">
+        <div style="font-weight:600;margin-bottom:10px">Average position over time</div>
+        <div id="serptrend"></div>
+      </div>
+      <div class="panel" style="margin-bottom:0">
+        <div style="font-weight:600;margin-bottom:10px">Top keywords &amp; position</div>
+        <div style="overflow-x:auto">
+          <table id="serptable">
+            <thead><tr><th>Keyword</th><th class="num">Pos</th><th class="num">Clicks</th><th class="num">Impr</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -425,6 +460,51 @@ const BACKLINKS = {
   "compass-its.com":      {total:36, topSites:[["compass-arabia.com",18],["compassfmgcc.com",7],["compasswaterproof.com",5],["sunsetmediame.com",3],["2ip.ru",1]], history:[["2026-06-28",36]]}
 };
 
+// Country-filtered Search Console rankings. Per site, per market: KPIs + top keywords [query, position, clicks, impressions].
+// GCC/overall is derived at runtime from SITES (cur + queries). kw position is GSC's averaged rank, not a live SERP check.
+const RANK = {
+  "compass-arabia.com":{
+    QA:{clicks:74,impr:1710,ctr:4.3,pos:6.1,kw:[["compass arabia",1.1,9,12],["compass",8.3,6,313],["compass surveying",1.3,2,3],["land surveyor",3.6,1,19],["survey companies in qatar",1.0,1,9],["bathymetric survey",8.0,1,7],["3d laser scanning services",3.2,1,4],["compas",6.7,1,3],["aerial lidar survey company gcc",1.0,1,2],["compass contracting",1.0,1,1]]},
+    SA:{clicks:32,impr:881,ctr:3.6,pos:8.9,kw:[["compass arabia",6.3,5,41],["compass contracting",7.8,2,26],["best contracting companies in saudi arabia",7.3,1,18],["compass saudi arabia",4.1,1,15],["environmental survey drone ksa",8.7,0,21],["drone survey in saudi arabia",14.8,0,17],["drone survey company saudi",10.3,0,13],["compass",7.5,0,11],["aerial surveying and mapping saudi",12.5,0,10]]},
+    AE:{clicks:8,impr:1170,ctr:0.7,pos:19.2,kw:[["compass saudi arabia",2.0,2,4],["compass qatar",7.4,1,9],["compass arabia",2.2,1,5],["geotechnical companies in dubai",1.0,1,1],["3d laser scanning services in uae",7.3,0,56],["aerial 3d laser scanning services",18.4,0,52],["utility mapping survey in abu dhabi",22.7,0,35],["terrestrial scanning services in uae",18.3,0,34],["utility survey services in uae",15.8,0,31],["utility mapping survey in uae",17.1,0,31]]}
+  },
+  "compassfmgcc.com":{
+    QA:{clicks:66,impr:741,ctr:8.9,pos:9.4,kw:[["compass facility management",1.6,8,33],["facility management companies in qatar",4.0,7,99],["list of facility management companies in qatar",1.0,2,3],["compass fm",2.5,2,2],["compass cleaning company qatar",10.5,1,26],["compass management consulting",5.2,1,25],["facility management",23.1,1,14],["top 10 facility management companies in qatar",39.5,1,10],["compass management consulting qatar",1.4,1,5],["compass cleaning",1.5,1,4]]},
+    SA:{clicks:2,impr:14,ctr:14.3,pos:43.9,kw:[["compass facility management",1.0,1,1],["compass fm",10.0,0,2],["qatar facility management market",75.5,0,2]]},
+    AE:{clicks:5,impr:103,ctr:4.9,pos:6.7,kw:[["real estate facility management",1.0,1,3],["compass facility management",1.3,1,3],["facility management",1.0,0,3],["compass",4.3,0,3],["compass cleaning company",1.0,0,2],["compass building",6.0,0,2],["facilities management company in qatar",1.0,0,1],["facilities service provider",1.0,0,1],["list of facility management companies in uae",1.0,0,1]]}
+  },
+  "compasswaterproof.com":{
+    QA:{clicks:21,impr:192,ctr:10.9,pos:5.0,kw:[["pu foam waterproofing",3.0,1,3],["waterproofing companies in qatar",4.2,0,14],["waterproofing",1.7,0,7],["importance of waterproofing in the gcc",1.0,0,3],["compass",8.0,0,3],["water proofing",14.0,0,3],["water proofing phone",2.0,0,2],["polyurea waterproofing",10.5,0,2],["waterproof company",13.5,0,2],["polyurea coating",15.0,0,2]]},
+    SA:{clicks:1,impr:20,ctr:5.0,pos:8.5,kw:[["polyurethane foam waterproofing",37.0,0,1]]},
+    AE:{clicks:0,impr:109,ctr:0,pos:6.5,kw:[["waterproofing for rooftop terrace extreme uv gcc",2.0,0,26],["consultant-approved waterproofing bridges overpasses gcc",6.1,0,17],["importance of waterproofing in the gcc",44.6,0,8],["best cementitious or membrane waterproofing qatar humidity",1.0,0,6],["pu foam waterproofing",6.5,0,4],["polyurethane foam waterproofing",1.0,0,2],["waterproofing failure points gcc high-rise",1.0,0,2],["waterproofing for desalination plant gcc",1.0,0,2],["bitumen waterproofing",1.0,0,1],["bitumen waterproofing membrane",1.0,0,1]]}
+  },
+  "compass-lg.com":{
+    QA:{clicks:0,impr:2,ctr:0,pos:5.5,kw:[["compass logistics",5.0,0,1]]},
+    SA:{clicks:0,impr:45,ctr:0,pos:5.2,kw:[["compass logistics",4.8,0,9],["compass saudi arabia",9.0,0,3],["compass global logistics",6.0,0,1],["compass logistics company",6.0,0,1],["compass ocean logistics",6.0,0,1]]},
+    AE:{clicks:0,impr:18,ctr:0,pos:10.4,kw:[["compass logistics",8.2,0,6],["compass freight",9.0,0,1],["compass sea & air cargo llc",41.0,0,1]]}
+  },
+  "sunsetmediame.com":{
+    QA:{clicks:0,impr:0,ctr:0,pos:null,kw:[]},
+    SA:{clicks:0,impr:0,ctr:0,pos:null,kw:[]},
+    AE:{clicks:0,impr:1,ctr:0,pos:6.0,kw:[["sunset media",6.0,0,1]]}
+  },
+  "compass-its.com":{
+    QA:{clicks:6,impr:87,ctr:6.9,pos:3.8,kw:[["compass it solutions",6.0,1,22],["it compass",4.0,1,1],["best it companies in qatar",1.0,0,1],["best outsourcing companies in qatar",1.0,0,1],["big companies in qatar",1.0,0,1],["companies in qatar",1.0,0,1],["consultant company in qatar",1.0,0,1],["cyber security companies in qatar",1.0,0,1],["it cabling company near me",1.0,0,1],["it companies near me",1.0,0,1]]},
+    SA:{clicks:0,impr:0,ctr:0,pos:null,kw:[]},
+    AE:{clicks:1,impr:2,ctr:50,pos:1.0,kw:[["compass it company",1.0,0,1]]}
+  }
+};
+
+// Average-position history per site per market (incl. GCC/overall). [[YYYY-MM-DD, avgPos]] appended daily; null = no impressions that day.
+const RANKHIST = {
+  "compass-arabia.com":   {GCC:[["2026-06-28",9.8]], QA:[["2026-06-28",6.1]], SA:[["2026-06-28",8.9]], AE:[["2026-06-28",19.2]]},
+  "compassfmgcc.com":     {GCC:[["2026-06-28",11.2]],QA:[["2026-06-28",9.4]], SA:[["2026-06-28",43.9]],AE:[["2026-06-28",6.7]]},
+  "compasswaterproof.com":{GCC:[["2026-06-28",10.8]],QA:[["2026-06-28",5.0]], SA:[["2026-06-28",8.5]], AE:[["2026-06-28",6.5]]},
+  "compass-lg.com":       {GCC:[["2026-06-28",10.0]],QA:[["2026-06-28",5.5]], SA:[["2026-06-28",5.2]], AE:[["2026-06-28",10.4]]},
+  "sunsetmediame.com":    {GCC:[["2026-06-28",14.6]],QA:[], SA:[], AE:[["2026-06-28",6.0]]},
+  "compass-its.com":      {GCC:[["2026-06-28",12.5]],QA:[["2026-06-28",3.8]], SA:[], AE:[["2026-06-28",1.0]]}
+};
+
 const fmt = n => n>=1000 ? (n/1000).toFixed(2).replace(/\.?0+$/,'')+"K" : ""+n;
 const pct = v => (v>0?"+":"")+v.toFixed(0)+"%";
 
@@ -669,10 +749,39 @@ function buildBacklinks(k){
   tb.innerHTML = b.topSites.length ? b.topSites.map(s=>'<tr><td>'+s[0]+'</td><td class="num">'+s[1]+'</td></tr>').join('') : '<tr><td colspan="2" style="color:var(--muted)">No linking domains reported.</td></tr>';
 }
 
+let curCountry='GCC', curKey=null;
+const CNAME={GCC:"GCC / all",QA:"Qatar",SA:"Saudi Arabia",AE:"UAE"};
+function posColor(p){ if(p==null) return 'var(--muted)'; if(p<=3) return 'var(--green)'; if(p<=10) return 'var(--lime)'; if(p<=20) return 'var(--amber)'; return 'var(--red)'; }
+function serpData(k,c){
+  if(c==='GCC'){ const s=SITES[k]; return {clicks:s.cur.clicks,impr:s.cur.impr,ctr:s.cur.ctr,pos:s.cur.pos,kw:s.queries.map(q=>[q[0],q[4],q[1],q[2]])}; }
+  const r=RANK[k]&&RANK[k][c];
+  return r?{clicks:r.clicks,impr:r.impr,ctr:r.ctr,pos:r.pos,kw:r.kw.slice()}:{clicks:0,impr:0,ctr:0,pos:null,kw:[]};
+}
+function buildSERP(k){
+  document.querySelectorAll('#ctrySwitch .ctry-btn').forEach(b=>b.classList.toggle('active',b.dataset.c===curCountry));
+  const d=serpData(k,curCountry), cn=CNAME[curCountry];
+  document.getElementById('serpkpis').innerHTML=
+    '<div class="kpi"><div class="lbl">Avg position · '+cn+'</div><div class="val" style="color:'+posColor(d.pos)+'">'+(d.pos==null?'—':d.pos.toFixed(1))+'</div><div class="prev">'+(d.impr?'lower is better':'no impressions here')+'</div></div>'+
+    '<div class="kpi"><div class="lbl">Clicks</div><div class="val">'+d.clicks+'</div><div class="prev">in '+cn+'</div></div>'+
+    '<div class="kpi"><div class="lbl">Impressions</div><div class="val">'+fmt(d.impr)+'</div><div class="prev">in '+cn+'</div></div>'+
+    '<div class="kpi"><div class="lbl">CTR</div><div class="val">'+d.ctr+'%</div><div class="prev">in '+cn+'</div></div>';
+  const hist=(RANKHIST[k]&&RANKHIST[k][curCountry])||[];
+  const pts=hist.filter(h=>h[1]!=null);
+  const tr=document.getElementById('serptrend');
+  if(!pts.length){ tr.innerHTML='<div style="color:var(--muted)">No ranking in '+cn+' yet.</div>'; }
+  else { const maxP=Math.max(10,...pts.map(h=>h[1]));
+    tr.innerHTML=pts.slice(-30).map(h=>{ const dd=new Date(h[0]).toLocaleDateString('en-GB',{day:'numeric',month:'short'}); const w=Math.max(4,((maxP+1-h[1])/maxP)*100);
+      return '<div class="bar-row"><div class="bar-lbl" style="flex:0 0 70px">'+dd+'</div><div class="bar-track"><div class="bar-fill" style="width:'+w+'%;background:'+posColor(h[1])+'"></div></div><div class="bar-val">#'+h[1].toFixed(1)+'</div></div>'; }).join('');
+  }
+  const tb=document.querySelector('#serptable tbody');
+  tb.innerHTML = d.kw.length ? d.kw.slice(0,15).map(q=>'<tr><td>'+q[0]+'</td><td class="num">'+posPill(q[1])+'</td><td class="num">'+q[2]+'</td><td class="num">'+q[3]+'</td></tr>').join('')
+    : '<tr><td colspan="4" style="color:var(--muted)">No keywords ranking in '+cn+'.</td></tr>';
+}
+
 function selectSite(k){
-  curSite=SITES[k];
+  curSite=SITES[k]; curKey=k;
   buildKpis(curSite,k); buildQChart(curSite); buildPChart(curSite);
-  buildRecs(curSite); buildKwTable(curSite); buildPgTable(curSite); buildGA4(curSite); buildBacklinks(k);
+  buildRecs(curSite); buildKwTable(curSite); buildPgTable(curSite); buildGA4(curSite); buildBacklinks(k); buildSERP(k);
   try{localStorage.setItem('compass_seo_site',k);}catch(e){}
 }
 
@@ -684,6 +793,11 @@ function init(){
   let saved=null; try{saved=localStorage.getItem('compass_seo_site');}catch(e){}
   if(saved&&SITES[saved])sel.value=saved;
   sel.addEventListener('change',()=>selectSite(sel.value));
+  try{const sc=localStorage.getItem('compass_seo_country'); if(sc&&CNAME[sc])curCountry=sc;}catch(e){}
+  document.querySelectorAll('#ctrySwitch .ctry-btn').forEach(b=>b.addEventListener('click',()=>{
+    curCountry=b.dataset.c; try{localStorage.setItem('compass_seo_country',curCountry);}catch(e){}
+    buildSERP(curKey);
+  }));
   selectSite(sel.value);
 }
 init();
