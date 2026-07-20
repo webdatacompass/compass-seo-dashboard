@@ -1,0 +1,49 @@
+name: Refresh dashboard data
+
+on:
+  workflow_dispatch:        # allows manual runs from the Actions tab (used for testing)
+  schedule:
+    - cron: '0 6 * * *'     # daily at 06:00 UTC (~09:00 Arabia time)
+
+permissions:
+  contents: write           # allow the job to commit data.json back to the repo
+
+concurrency:
+  group: refresh-data
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Write service-account key
+        env:
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+        run: printf '%s' "$GOOGLE_CREDENTIALS" > "$RUNNER_TEMP/sa.json"
+
+      - name: Fetch data
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/sa.json
+        run: python scripts/fetch_data.py
+
+      - name: Commit updated data.json
+        run: |
+          git config user.name "compass-data-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data.json
+          if git diff --staged --quiet; then
+            echo "No data changes to commit."
+          else
+            git commit -m "Automated data refresh $(date -u +%Y-%m-%d)"
+            git push
+          fi
