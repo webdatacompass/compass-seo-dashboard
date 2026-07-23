@@ -1,0 +1,33 @@
+{
+  "_comment": "Targeted keywords per site per market (QA=Qatar, SA=Saudi, AE=UAE). Source: Compass Group Keywords 07.23. These are the ONLY keywords tracked/shown on the dashboard. Edit this file to change what's tracked; the daily Action picks it up automatically.",
+  "compass-arabia.com": {
+    "QA": ["surveying services", "site survey services", "3D laser Scanning Services", "Geographic Information System", "ground penetrating radar", "survey companies in Qatar", "land survey in Qatar", "utility survey services", "geospatial information systems", "land surveyor", "survey surveyor", "property surveyor", "boundary survey"],
+    "SA": ["land surveyor", "surveyor engineer", "topographical survey", "site survey", "bim modeling", "surveying engineering", "survey companies in saudi arabia", "utility survey services", "site survey services", "surveying services"],
+    "AE": ["surveying services", "land surveyor", "surveyor engineer", "surveying company", "topographical survey", "site survey", "survey company in dubai", "bim modeling", "drone survey", "3D laser Scanning Services", "utility survey services", "land surveyor dubai"]
+  },
+  "compassfmgcc.com": {
+    "QA": ["facility management companies in Qatar", "cleaning companies in Qatar", "facility management", "ac services in Qatar", "list of facilities management companies in qatar", "cleaning company in qatar", "facility management services", "facilities management and maintenance company", "facility management qatar", "integrated facility management"],
+    "SA": ["cleaning services", "ac repair", "facilities management", "facilities management companies", "cleaning services Riyadh", "duct cleaning", "compass cleaning company", "company maintenance", "facility management services"],
+    "AE": ["facility management", "facility management services", "building maintenance", "building maintenance work", "hvac maintenance", "emergency air conditioner repair", "electrical services", "cleaning services", "compass cleaning company", "electrical services in uae", "cleaning services in uae"]
+  },
+  "compasswaterproof.com": {
+    "QA": ["waterproofing companies in qatar", "pu foam waterproofing", "roof waterproofing in gcc", "waterproofing company", "epoxy flooring qatar", "polyurethane foam waterproofing", "concrete repair", "waterproofing contractors", "waterproofing services", "crystalline waterproofing", "concrete roof waterproofing"],
+    "SA": ["roof waterproofing", "cementitious waterproofing", "waterproofing paint", "polyurethane foam", "roof waterproofing in gcc", "waterproofing company", "waterproofing membrane", "waterproofing contractors", "pu foam waterproofing", "waterproofing services"],
+    "AE": ["roof waterproofing", "cementitious waterproofing", "epoxy floor coating", "waterproofing paint", "waterproofing coating", "polyurethane foam", "pu foam", "concrete repair", "waterproofing companies in uae", "roof waterproofing in gcc"]
+  },
+  "compass-its.com": {
+    "QA": ["cloud offerings", "cloud computing", "ai and cloud", "cloud artificial intelligence", "qatar artificial intelligence", "information technology services", "enterprise technology services", "it services companies in qatar", "cyber security", "managed it services"],
+    "SA": ["cyber security", "data security", "information technology security", "cloud offerings", "ai and cloud", "cloud artificial intelligence", "artificial intelligence", "saudi it companies", "technology saudi arabia", "digital transformation"],
+    "AE": ["cyber security", "data security", "network security", "information technology security", "it consultancy in dubai", "cloud offerings", "ai and cloud", "cloud artificial intelligence", "artificial intelligence", "cloud solutions"]
+  },
+  "compass-lg.com": {
+    "QA": ["shipping companies in Qatar", "moving company Qatar", "moving services", "customs clearance", "logistics provider", "freight forwarding", "sea freight Qatar", "transport management system", "logistics company", "qatar customs", "cargo services Qatar", "supply chain management", "logistics systems Qatar"],
+    "SA": ["logistics provider", "freight forwarding", "shipping service companies", "cargo freight forwarders", "fast forwarder logistics", "ksa shipping companies", "customs clearance", "transport management system", "logistics company", "supply chain management", "moving companies", "supply chain activities"],
+    "AE": ["logistics provider", "freight forwarding", "freight forwarding companies", "logistic shipping company", "cargo forwarding services", "transport management system", "supply chain management", "moving companies", "customs clearance", "logistics company", "packers and movers"]
+  },
+  "sunsetmediame.com": {
+    "QA": ["marketing agency digital", "digital marketing agency", "digital marketing agency in Qatar", "social media marketing", "social media marketing Qatar", "advertising agency in qatar", "branding agency Qatar", "digital marketing and advertising agency", "digital marketing ads agency", "advertising agencies in doha", "sunset media", "Content Creation", "web development"],
+    "SA": ["marketing agency digital", "digital marketers", "social media marketing", "digital marketing and advertising agency", "digital marketing ads agency", "marketing through social media", "facebook advertising management", "social media marketing agency", "twitter advertising", "digital media advertising companies", "sunset media"],
+    "AE": ["marketing agency digital", "digital marketers", "social media marketing", "digital marketing and advertising agency", "digital marketing ads agency", "facebook advertising management", "social media marketing agency", "twitter advertising", "facebook ads manager", "online marketing", "digital marketing company", "digital media Company", "sunset media"]
+  }
+}

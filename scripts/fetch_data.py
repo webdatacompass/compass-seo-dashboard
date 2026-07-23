@@ -18,6 +18,7 @@ Run:  python scripts/fetch_data.py
 
 import json
 import os
+import re
 import sys
 import datetime as dt
 
@@ -58,6 +59,7 @@ SCOPES = [
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA_PATH = os.path.join(REPO_ROOT, "data.json")
+KEYWORDS_PATH = os.path.join(REPO_ROOT, "keywords.json")
 
 
 def creds():
@@ -121,20 +123,69 @@ def top_list(rows, order):
     return out
 
 
-def fetch_gsc_site(svc, cfg, cur, prev):
+def norm(s):
+    """Normalise a keyword for matching against GSC queries (which are lowercased)."""
+    return re.sub(r"\s+", " ", s.replace("​", "").strip()).lower()
+
+
+def query_lookup(rows):
+    """Map normalised query text -> its GSC row."""
+    out = {}
+    for r in rows:
+        keys = r.get("keys", [])
+        if keys:
+            out[norm(keys[0])] = r
+    return out
+
+
+def kw_metrics(r):
+    return (int(round(r.get("clicks", 0))), int(round(r.get("impressions", 0))),
+            round(r.get("ctr", 0) * 100, 1), round(r.get("position", 0), 1))
+
+
+def fetch_gsc_site(svc, cfg, cur, prev, targets):
+    """targets = {"QA": [...], "SA": [...], "AE": [...]} — the ONLY keywords tracked.
+    Keywords with no Search Console impressions come back as 'not ranking' (pos=None, 0/0)."""
     site = cfg["gsc"]
     cur_totals = agg_totals(gsc_query(svc, site, cur[0], cur[1], row_limit=1))
     prev_totals = agg_totals(gsc_query(svc, site, prev[0], prev[1], row_limit=1))
-    queries = top_list(gsc_query(svc, site, cur[0], cur[1], dimensions=["query"]), "query")
     pages = top_list(gsc_query(svc, site, cur[0], cur[1], dimensions=["page"]), "page")
 
+    # Per-property "Keywords" table: the union of the site's targets (deduped, order kept),
+    # each with its OVERALL (all-country) Search Console metrics.
+    overall = query_lookup(gsc_query(svc, site, cur[0], cur[1], dimensions=["query"], row_limit=5000))
+    seen, union = set(), []
+    for m in ("QA", "SA", "AE"):
+        for kw in targets.get(m, []):
+            if norm(kw) not in seen:
+                seen.add(norm(kw))
+                union.append(kw)
+    queries = []
+    for kw in union:
+        r = overall.get(norm(kw))
+        if r:
+            c, i, ct, p = kw_metrics(r)
+            queries.append([kw, c, i, ct, p])
+        else:
+            queries.append([kw, 0, 0, 0.0, None])  # tracked but not ranking
+
+    # Per-country SERP list: that market's targeted keywords with in-market metrics.
     rank = {}
     for m, code in MARKETS.items():
         totals = agg_totals(gsc_query(svc, site, cur[0], cur[1], country=code, row_limit=1))
-        kw = top_list(gsc_query(svc, site, cur[0], cur[1], dimensions=["query"], country=code), "kw")
+        clookup = query_lookup(
+            gsc_query(svc, site, cur[0], cur[1], dimensions=["query"], country=code, row_limit=5000))
+        kwlist = []
+        for kw in targets.get(m, []):
+            r = clookup.get(norm(kw))
+            if r:
+                c, i, ct, p = kw_metrics(r)
+                kwlist.append([kw, p, c, i])
+            else:
+                kwlist.append([kw, None, 0, 0])  # tracked but not ranking in this market
         if totals is None:
             totals = {"clicks": 0, "impr": 0, "ctr": 0.0, "pos": None}
-        rank[m] = {**totals, "kw": kw}
+        rank[m] = {**totals, "kw": kwlist}
 
     return {
         "cur": cur_totals or {"clicks": 0, "impr": 0, "ctr": 0.0, "pos": 0.0},
@@ -236,6 +287,10 @@ def main():
     old_rankhist = existing.get("RANKHIST", {})
     backlinks = existing.get("BACKLINKS", {})
 
+    # Targeted keyword list — the ONLY keywords tracked/shown on the dashboard.
+    with open(KEYWORDS_PATH, encoding="utf-8") as f:
+        keywords = json.load(f)
+
     SITES, RANK, RANKHIST = {}, {}, {}
 
     for cfg in SITES_CONFIG:
@@ -244,7 +299,8 @@ def main():
 
         # --- Search Console (critical for this site) ---
         try:
-            gsc_data, rank, gcc_pos = fetch_gsc_site(gsc, cfg, (cur_s, cur_e), (prev_s, prev_e))
+            targets = keywords.get(key, {"QA": [], "SA": [], "AE": []})
+            gsc_data, rank, gcc_pos = fetch_gsc_site(gsc, cfg, (cur_s, cur_e), (prev_s, prev_e), targets)
             RANK[key] = rank
             rh = old_rankhist.get(key, {})
             new_rh = {m: append_history(rh.get(m, []), date_str, rank[m]["pos"]) for m in MARKETS}
