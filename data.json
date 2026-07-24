@@ -18,11 +18,53 @@
    },
    "queries": [
     [
-     "compass arabia",
-     16,
-     83,
-     19.3,
-     2.9
+     "surveying services",
+     0,
+     8,
+     0,
+     2.2
+    ],
+    [
+     "site survey services",
+     0,
+     6,
+     0,
+     3
+    ],
+    [
+     "3D laser Scanning Services",
+     2,
+     22,
+     9.1,
+     9.4
+    ],
+    [
+     "Geographic Information System",
+     0,
+     0,
+     0.0,
+     null
+    ],
+    [
+     "ground penetrating radar",
+     0,
+     0,
+     0.0,
+     null
+    ],
+    [
+     "survey companies in Qatar",
+     2,
+     23,
+     8.7,
+     2.2
+    ],
+    [
+     "land survey in Qatar",
+     0,
+     0,
+     0.0,
+     null
     ],
     [
      "utility survey services",
@@ -32,60 +74,109 @@
      14.2
     ],
     [
-     "3d laser scanning services",
-     2,
-     22,
-     9.1,
-     9.4
+     "geospatial information systems",
+     0,
+     0,
+     0.0,
+     null
     ],
     [
-     "compass contracting",
-     2,
-     16,
-     12.5,
-     8.2
-    ],
-    [
-     "compass saudi arabia",
-     2,
-     36,
-     5.6,
-     2.3
-    ],
-    [
-     "survey companies in qatar",
-     2,
-     23,
-     8.7,
+     "land surveyor",
+     0,
+     20,
+     0,
      2.2
     ],
     [
-     "compass group recruitment contact qatar",
+     "survey surveyor",
+     0,
+     0,
+     0.0,
+     null
+    ],
+    [
+     "property surveyor",
+     0,
+     0,
+     0.0,
+     null
+    ],
+    [
+     "boundary survey",
+     0,
+     0,
+     0.0,
+     null
+    ],
+    [
+     "surveyor engineer",
+     0,
      1,
+     0,
+     2
+    ],
+    [
+     "topographical survey",
+     0,
+     3,
+     0,
+     9.3
+    ],
+    [
+     "site survey",
+     0,
      2,
-     50.0,
-     6
+     0,
+     2
     ],
     [
-     "compass survey",
-     1,
-     5,
-     20.0,
-     11
+     "bim modeling",
+     0,
+     0,
+     0.0,
+     null
     ],
     [
-     "compass surveying",
+     "surveying engineering",
+     0,
      1,
-     7,
-     14.3,
-     3.6
+     0,
+     2
     ],
     [
-     "construction survey",
+     "survey companies in saudi arabia",
+     0,
+     0,
+     0.0,
+     null
+    ],
+    [
+     "surveying company",
+     0,
      1,
-     1,
-     100,
-     4
+     0,
+     1
+    ],
+    [
+     "survey company in dubai",
+     0,
+     0,
+     0.0,
+     null
+    ],
+    [
+     "drone survey",
+     0,
+     0,
+     0.0,
+     null
+    ],
+    [
+     "land surveyor dubai",
+     0,
+     0,
+     0.0,
+     null
     ]
    ],
    "pages": [
@@ -270,53 +361,18 @@
    },
    "queries": [
     [
-     "compass facility management",
-     22,
-     134,
-     16.4,
-     5.2
-    ],
-    [
-     "facility management companies in qatar",
+     "facility management companies in Qatar",
      17,
      196,
      8.7,
      6.9
     ],
     [
-     "compass cleaning company",
-     5,
-     30,
-     16.7,
-     2.6
-    ],
-    [
-     "top facility management companies in qatar",
-     5,
-     38,
-     13.2,
-     1.9
-    ],
-    [
-     "facilities management company in qatar",
-     3,
-     9,
-     33.3,
-     5
-    ],
-    [
-     "qatar facility management company",
-     3,
-     19,
-     15.8,
-     12.7
-    ],
-    [
-     "compass fm",
-     2,
-     13,
-     15.4,
-     14
+     "cleaning companies in Qatar",
+     0,
+     0,
+     0.0,
+     null
     ],
     [
      "facility management",
@@ -326,18 +382,158 @@
      26.6
     ],
     [
-     "integrated facility management companies",
-     2,
-     15,
-     13.3,
-     4.6
+     "ac services in Qatar",
+     0,
+     0,
+     0.0,
+     null
     ],
     [
-     "best companies in qatar",
+     "list of facilities management companies in qatar",
+     0,
+     7,
+     0,
+     23.7
+    ],
+    [
+     "cleaning company in qatar",
+     0,
+     0,
+     0.0,
+     null
+    ],
+    [
+     "facility management services",
+     0,
      1,
+     0,
+     3
+    ],
+    [
+     "facilities management and maintenance company",
+     0,
+     0,
+     0.0,
+     null
+    ],
+    [
+     "facility management qatar",
+     0,
+     19,
+     0,
+     36.1
+    ],
+    [
+     "integrated facility management",
+     0,
+     0,
+     0.0,
+     null
+    ],
+    [
+     "cleaning services",
+     0,
+     0,
+     0.0,
+     null
+    ],
+    [
+     "ac repair",
+     0,
+     0,
+     0.0,
+     null
+    ],
+    [
+     "facilities management",
+     0,
+     4,
+     0,
+     32.8
+    ],
+    [
+     "facilities management companies",
+     0,
      1,
-     100,
-     21
+     0,
+     50
+    ],
+    [
+     "cleaning services Riyadh",
+     0,
+     0,
+     0.0,
+     null
+    ],
+    [
+     "duct cleaning",
+     0,
+     1,
+     0,
+     71
+    ],
+    [
+     "compass cleaning company",
+     5,
+     30,
+     16.7,
+     2.6
+    ],
+    [
+     "company maintenance",
+     0,
+     0,
+     0.0,
+     null
+    ],
+    [
+     "building maintenance",
+     0,
+     0,
+     0.0,
+     null
+    ],
+    [
+     "building maintenance work",
+     0,
+     0,
+     0.0,
+     null
+    ],
+    [
+     "hvac maintenance",
+     0,
+     1,
+     0,
+     15
+    ],
+    [
+     "emergency air conditioner repair",
+     0,
+     0,
+     0.0,
+     null
+    ],
+    [
+     "electrical services",
+     0,
+     0,
+     0.0,
+     null
+    ],
+    [
+     "electrical services in uae",
+     0,
+     0,
+     0.0,
+     null
+    ],
+    [
+     "cleaning services in uae",
+     0,
+     0,
+     0.0,
+     null
     ]
    ],
    "pages": [
@@ -517,11 +713,39 @@
    },
    "queries": [
     [
-     "concrete repair",
-     1,
-     7,
-     14.3,
-     19.7
+     "waterproofing companies in qatar",
+     0,
+     3,
+     0,
+     7.7
+    ],
+    [
+     "pu foam waterproofing",
+     0,
+     27,
+     0,
+     2.8
+    ],
+    [
+     "roof waterproofing in gcc",
+     0,
+     0,
+     0.0,
+     null
+    ],
+    [
+     "waterproofing company",
+     0,
+     0,
+     0.0,
+     null
+    ],
+    [
+     "epoxy flooring qatar",
+     0,
+     0,
+     0.0,
+     null
     ],
     [
      "polyurethane foam waterproofing",
@@ -531,39 +755,46 @@
      1.7
     ],
     [
-     "cementatious waterproofing",
-     0,
+     "concrete repair",
      1,
-     0,
-     10
+     7,
+     14.3,
+     19.7
     ],
     [
-     "cementious waterproofing",
+     "waterproofing contractors",
      0,
-     1,
      0,
-     1
+     0.0,
+     null
     ],
     [
-     "cementitious",
+     "waterproofing services",
      0,
      1,
      0,
-     21
+     37
     ],
     [
-     "cementitious concrete",
+     "crystalline waterproofing",
      0,
-     1,
      0,
-     11
+     0.0,
+     null
     ],
     [
-     "cementitious water proofing",
+     "concrete roof waterproofing",
      0,
-     1,
      0,
-     3
+     0.0,
+     null
+    ],
+    [
+     "roof waterproofing",
+     0,
+     0,
+     0.0,
+     null
     ],
     [
      "cementitious waterproofing",
@@ -573,18 +804,53 @@
      30.6
     ],
     [
-     "cementitious waterproofing application",
+     "waterproofing paint",
      0,
-     1,
      0,
-     52
+     0.0,
+     null
     ],
     [
-     "cementitious waterproofing materials",
+     "polyurethane foam",
      0,
-     1,
      0,
-     75
+     0.0,
+     null
+    ],
+    [
+     "waterproofing membrane",
+     0,
+     0,
+     0.0,
+     null
+    ],
+    [
+     "epoxy floor coating",
+     0,
+     0,
+     0.0,
+     null
+    ],
+    [
+     "waterproofing coating",
+     0,
+     0,
+     0.0,
+     null
+    ],
+    [
+     "pu foam",
+     0,
+     0,
+     0.0,
+     null
+    ],
+    [
+     "waterproofing companies in uae",
+     0,
+     0,
+     0.0,
+     null
     ]
    ],
    "pages": [
@@ -769,74 +1035,165 @@
    },
    "queries": [
     [
-     "compass logistics",
-     3,
-     101,
-     3.0,
-     9.8
+     "shipping companies in Qatar",
+     0,
+     0,
+     0.0,
+     null
     ],
     [
-     "logistics systems qatar",
+     "moving company Qatar",
+     0,
+     0,
+     0.0,
+     null
+    ],
+    [
+     "moving services",
+     0,
+     0,
+     0.0,
+     null
+    ],
+    [
+     "customs clearance",
+     0,
+     0,
+     0.0,
+     null
+    ],
+    [
+     "logistics provider",
+     0,
+     2,
+     0,
+     9.5
+    ],
+    [
+     "freight forwarding",
+     0,
+     0,
+     0.0,
+     null
+    ],
+    [
+     "sea freight Qatar",
+     0,
+     0,
+     0.0,
+     null
+    ],
+    [
+     "transport management system",
+     0,
+     0,
+     0.0,
+     null
+    ],
+    [
+     "logistics company",
+     0,
+     0,
+     0.0,
+     null
+    ],
+    [
+     "qatar customs",
+     0,
+     0,
+     0.0,
+     null
+    ],
+    [
+     "cargo services Qatar",
+     0,
+     0,
+     0.0,
+     null
+    ],
+    [
+     "supply chain management",
+     0,
+     0,
+     0.0,
+     null
+    ],
+    [
+     "logistics systems Qatar",
      1,
      6,
      16.7,
      26.7
     ],
     [
-     "\"convoy\" \"freight\" -site:reddit.com -site:twitter.com -site:x.com -site:wykop.pl -site:tripadvisor.com -site:youtube.com -site:yelp.com -site:booking.com -site:facebook.com -site:instagram.com -site:tiktok.com",
+     "shipping service companies",
      0,
-     2,
      0,
-     3
+     0.0,
+     null
     ],
     [
-     "\"convoy\" \"load\" -site:reddit.com -site:twitter.com -site:x.com -site:wykop.pl -site:tripadvisor.com -site:youtube.com -site:yelp.com -site:booking.com -site:facebook.com -site:instagram.com -site:tiktok.com",
+     "cargo freight forwarders",
      0,
-     2,
      0,
-     1
+     0.0,
+     null
     ],
     [
-     "\"convoy\" \"shipment\" -site:reddit.com -site:twitter.com -site:x.com -site:wykop.pl -site:tripadvisor.com -site:youtube.com -site:yelp.com -site:booking.com -site:facebook.com -site:instagram.com -site:tiktok.com",
+     "fast forwarder logistics",
      0,
-     3,
      0,
-     7
+     0.0,
+     null
     ],
     [
-     "\"convoy\" \"transport\" -site:reddit.com -site:twitter.com -site:x.com -site:wykop.pl -site:tripadvisor.com -site:youtube.com -site:yelp.com -site:booking.com -site:facebook.com -site:instagram.com -site:tiktok.com",
+     "ksa shipping companies",
      0,
-     1,
      0,
-     7
+     0.0,
+     null
     ],
     [
-     "\"supply chain visibility\" -site:reddit.com -site:twitter.com -site:x.com -site:wykop.pl -site:tripadvisor.com -site:youtube.com -site:yelp.com -site:booking.com -site:facebook.com -site:instagram.com -site:tiktok.com",
+     "moving companies",
      0,
-     5,
      0,
-     4.8
+     0.0,
+     null
     ],
     [
-     "\"time-critical\" logistics or freight or cargo or sameday or airfreight or supplychain or supply or chain",
+     "supply chain activities",
      0,
-     1,
      0,
-     82
+     0.0,
+     null
     ],
     [
-     "(\"cold chain\" or \"temperature-controlled\" or \"refrigerated transport\" or \"frozen logistics\") and (\"acquisition\" or \"merger\" or \"m&a\" or \"buyout\" or \"consolidation\" or \"takeover\") and (\"europe\" or \"eu\" or \"france\" or \"spain\" or \"italy\" or \"united kingdom\" or \"netherlands\" or \"belgium\" or \"portugal\" or \"switzerland\" or \"germany\") not (\"pharma\" or \"pharmaceutical\" or \"vaccine\")",
+     "freight forwarding companies",
      0,
-     1,
      0,
-     6
+     0.0,
+     null
     ],
     [
-     "benefits of freight forwarder",
+     "logistic shipping company",
      0,
-     1,
      0,
-     18
+     0.0,
+     null
+    ],
+    [
+     "cargo forwarding services",
+     0,
+     0,
+     0.0,
+     null
+    ],
+    [
+     "packers and movers",
+     0,
+     0,
+     0.0,
+     null
     ]
    ],
    "pages": [
@@ -1011,39 +1368,74 @@
    },
    "queries": [
     [
-     "local seo services",
+     "marketing agency digital",
      0,
-     6,
      0,
-     93
+     0.0,
+     null
     ],
     [
-     "ramadan qatar marketing moment",
+     "digital marketing agency",
      0,
-     6,
      0,
-     7.2
+     0.0,
+     null
     ],
     [
-     "social media marketing in qatar",
+     "digital marketing agency in Qatar",
      0,
-     1,
      0,
-     17
+     0.0,
+     null
     ],
     [
-     "sunset digital gmbh",
+     "social media marketing",
      0,
-     2,
      0,
-     42
+     0.0,
+     null
     ],
     [
-     "sunset marketing",
+     "social media marketing Qatar",
      0,
-     3,
      0,
-     21
+     0.0,
+     null
+    ],
+    [
+     "advertising agency in qatar",
+     0,
+     0,
+     0.0,
+     null
+    ],
+    [
+     "branding agency Qatar",
+     0,
+     0,
+     0.0,
+     null
+    ],
+    [
+     "digital marketing and advertising agency",
+     0,
+     0,
+     0.0,
+     null
+    ],
+    [
+     "digital marketing ads agency",
+     0,
+     0,
+     0.0,
+     null
+    ],
+    [
+     "advertising agencies in doha",
+     0,
+     0,
+     0.0,
+     null
     ],
     [
      "sunset media",
@@ -1053,11 +1445,88 @@
      11.5
     ],
     [
-     "sunset media festival",
+     "Content Creation",
      0,
-     2,
      0,
-     31
+     0.0,
+     null
+    ],
+    [
+     "web development",
+     0,
+     0,
+     0.0,
+     null
+    ],
+    [
+     "digital marketers",
+     0,
+     0,
+     0.0,
+     null
+    ],
+    [
+     "marketing through social media",
+     0,
+     0,
+     0.0,
+     null
+    ],
+    [
+     "facebook advertising management",
+     0,
+     0,
+     0.0,
+     null
+    ],
+    [
+     "social media marketing agency",
+     0,
+     0,
+     0.0,
+     null
+    ],
+    [
+     "twitter advertising",
+     0,
+     0,
+     0.0,
+     null
+    ],
+    [
+     "digital media advertising companies",
+     0,
+     0,
+     0.0,
+     null
+    ],
+    [
+     "facebook ads manager",
+     0,
+     0,
+     0.0,
+     null
+    ],
+    [
+     "online marketing",
+     0,
+     0,
+     0.0,
+     null
+    ],
+    [
+     "digital marketing company",
+     0,
+     0,
+     0.0,
+     null
+    ],
+    [
+     "digital media Company",
+     0,
+     0,
+     0.0,
+     null
     ]
    ],
    "pages": [
@@ -1227,74 +1696,137 @@
    },
    "queries": [
     [
-     "compass it solutions",
-     4,
-     49,
-     8.2,
-     9.5
+     "cloud offerings",
+     0,
+     0,
+     0.0,
+     null
     ],
     [
-     "compass it",
-     1,
-     16,
-     6.2,
-     15.4
+     "cloud computing",
+     0,
+     0,
+     0.0,
+     null
     ],
     [
-     "compass-it",
-     1,
-     1,
-     100,
-     1
+     "ai and cloud",
+     0,
+     0,
+     0.0,
+     null
     ],
     [
-     "compassit",
-     1,
-     8,
-     12.5,
-     5.6
+     "cloud artificial intelligence",
+     0,
+     0,
+     0.0,
+     null
     ],
     [
-     "it solution company near me",
-     1,
-     1,
-     100,
-     1
+     "qatar artificial intelligence",
+     0,
+     0,
+     0.0,
+     null
     ],
     [
-     "cloud computing partner in qatar",
+     "information technology services",
      0,
-     1,
      0,
-     64
+     0.0,
+     null
     ],
     [
-     "cloud security consulting services company in doha",
+     "enterprise technology services",
      0,
-     2,
      0,
-     31
+     0.0,
+     null
     ],
     [
-     "compas it",
+     "it services companies in qatar",
      0,
-     2,
      0,
-     11.5
+     0.0,
+     null
     ],
     [
-     "compas qatar",
+     "cyber security",
      0,
-     1,
      0,
-     23
+     0.0,
+     null
     ],
     [
-     "compass it solutions and services pvt.ltd",
+     "managed it services",
      0,
-     1,
      0,
-     3
+     0.0,
+     null
+    ],
+    [
+     "data security",
+     0,
+     0,
+     0.0,
+     null
+    ],
+    [
+     "information technology security",
+     0,
+     0,
+     0.0,
+     null
+    ],
+    [
+     "artificial intelligence",
+     0,
+     0,
+     0.0,
+     null
+    ],
+    [
+     "saudi it companies",
+     0,
+     0,
+     0.0,
+     null
+    ],
+    [
+     "technology saudi arabia",
+     0,
+     0,
+     0.0,
+     null
+    ],
+    [
+     "digital transformation",
+     0,
+     0,
+     0.0,
+     null
+    ],
+    [
+     "network security",
+     0,
+     0,
+     0.0,
+     null
+    ],
+    [
+     "it consultancy in dubai",
+     0,
+     0,
+     0.0,
+     null
+    ],
+    [
+     "cloud solutions",
+     0,
+     0,
+     0.0,
+     null
     ]
    ],
    "pages": [
@@ -1822,10 +2354,46 @@
     "pos": 6.9,
     "kw": [
      [
-      "compass arabia",
-      1,
-      5,
+      "surveying services",
+      2.2,
+      0,
       8
+     ],
+     [
+      "site survey services",
+      3,
+      0,
+      6
+     ],
+     [
+      "3D laser Scanning Services",
+      14,
+      0,
+      5
+     ],
+     [
+      "Geographic Information System",
+      null,
+      0,
+      0
+     ],
+     [
+      "ground penetrating radar",
+      null,
+      0,
+      0
+     ],
+     [
+      "survey companies in Qatar",
+      2.2,
+      1,
+      22
+     ],
+     [
+      "land survey in Qatar",
+      null,
+      0,
+      0
      ],
      [
       "utility survey services",
@@ -1834,52 +2402,34 @@
       4
      ],
      [
-      "compass contracting",
-      4.7,
-      1,
-      3
-     ],
-     [
-      "compass survey",
-      2,
-      1,
-      2
-     ],
-     [
-      "compass surveying",
-      1,
-      1,
-      4
-     ],
-     [
-      "land survey companies near me",
-      1,
-      1,
-      3
-     ],
-     [
-      "land surveying companies",
-      1,
-      1,
-      1
-     ],
-     [
-      "survey companies in qatar",
-      2.2,
-      1,
-      22
-     ],
-     [
-      "3d laser scanning",
-      10,
+      "geospatial information systems",
+      null,
       0,
-      2
+      0
      ],
      [
-      "3d laser scanning services",
-      14,
+      "land surveyor",
+      2.3,
       0,
-      5
+      19
+     ],
+     [
+      "survey surveyor",
+      null,
+      0,
+      0
+     ],
+     [
+      "property surveyor",
+      null,
+      0,
+      0
+     ],
+     [
+      "boundary survey",
+      null,
+      0,
+      0
      ]
     ]
    },
@@ -1890,16 +2440,46 @@
     "pos": 8.0,
     "kw": [
      [
-      "compass arabia",
-      4.4,
-      4,
-      40
+      "land surveyor",
+      null,
+      0,
+      0
      ],
      [
-      "compass contracting",
-      9,
-      1,
-      13
+      "surveyor engineer",
+      null,
+      0,
+      0
+     ],
+     [
+      "topographical survey",
+      null,
+      0,
+      0
+     ],
+     [
+      "site survey",
+      null,
+      0,
+      0
+     ],
+     [
+      "bim modeling",
+      null,
+      0,
+      0
+     ],
+     [
+      "surveying engineering",
+      null,
+      0,
+      0
+     ],
+     [
+      "survey companies in saudi arabia",
+      null,
+      0,
+      0
      ],
      [
       "utility survey services",
@@ -1908,46 +2488,16 @@
       2
      ],
      [
-      "3d building scanning services",
-      16,
+      "site survey services",
+      null,
       0,
-      1
+      0
      ],
      [
-      "3d laser scanning services",
-      11.7,
+      "surveying services",
+      null,
       0,
-      3
-     ],
-     [
-      "aerial surveying and mapping saudi",
-      16.8,
-      0,
-      11
-     ],
-     [
-      "arabia contracting company",
-      3,
-      0,
-      1
-     ],
-     [
-      "arabic compass",
-      35,
-      0,
-      1
-     ],
-     [
-      "best contracting companies",
-      8,
-      0,
-      1
-     ],
-     [
-      "best contracting companies in saudi arabia",
-      12,
-      0,
-      2
+      0
      ]
     ]
    },
@@ -1958,22 +2508,64 @@
     "pos": 20.3,
     "kw": [
      [
-      "3d laser scanning services",
+      "surveying services",
+      null,
+      0,
+      0
+     ],
+     [
+      "land surveyor",
+      null,
+      0,
+      0
+     ],
+     [
+      "surveyor engineer",
+      null,
+      0,
+      0
+     ],
+     [
+      "surveying company",
+      null,
+      0,
+      0
+     ],
+     [
+      "topographical survey",
+      null,
+      0,
+      0
+     ],
+     [
+      "site survey",
+      null,
+      0,
+      0
+     ],
+     [
+      "survey company in dubai",
+      null,
+      0,
+      0
+     ],
+     [
+      "bim modeling",
+      null,
+      0,
+      0
+     ],
+     [
+      "drone survey",
+      null,
+      0,
+      0
+     ],
+     [
+      "3D laser Scanning Services",
       7.2,
       1,
       12
-     ],
-     [
-      "construction survey",
-      4,
-      1,
-      1
-     ],
-     [
-      "road construction companies in qatar",
-      1,
-      1,
-      1
      ],
      [
       "utility survey services",
@@ -1982,40 +2574,10 @@
       3
      ],
      [
-      "3d laser scan company",
-      43,
+      "land surveyor dubai",
+      null,
       0,
-      1
-     ],
-     [
-      "3d laser scanning",
-      22.6,
-      0,
-      8
-     ],
-     [
-      "3d laser scanning & survey experts uae",
-      6.6,
-      0,
-      7
-     ],
-     [
-      "3d laser scanning companies",
-      7.5,
-      0,
-      2
-     ],
-     [
-      "3d laser scanning companies in uae",
-      9.6,
-      0,
-      5
-     ],
-     [
-      "3d laser scanning company",
-      7,
-      0,
-      1
+      0
      ]
     ]
    }
@@ -2028,64 +2590,64 @@
     "pos": 10.1,
     "kw": [
      [
-      "compass facility management",
-      1,
-      18,
-      52
-     ],
-     [
-      "facility management companies in qatar",
+      "facility management companies in Qatar",
       6.5,
       10,
       166
      ],
      [
-      "top facility management companies in qatar",
-      1.8,
-      5,
-      33
+      "cleaning companies in Qatar",
+      null,
+      0,
+      0
      ],
      [
-      "compass cleaning company",
-      2.5,
-      3,
-      25
+      "facility management",
+      29.9,
+      1,
+      31
      ],
      [
-      "facilities management company in qatar",
-      5.9,
-      3,
+      "ac services in Qatar",
+      null,
+      0,
+      0
+     ],
+     [
+      "list of facilities management companies in qatar",
+      23.7,
+      0,
       7
      ],
      [
-      "compass fm",
-      1,
-      2,
-      3
+      "cleaning company in qatar",
+      null,
+      0,
+      0
      ],
      [
-      "best companies in qatar",
-      21,
-      1,
+      "facility management services",
+      3,
+      0,
       1
      ],
      [
-      "best security guard company in qatar",
-      1,
-      1,
-      2
+      "facilities management and maintenance company",
+      null,
+      0,
+      0
      ],
      [
-      "companies in lusail qatar",
-      1,
-      1,
-      1
+      "facility management qatar",
+      37.2,
+      0,
+      17
      ],
      [
-      "compass facility",
-      1,
-      1,
-      1
+      "integrated facility management",
+      null,
+      0,
+      0
      ]
     ]
    },
@@ -2096,58 +2658,58 @@
     "pos": 6.6,
     "kw": [
      [
+      "cleaning services",
+      null,
+      0,
+      0
+     ],
+     [
+      "ac repair",
+      null,
+      0,
+      0
+     ],
+     [
+      "facilities management",
+      null,
+      0,
+      0
+     ],
+     [
+      "facilities management companies",
+      null,
+      0,
+      0
+     ],
+     [
+      "cleaning services Riyadh",
+      null,
+      0,
+      0
+     ],
+     [
+      "duct cleaning",
+      null,
+      0,
+      0
+     ],
+     [
       "compass cleaning company",
       4,
       1,
       2
      ],
      [
-      "compass facilities management",
-      1,
-      1,
-      1
-     ],
-     [
-      "compass facility management",
-      1.5,
-      1,
-      2
-     ],
-     [
-      "facility management companies in qatar",
-      18,
-      1,
-      2
-     ],
-     [
-      "compass air conditioning",
-      5,
+      "company maintenance",
+      null,
       0,
-      1
+      0
      ],
      [
-      "compass group facility management",
-      5,
+      "facility management services",
+      null,
       0,
-      1
-     ],
-     [
-      "facilities management companies in qatar",
-      6,
-      0,
-      1
-     ],
-     [
-      "large facilities management companies in gcc",
-      13,
-      0,
-      2
-     ],
-     [
-      "tree removal service",
-      1,
-      0,
-      1
+      0
      ]
     ]
    },
@@ -2158,16 +2720,52 @@
     "pos": 7.2,
     "kw": [
      [
-      "compass facility management",
-      1.1,
-      2,
-      8
+      "facility management",
+      6.2,
+      1,
+      5
      ],
      [
-      "integrated facility management companies",
-      1,
-      2,
-      12
+      "facility management services",
+      null,
+      0,
+      0
+     ],
+     [
+      "building maintenance",
+      null,
+      0,
+      0
+     ],
+     [
+      "building maintenance work",
+      null,
+      0,
+      0
+     ],
+     [
+      "hvac maintenance",
+      null,
+      0,
+      0
+     ],
+     [
+      "emergency air conditioner repair",
+      null,
+      0,
+      0
+     ],
+     [
+      "electrical services",
+      null,
+      0,
+      0
+     ],
+     [
+      "cleaning services",
+      null,
+      0,
+      0
      ],
      [
       "compass cleaning company",
@@ -2176,46 +2774,16 @@
       2
      ],
      [
-      "compass landscaping",
-      2,
-      1,
-      1
-     ],
-     [
-      "facility management",
-      6.2,
-      1,
-      5
-     ],
-     [
-      "facility management companies",
-      16,
-      1,
-      4
-     ],
-     [
-      "facility management companies in qatar",
-      1,
-      1,
-      1
-     ],
-     [
-      "qatar facility management company",
-      1,
-      1,
-      1
-     ],
-     [
-      "cleaning facility management companies",
-      21,
+      "electrical services in uae",
+      null,
       0,
-      1
+      0
      ],
      [
-      "commercial facility management uae",
-      2,
+      "cleaning services in uae",
+      null,
       0,
-      2
+      0
      ]
     ]
    }
@@ -2228,10 +2796,34 @@
     "pos": 9.1,
     "kw": [
      [
-      "concrete repair",
-      19.7,
-      1,
-      7
+      "waterproofing companies in qatar",
+      7.7,
+      0,
+      3
+     ],
+     [
+      "pu foam waterproofing",
+      3.3,
+      0,
+      16
+     ],
+     [
+      "roof waterproofing in gcc",
+      null,
+      0,
+      0
+     ],
+     [
+      "waterproofing company",
+      null,
+      0,
+      0
+     ],
+     [
+      "epoxy flooring qatar",
+      null,
+      0,
+      0
      ],
      [
       "polyurethane foam waterproofing",
@@ -2240,52 +2832,34 @@
       3
      ],
      [
-      "cementatious waterproofing",
-      10,
-      0,
-      1
+      "concrete repair",
+      19.7,
+      1,
+      7
      ],
      [
-      "cementitious",
-      21,
+      "waterproofing contractors",
+      null,
       0,
-      1
+      0
      ],
      [
-      "cementitious concrete",
-      11,
+      "waterproofing services",
+      null,
       0,
-      1
+      0
      ],
      [
-      "cementitious water proofing",
-      3,
+      "crystalline waterproofing",
+      null,
       0,
-      1
+      0
      ],
      [
-      "cementitious waterproofing",
-      13.2,
+      "concrete roof waterproofing",
+      null,
       0,
-      17
-     ],
-     [
-      "combo roof waterproofing",
-      8,
-      0,
-      1
-     ],
-     [
-      "complete waterproofing solutions",
-      26,
-      0,
-      1
-     ],
-     [
-      "concrete fix",
-      9,
-      0,
-      1
+      0
      ]
     ]
    },
@@ -2296,16 +2870,64 @@
     "pos": 7.3,
     "kw": [
      [
-      "polyurethane foam waterproofing",
-      1,
+      "roof waterproofing",
+      null,
       0,
-      2
+      0
      ],
      [
-      "waterproofing company in saudi arabia",
-      6,
+      "cementitious waterproofing",
+      null,
       0,
-      1
+      0
+     ],
+     [
+      "waterproofing paint",
+      null,
+      0,
+      0
+     ],
+     [
+      "polyurethane foam",
+      null,
+      0,
+      0
+     ],
+     [
+      "roof waterproofing in gcc",
+      null,
+      0,
+      0
+     ],
+     [
+      "waterproofing company",
+      null,
+      0,
+      0
+     ],
+     [
+      "waterproofing membrane",
+      null,
+      0,
+      0
+     ],
+     [
+      "waterproofing contractors",
+      null,
+      0,
+      0
+     ],
+     [
+      "pu foam waterproofing",
+      null,
+      0,
+      0
+     ],
+     [
+      "waterproofing services",
+      null,
+      0,
+      0
      ]
     ]
    },
@@ -2316,64 +2938,64 @@
     "pos": 9.4,
     "kw": [
      [
+      "roof waterproofing",
+      null,
+      0,
+      0
+     ],
+     [
       "cementitious waterproofing",
       52.2,
       0,
       8
      ],
      [
-      "cementitious waterproofing materials",
-      75,
+      "epoxy floor coating",
+      null,
       0,
-      1
+      0
      ],
      [
-      "complete waterproofing solutions",
-      31.1,
+      "waterproofing paint",
+      null,
       0,
-      15
+      0
      ],
      [
-      "concrete spalling repair",
-      1,
+      "waterproofing coating",
+      null,
       0,
-      1
+      0
      ],
      [
-      "importance of waterproofing in the gcc",
-      37,
+      "polyurethane foam",
+      null,
       0,
-      9
+      0
      ],
      [
-      "paint waterproofing",
-      14,
+      "pu foam",
+      null,
       0,
-      1
+      0
      ],
      [
-      "polyurea suppliers",
-      2,
+      "concrete repair",
+      null,
       0,
-      1
+      0
      ],
      [
-      "pu foam waterproofing",
-      2,
+      "waterproofing companies in uae",
+      null,
       0,
-      6
+      0
      ],
      [
-      "waterproofing cementitious",
-      40,
+      "roof waterproofing in gcc",
+      null,
       0,
-      1
-     ],
-     [
-      "waterproofing in dubai",
-      1,
-      0,
-      1
+      0
      ]
     ]
    }
@@ -2386,64 +3008,82 @@
     "pos": 14.7,
     "kw": [
      [
-      "logistics systems qatar",
-      26.7,
-      1,
-      6
+      "shipping companies in Qatar",
+      null,
+      0,
+      0
      ],
      [
-      "commercial goods",
-      6,
+      "moving company Qatar",
+      null,
       0,
-      1
+      0
      ],
      [
-      "compass cargo",
-      1,
+      "moving services",
+      null,
       0,
-      1
+      0
      ],
      [
-      "compass company qatar",
-      40,
+      "customs clearance",
+      null,
       0,
-      1
-     ],
-     [
-      "compass company saudi arabia",
-      11,
-      0,
-      1
-     ],
-     [
-      "compass lines tracking",
-      7,
-      0,
-      1
-     ],
-     [
-      "compass logistics",
-      5,
-      0,
-      1
-     ],
-     [
-      "compass saudi arabia",
-      8,
-      0,
-      1
-     ],
-     [
-      "logistics company setup qatar",
-      37,
-      0,
-      1
+      0
      ],
      [
       "logistics provider",
       9.5,
       0,
       2
+     ],
+     [
+      "freight forwarding",
+      null,
+      0,
+      0
+     ],
+     [
+      "sea freight Qatar",
+      null,
+      0,
+      0
+     ],
+     [
+      "transport management system",
+      null,
+      0,
+      0
+     ],
+     [
+      "logistics company",
+      null,
+      0,
+      0
+     ],
+     [
+      "qatar customs",
+      null,
+      0,
+      0
+     ],
+     [
+      "cargo services Qatar",
+      null,
+      0,
+      0
+     ],
+     [
+      "supply chain management",
+      null,
+      0,
+      0
+     ],
+     [
+      "logistics systems Qatar",
+      26.7,
+      1,
+      6
      ]
     ]
    },
@@ -2454,64 +3094,76 @@
     "pos": 10.5,
     "kw": [
      [
-      "compass logistics",
-      4.3,
-      1,
-      37
+      "logistics provider",
+      null,
+      0,
+      0
      ],
      [
-      "compas storage",
-      25,
+      "freight forwarding",
+      null,
       0,
-      1
+      0
      ],
      [
-      "compass",
-      1,
+      "shipping service companies",
+      null,
       0,
-      1
+      0
      ],
      [
-      "compass freight forwarding",
-      5,
+      "cargo freight forwarders",
+      null,
       0,
-      3
+      0
      ],
      [
-      "compass global logistics",
-      6,
+      "fast forwarder logistics",
+      null,
       0,
-      2
+      0
      ],
      [
-      "compass international logistics",
-      6,
+      "ksa shipping companies",
+      null,
       0,
-      1
+      0
      ],
      [
-      "compass lines tracking",
-      10,
+      "customs clearance",
+      null,
       0,
-      3
+      0
      ],
      [
-      "compass logistics dubai",
-      7,
+      "transport management system",
+      null,
       0,
-      1
+      0
      ],
      [
-      "compass logistics international",
-      6.4,
+      "logistics company",
+      null,
       0,
-      17
+      0
      ],
      [
-      "compass logistics tracking",
-      4.5,
+      "supply chain management",
+      null,
       0,
-      2
+      0
+     ],
+     [
+      "moving companies",
+      null,
+      0,
+      0
+     ],
+     [
+      "supply chain activities",
+      null,
+      0,
+      0
      ]
     ]
    },
@@ -2522,64 +3174,70 @@
     "pos": 10.6,
     "kw": [
      [
-      "compass logistics",
-      13.6,
-      1,
-      37
+      "logistics provider",
+      null,
+      0,
+      0
      ],
      [
-      "benefits of freight forwarder",
-      18,
+      "freight forwarding",
+      null,
       0,
-      1
+      0
      ],
      [
-      "cargo compas",
-      2,
+      "freight forwarding companies",
+      null,
       0,
-      1
+      0
      ],
      [
-      "cli middle east fzco",
-      23.5,
+      "logistic shipping company",
+      null,
       0,
-      2
+      0
      ],
      [
-      "compass cargo",
-      1,
+      "cargo forwarding services",
+      null,
       0,
-      1
+      0
      ],
      [
-      "compass freight",
-      9,
+      "transport management system",
+      null,
       0,
-      1
+      0
      ],
      [
-      "compass global logistics",
-      9,
+      "supply chain management",
+      null,
       0,
-      1
+      0
      ],
      [
-      "compass lines tracking",
-      9,
+      "moving companies",
+      null,
       0,
-      1
+      0
      ],
      [
-      "compass logistics dubai",
-      13,
+      "customs clearance",
+      null,
       0,
-      2
+      0
      ],
      [
-      "compass logistics international",
-      2,
+      "logistics company",
+      null,
       0,
-      1
+      0
+     ],
+     [
+      "packers and movers",
+      null,
+      0,
+      0
      ]
     ]
    }
@@ -2592,28 +3250,82 @@
     "pos": 44.9,
     "kw": [
      [
-      "local seo services",
-      93,
+      "marketing agency digital",
+      null,
       0,
-      6
+      0
      ],
      [
-      "sunset digital gmbh",
-      36,
+      "digital marketing agency",
+      null,
       0,
-      1
+      0
      ],
      [
-      "sunset marketing",
-      9,
+      "digital marketing agency in Qatar",
+      null,
       0,
-      1
+      0
+     ],
+     [
+      "social media marketing",
+      null,
+      0,
+      0
+     ],
+     [
+      "social media marketing Qatar",
+      null,
+      0,
+      0
+     ],
+     [
+      "advertising agency in qatar",
+      null,
+      0,
+      0
+     ],
+     [
+      "branding agency Qatar",
+      null,
+      0,
+      0
+     ],
+     [
+      "digital marketing and advertising agency",
+      null,
+      0,
+      0
+     ],
+     [
+      "digital marketing ads agency",
+      null,
+      0,
+      0
+     ],
+     [
+      "advertising agencies in doha",
+      null,
+      0,
+      0
      ],
      [
       "sunset media",
       1.2,
       0,
       5
+     ],
+     [
+      "Content Creation",
+      null,
+      0,
+      0
+     ],
+     [
+      "web development",
+      null,
+      0,
+      0
      ]
     ]
    },
@@ -2623,6 +3335,66 @@
     "ctr": 0,
     "pos": 2,
     "kw": [
+     [
+      "marketing agency digital",
+      null,
+      0,
+      0
+     ],
+     [
+      "digital marketers",
+      null,
+      0,
+      0
+     ],
+     [
+      "social media marketing",
+      null,
+      0,
+      0
+     ],
+     [
+      "digital marketing and advertising agency",
+      null,
+      0,
+      0
+     ],
+     [
+      "digital marketing ads agency",
+      null,
+      0,
+      0
+     ],
+     [
+      "marketing through social media",
+      null,
+      0,
+      0
+     ],
+     [
+      "facebook advertising management",
+      null,
+      0,
+      0
+     ],
+     [
+      "social media marketing agency",
+      null,
+      0,
+      0
+     ],
+     [
+      "twitter advertising",
+      null,
+      0,
+      0
+     ],
+     [
+      "digital media advertising companies",
+      null,
+      0,
+      0
+     ],
      [
       "sunset media",
       2,
@@ -2637,6 +3409,78 @@
     "ctr": 0,
     "pos": 6.5,
     "kw": [
+     [
+      "marketing agency digital",
+      null,
+      0,
+      0
+     ],
+     [
+      "digital marketers",
+      null,
+      0,
+      0
+     ],
+     [
+      "social media marketing",
+      null,
+      0,
+      0
+     ],
+     [
+      "digital marketing and advertising agency",
+      null,
+      0,
+      0
+     ],
+     [
+      "digital marketing ads agency",
+      null,
+      0,
+      0
+     ],
+     [
+      "facebook advertising management",
+      null,
+      0,
+      0
+     ],
+     [
+      "social media marketing agency",
+      null,
+      0,
+      0
+     ],
+     [
+      "twitter advertising",
+      null,
+      0,
+      0
+     ],
+     [
+      "facebook ads manager",
+      null,
+      0,
+      0
+     ],
+     [
+      "online marketing",
+      null,
+      0,
+      0
+     ],
+     [
+      "digital marketing company",
+      null,
+      0,
+      0
+     ],
+     [
+      "digital media Company",
+      null,
+      0,
+      0
+     ],
      [
       "sunset media",
       4.3,
@@ -2654,64 +3498,64 @@
     "pos": 13.2,
     "kw": [
      [
-      "compass it solutions",
-      1.7,
-      2,
-      6
-     ],
-     [
-      "compass it",
-      1,
-      1,
-      2
-     ],
-     [
-      "it solution company near me",
-      1,
-      1,
-      1
-     ],
-     [
-      "cloud computing partner in qatar",
-      64,
+      "cloud offerings",
+      null,
       0,
-      1
+      0
      ],
      [
-      "compas qatar",
-      23,
+      "cloud computing",
+      null,
       0,
-      1
+      0
      ],
      [
-      "compass it solutions and services pvt.ltd",
-      3,
+      "ai and cloud",
+      null,
       0,
-      1
+      0
      ],
      [
-      "compass it solutions and services pvt.ltd photos",
-      3,
+      "cloud artificial intelligence",
+      null,
       0,
-      1
+      0
      ],
      [
-      "compass it support",
-      1,
+      "qatar artificial intelligence",
+      null,
       0,
-      1
+      0
      ],
      [
-      "it company near me",
-      1,
+      "information technology services",
+      null,
       0,
-      1
+      0
      ],
      [
-      "it compass",
-      1,
+      "enterprise technology services",
+      null,
       0,
-      1
+      0
+     ],
+     [
+      "it services companies in qatar",
+      null,
+      0,
+      0
+     ],
+     [
+      "cyber security",
+      null,
+      0,
+      0
+     ],
+     [
+      "managed it services",
+      null,
+      0,
+      0
      ]
     ]
    },
@@ -2722,10 +3566,64 @@
     "pos": 30,
     "kw": [
      [
-      "cloud security consulting services company in doha",
-      30,
+      "cyber security",
+      null,
       0,
-      1
+      0
+     ],
+     [
+      "data security",
+      null,
+      0,
+      0
+     ],
+     [
+      "information technology security",
+      null,
+      0,
+      0
+     ],
+     [
+      "cloud offerings",
+      null,
+      0,
+      0
+     ],
+     [
+      "ai and cloud",
+      null,
+      0,
+      0
+     ],
+     [
+      "cloud artificial intelligence",
+      null,
+      0,
+      0
+     ],
+     [
+      "artificial intelligence",
+      null,
+      0,
+      0
+     ],
+     [
+      "saudi it companies",
+      null,
+      0,
+      0
+     ],
+     [
+      "technology saudi arabia",
+      null,
+      0,
+      0
+     ],
+     [
+      "digital transformation",
+      null,
+      0,
+      0
      ]
     ]
    },
@@ -2736,10 +3634,64 @@
     "pos": 10.8,
     "kw": [
      [
-      "cloud security consulting services company in doha",
-      32,
+      "cyber security",
+      null,
       0,
-      1
+      0
+     ],
+     [
+      "data security",
+      null,
+      0,
+      0
+     ],
+     [
+      "network security",
+      null,
+      0,
+      0
+     ],
+     [
+      "information technology security",
+      null,
+      0,
+      0
+     ],
+     [
+      "it consultancy in dubai",
+      null,
+      0,
+      0
+     ],
+     [
+      "cloud offerings",
+      null,
+      0,
+      0
+     ],
+     [
+      "ai and cloud",
+      null,
+      0,
+      0
+     ],
+     [
+      "cloud artificial intelligence",
+      null,
+      0,
+      0
+     ],
+     [
+      "artificial intelligence",
+      null,
+      0,
+      0
+     ],
+     [
+      "cloud solutions",
+      null,
+      0,
+      0
      ]
     ]
    }
