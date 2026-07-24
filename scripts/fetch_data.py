@@ -143,6 +143,17 @@ def kw_metrics(r):
             round(r.get("ctr", 0) * 100, 1), round(r.get("position", 0), 1))
 
 
+def agg_kw(rows):
+    """Aggregate [kw, pos, clicks, impr] rows into market totals over the TARGETED
+    keywords only. Position is impression-weighted across the keywords that rank."""
+    clicks = sum(r[2] for r in rows)
+    impr = sum(r[3] for r in rows)
+    ctr = round(clicks / impr * 100, 1) if impr else 0.0
+    ranked = [(r[1], r[3]) for r in rows if r[1] is not None and r[3] > 0]
+    pos = round(sum(p * i for p, i in ranked) / sum(i for _, i in ranked), 1) if ranked else None
+    return {"clicks": clicks, "impr": impr, "ctr": ctr, "pos": pos}
+
+
 def fetch_gsc_site(svc, cfg, cur, prev, targets):
     """targets = {"QA": [...], "SA": [...], "AE": [...]} — the ONLY keywords tracked.
     Keywords with no Search Console impressions come back as 'not ranking' (pos=None, 0/0)."""
@@ -169,10 +180,9 @@ def fetch_gsc_site(svc, cfg, cur, prev, targets):
         else:
             queries.append([kw, 0, 0, 0.0, None])  # tracked but not ranking
 
-    # Per-country SERP list: that market's targeted keywords with in-market metrics.
+    # Per-country SERP: keyword list AND totals over the TARGETED keywords only.
     rank = {}
     for m, code in MARKETS.items():
-        totals = agg_totals(gsc_query(svc, site, cur[0], cur[1], country=code, row_limit=1))
         clookup = query_lookup(
             gsc_query(svc, site, cur[0], cur[1], dimensions=["query"], country=code, row_limit=5000))
         kwlist = []
@@ -183,16 +193,18 @@ def fetch_gsc_site(svc, cfg, cur, prev, targets):
                 kwlist.append([kw, p, c, i])
             else:
                 kwlist.append([kw, None, 0, 0])  # tracked but not ranking in this market
-        if totals is None:
-            totals = {"clicks": 0, "impr": 0, "ctr": 0.0, "pos": None}
-        rank[m] = {**totals, "kw": kwlist}
+        rank[m] = {**agg_kw(kwlist), "kw": kwlist}
+
+    # GCC / all = the targeted union (all markets), aggregated.
+    gcc_kw = [[q[0], q[4], q[1], q[2]] for q in queries]  # [kw, pos, clicks, impr]
+    rank["GCC"] = {**agg_kw(gcc_kw), "kw": gcc_kw}
 
     return {
         "cur": cur_totals or {"clicks": 0, "impr": 0, "ctr": 0.0, "pos": 0.0},
         "prev": prev_totals,  # None -> dashboard shows "no prior period"
         "queries": queries,
         "pages": pages,
-    }, rank, (cur_totals["pos"] if cur_totals else None)
+    }, rank, rank["GCC"]["pos"]
 
 
 # --------------------------------- GA4 -------------------------------------
