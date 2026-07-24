@@ -2348,10 +2348,10 @@
  "RANK": {
   "compass-arabia.com": {
    "QA": {
-    "clicks": 40,
-    "impr": 1385,
-    "ctr": 2.9,
-    "pos": 6.9,
+    "clicks": 3,
+    "impr": 64,
+    "ctr": 4.7,
+    "pos": 3.2,
     "kw": [
      [
       "surveying services",
@@ -2434,10 +2434,10 @@
     ]
    },
    "SA": {
-    "clicks": 19,
-    "impr": 634,
-    "ctr": 3.0,
-    "pos": 8.0,
+    "clicks": 1,
+    "impr": 2,
+    "ctr": 50.0,
+    "pos": 7.0,
     "kw": [
      [
       "land surveyor",
@@ -2502,10 +2502,10 @@
     ]
    },
    "AE": {
-    "clicks": 12,
-    "impr": 778,
-    "ctr": 1.5,
-    "pos": 20.3,
+    "clicks": 2,
+    "impr": 15,
+    "ctr": 13.3,
+    "pos": 11.3,
     "kw": [
      [
       "surveying services",
@@ -2580,14 +2580,160 @@
       0
      ]
     ]
+   },
+   "GCC": {
+    "clicks": 8,
+    "impr": 98,
+    "ctr": 8.2,
+    "pos": 5.4,
+    "kw": [
+     [
+      "surveying services",
+      2.2,
+      0,
+      8
+     ],
+     [
+      "site survey services",
+      3,
+      0,
+      6
+     ],
+     [
+      "3D laser Scanning Services",
+      9.4,
+      2,
+      22
+     ],
+     [
+      "Geographic Information System",
+      null,
+      0,
+      0
+     ],
+     [
+      "ground penetrating radar",
+      null,
+      0,
+      0
+     ],
+     [
+      "survey companies in Qatar",
+      2.2,
+      2,
+      23
+     ],
+     [
+      "land survey in Qatar",
+      null,
+      0,
+      0
+     ],
+     [
+      "utility survey services",
+      14.2,
+      4,
+      11
+     ],
+     [
+      "geospatial information systems",
+      null,
+      0,
+      0
+     ],
+     [
+      "land surveyor",
+      2.2,
+      0,
+      20
+     ],
+     [
+      "survey surveyor",
+      null,
+      0,
+      0
+     ],
+     [
+      "property surveyor",
+      null,
+      0,
+      0
+     ],
+     [
+      "boundary survey",
+      null,
+      0,
+      0
+     ],
+     [
+      "surveyor engineer",
+      2,
+      0,
+      1
+     ],
+     [
+      "topographical survey",
+      9.3,
+      0,
+      3
+     ],
+     [
+      "site survey",
+      2,
+      0,
+      2
+     ],
+     [
+      "bim modeling",
+      null,
+      0,
+      0
+     ],
+     [
+      "surveying engineering",
+      2,
+      0,
+      1
+     ],
+     [
+      "survey companies in saudi arabia",
+      null,
+      0,
+      0
+     ],
+     [
+      "surveying company",
+      1,
+      0,
+      1
+     ],
+     [
+      "survey company in dubai",
+      null,
+      0,
+      0
+     ],
+     [
+      "drone survey",
+      null,
+      0,
+      0
+     ],
+     [
+      "land surveyor dubai",
+      null,
+      0,
+      0
+     ]
+    ]
    }
   },
   "compassfmgcc.com": {
    "QA": {
-    "clicks": 95,
-    "impr": 1379,
-    "ctr": 6.9,
-    "pos": 10.1,
+    "clicks": 11,
+    "impr": 222,
+    "ctr": 5.0,
+    "pos": 12.6,
     "kw": [
      [
       "facility management companies in Qatar",
@@ -2652,10 +2798,10 @@
     ]
    },
    "SA": {
-    "clicks": 6,
-    "impr": 46,
-    "ctr": 13.0,
-    "pos": 6.6,
+    "clicks": 1,
+    "impr": 2,
+    "ctr": 50.0,
+    "pos": 4.0,
     "kw": [
      [
       "cleaning services",
@@ -2714,10 +2860,10 @@
     ]
    },
    "AE": {
-    "clicks": 20,
-    "impr": 256,
-    "ctr": 7.8,
-    "pos": 7.2,
+    "clicks": 2,
+    "impr": 7,
+    "ctr": 28.6,
+    "pos": 5.4,
     "kw": [
      [
       "facility management",
@@ -2786,14 +2932,172 @@
       0
      ]
     ]
+   },
+   "GCC": {
+    "clicks": 24,
+    "impr": 296,
+    "ctr": 8.1,
+    "pos": 11.9,
+    "kw": [
+     [
+      "facility management companies in Qatar",
+      6.9,
+      17,
+      196
+     ],
+     [
+      "cleaning companies in Qatar",
+      null,
+      0,
+      0
+     ],
+     [
+      "facility management",
+      26.6,
+      2,
+      36
+     ],
+     [
+      "ac services in Qatar",
+      null,
+      0,
+      0
+     ],
+     [
+      "list of facilities management companies in qatar",
+      23.7,
+      0,
+      7
+     ],
+     [
+      "cleaning company in qatar",
+      null,
+      0,
+      0
+     ],
+     [
+      "facility management services",
+      3,
+      0,
+      1
+     ],
+     [
+      "facilities management and maintenance company",
+      null,
+      0,
+      0
+     ],
+     [
+      "facility management qatar",
+      36.1,
+      0,
+      19
+     ],
+     [
+      "integrated facility management",
+      null,
+      0,
+      0
+     ],
+     [
+      "cleaning services",
+      null,
+      0,
+      0
+     ],
+     [
+      "ac repair",
+      null,
+      0,
+      0
+     ],
+     [
+      "facilities management",
+      32.8,
+      0,
+      4
+     ],
+     [
+      "facilities management companies",
+      50,
+      0,
+      1
+     ],
+     [
+      "cleaning services Riyadh",
+      null,
+      0,
+      0
+     ],
+     [
+      "duct cleaning",
+      71,
+      0,
+      1
+     ],
+     [
+      "compass cleaning company",
+      2.6,
+      5,
+      30
+     ],
+     [
+      "company maintenance",
+      null,
+      0,
+      0
+     ],
+     [
+      "building maintenance",
+      null,
+      0,
+      0
+     ],
+     [
+      "building maintenance work",
+      null,
+      0,
+      0
+     ],
+     [
+      "hvac maintenance",
+      15,
+      0,
+      1
+     ],
+     [
+      "emergency air conditioner repair",
+      null,
+      0,
+      0
+     ],
+     [
+      "electrical services",
+      null,
+      0,
+      0
+     ],
+     [
+      "electrical services in uae",
+      null,
+      0,
+      0
+     ],
+     [
+      "cleaning services in uae",
+      null,
+      0,
+      0
+     ]
+    ]
    }
   },
   "compasswaterproof.com": {
    "QA": {
-    "clicks": 14,
-    "impr": 319,
-    "ctr": 4.4,
-    "pos": 9.1,
+    "clicks": 2,
+    "impr": 29,
+    "ctr": 6.9,
+    "pos": 7.7,
     "kw": [
      [
       "waterproofing companies in qatar",
@@ -2864,10 +3168,10 @@
     ]
    },
    "SA": {
-    "clicks": 3,
-    "impr": 36,
-    "ctr": 8.3,
-    "pos": 7.3,
+    "clicks": 0,
+    "impr": 0,
+    "ctr": 0.0,
+    "pos": null,
     "kw": [
      [
       "roof waterproofing",
@@ -2932,10 +3236,10 @@
     ]
    },
    "AE": {
-    "clicks": 4,
-    "impr": 250,
-    "ctr": 1.6,
-    "pos": 9.4,
+    "clicks": 0,
+    "impr": 8,
+    "ctr": 0.0,
+    "pos": 52.2,
     "kw": [
      [
       "roof waterproofing",
@@ -2998,14 +3302,142 @@
       0
      ]
     ]
+   },
+   "GCC": {
+    "clicks": 2,
+    "impr": 128,
+    "ctr": 1.6,
+    "pos": 21.6,
+    "kw": [
+     [
+      "waterproofing companies in qatar",
+      7.7,
+      0,
+      3
+     ],
+     [
+      "pu foam waterproofing",
+      2.8,
+      0,
+      27
+     ],
+     [
+      "roof waterproofing in gcc",
+      null,
+      0,
+      0
+     ],
+     [
+      "waterproofing company",
+      null,
+      0,
+      0
+     ],
+     [
+      "epoxy flooring qatar",
+      null,
+      0,
+      0
+     ],
+     [
+      "polyurethane foam waterproofing",
+      1.7,
+      1,
+      9
+     ],
+     [
+      "concrete repair",
+      19.7,
+      1,
+      7
+     ],
+     [
+      "waterproofing contractors",
+      null,
+      0,
+      0
+     ],
+     [
+      "waterproofing services",
+      37,
+      0,
+      1
+     ],
+     [
+      "crystalline waterproofing",
+      null,
+      0,
+      0
+     ],
+     [
+      "concrete roof waterproofing",
+      null,
+      0,
+      0
+     ],
+     [
+      "roof waterproofing",
+      null,
+      0,
+      0
+     ],
+     [
+      "cementitious waterproofing",
+      30.6,
+      0,
+      81
+     ],
+     [
+      "waterproofing paint",
+      null,
+      0,
+      0
+     ],
+     [
+      "polyurethane foam",
+      null,
+      0,
+      0
+     ],
+     [
+      "waterproofing membrane",
+      null,
+      0,
+      0
+     ],
+     [
+      "epoxy floor coating",
+      null,
+      0,
+      0
+     ],
+     [
+      "waterproofing coating",
+      null,
+      0,
+      0
+     ],
+     [
+      "pu foam",
+      null,
+      0,
+      0
+     ],
+     [
+      "waterproofing companies in uae",
+      null,
+      0,
+      0
+     ]
+    ]
    }
   },
   "compass-lg.com": {
    "QA": {
     "clicks": 1,
-    "impr": 86,
-    "ctr": 1.2,
-    "pos": 14.7,
+    "impr": 8,
+    "ctr": 12.5,
+    "pos": 22.4,
     "kw": [
      [
       "shipping companies in Qatar",
@@ -3088,10 +3520,10 @@
     ]
    },
    "SA": {
-    "clicks": 7,
-    "impr": 297,
-    "ctr": 2.4,
-    "pos": 10.5,
+    "clicks": 0,
+    "impr": 0,
+    "ctr": 0.0,
+    "pos": null,
     "kw": [
      [
       "logistics provider",
@@ -3168,10 +3600,10 @@
     ]
    },
    "AE": {
-    "clicks": 1,
-    "impr": 166,
-    "ctr": 0.6,
-    "pos": 10.6,
+    "clicks": 0,
+    "impr": 0,
+    "ctr": 0.0,
+    "pos": null,
     "kw": [
      [
       "logistics provider",
@@ -3240,14 +3672,160 @@
       0
      ]
     ]
+   },
+   "GCC": {
+    "clicks": 1,
+    "impr": 8,
+    "ctr": 12.5,
+    "pos": 22.4,
+    "kw": [
+     [
+      "shipping companies in Qatar",
+      null,
+      0,
+      0
+     ],
+     [
+      "moving company Qatar",
+      null,
+      0,
+      0
+     ],
+     [
+      "moving services",
+      null,
+      0,
+      0
+     ],
+     [
+      "customs clearance",
+      null,
+      0,
+      0
+     ],
+     [
+      "logistics provider",
+      9.5,
+      0,
+      2
+     ],
+     [
+      "freight forwarding",
+      null,
+      0,
+      0
+     ],
+     [
+      "sea freight Qatar",
+      null,
+      0,
+      0
+     ],
+     [
+      "transport management system",
+      null,
+      0,
+      0
+     ],
+     [
+      "logistics company",
+      null,
+      0,
+      0
+     ],
+     [
+      "qatar customs",
+      null,
+      0,
+      0
+     ],
+     [
+      "cargo services Qatar",
+      null,
+      0,
+      0
+     ],
+     [
+      "supply chain management",
+      null,
+      0,
+      0
+     ],
+     [
+      "logistics systems Qatar",
+      26.7,
+      1,
+      6
+     ],
+     [
+      "shipping service companies",
+      null,
+      0,
+      0
+     ],
+     [
+      "cargo freight forwarders",
+      null,
+      0,
+      0
+     ],
+     [
+      "fast forwarder logistics",
+      null,
+      0,
+      0
+     ],
+     [
+      "ksa shipping companies",
+      null,
+      0,
+      0
+     ],
+     [
+      "moving companies",
+      null,
+      0,
+      0
+     ],
+     [
+      "supply chain activities",
+      null,
+      0,
+      0
+     ],
+     [
+      "freight forwarding companies",
+      null,
+      0,
+      0
+     ],
+     [
+      "logistic shipping company",
+      null,
+      0,
+      0
+     ],
+     [
+      "cargo forwarding services",
+      null,
+      0,
+      0
+     ],
+     [
+      "packers and movers",
+      null,
+      0,
+      0
+     ]
+    ]
    }
   },
   "sunsetmediame.com": {
    "QA": {
-    "clicks": 1,
-    "impr": 16,
-    "ctr": 6.2,
-    "pos": 44.9,
+    "clicks": 0,
+    "impr": 5,
+    "ctr": 0.0,
+    "pos": 1.2,
     "kw": [
      [
       "marketing agency digital",
@@ -3332,8 +3910,8 @@
    "SA": {
     "clicks": 0,
     "impr": 1,
-    "ctr": 0,
-    "pos": 2,
+    "ctr": 0.0,
+    "pos": 2.0,
     "kw": [
      [
       "marketing agency digital",
@@ -3405,9 +3983,9 @@
    },
    "AE": {
     "clicks": 0,
-    "impr": 6,
-    "ctr": 0,
-    "pos": 6.5,
+    "impr": 3,
+    "ctr": 0.0,
+    "pos": 4.3,
     "kw": [
      [
       "marketing agency digital",
@@ -3488,14 +4066,160 @@
       3
      ]
     ]
+   },
+   "GCC": {
+    "clicks": 0,
+    "impr": 21,
+    "ctr": 0.0,
+    "pos": 11.5,
+    "kw": [
+     [
+      "marketing agency digital",
+      null,
+      0,
+      0
+     ],
+     [
+      "digital marketing agency",
+      null,
+      0,
+      0
+     ],
+     [
+      "digital marketing agency in Qatar",
+      null,
+      0,
+      0
+     ],
+     [
+      "social media marketing",
+      null,
+      0,
+      0
+     ],
+     [
+      "social media marketing Qatar",
+      null,
+      0,
+      0
+     ],
+     [
+      "advertising agency in qatar",
+      null,
+      0,
+      0
+     ],
+     [
+      "branding agency Qatar",
+      null,
+      0,
+      0
+     ],
+     [
+      "digital marketing and advertising agency",
+      null,
+      0,
+      0
+     ],
+     [
+      "digital marketing ads agency",
+      null,
+      0,
+      0
+     ],
+     [
+      "advertising agencies in doha",
+      null,
+      0,
+      0
+     ],
+     [
+      "sunset media",
+      11.5,
+      0,
+      21
+     ],
+     [
+      "Content Creation",
+      null,
+      0,
+      0
+     ],
+     [
+      "web development",
+      null,
+      0,
+      0
+     ],
+     [
+      "digital marketers",
+      null,
+      0,
+      0
+     ],
+     [
+      "marketing through social media",
+      null,
+      0,
+      0
+     ],
+     [
+      "facebook advertising management",
+      null,
+      0,
+      0
+     ],
+     [
+      "social media marketing agency",
+      null,
+      0,
+      0
+     ],
+     [
+      "twitter advertising",
+      null,
+      0,
+      0
+     ],
+     [
+      "digital media advertising companies",
+      null,
+      0,
+      0
+     ],
+     [
+      "facebook ads manager",
+      null,
+      0,
+      0
+     ],
+     [
+      "online marketing",
+      null,
+      0,
+      0
+     ],
+     [
+      "digital marketing company",
+      null,
+      0,
+      0
+     ],
+     [
+      "digital media Company",
+      null,
+      0,
+      0
+     ]
+    ]
    }
   },
   "compass-its.com": {
    "QA": {
-    "clicks": 7,
-    "impr": 39,
-    "ctr": 17.9,
-    "pos": 13.2,
+    "clicks": 0,
+    "impr": 0,
+    "ctr": 0.0,
+    "pos": null,
     "kw": [
      [
       "cloud offerings",
@@ -3561,9 +4285,9 @@
    },
    "SA": {
     "clicks": 0,
-    "impr": 1,
-    "ctr": 0,
-    "pos": 30,
+    "impr": 0,
+    "ctr": 0.0,
+    "pos": null,
     "kw": [
      [
       "cyber security",
@@ -3628,10 +4352,10 @@
     ]
    },
    "AE": {
-    "clicks": 1,
-    "impr": 4,
-    "ctr": 25.0,
-    "pos": 10.8,
+    "clicks": 0,
+    "impr": 0,
+    "ctr": 0.0,
+    "pos": null,
     "kw": [
      [
       "cyber security",
@@ -3694,8 +4418,287 @@
       0
      ]
     ]
+   },
+   "GCC": {
+    "clicks": 0,
+    "impr": 0,
+    "ctr": 0.0,
+    "pos": null,
+    "kw": [
+     [
+      "cloud offerings",
+      null,
+      0,
+      0
+     ],
+     [
+      "cloud computing",
+      null,
+      0,
+      0
+     ],
+     [
+      "ai and cloud",
+      null,
+      0,
+      0
+     ],
+     [
+      "cloud artificial intelligence",
+      null,
+      0,
+      0
+     ],
+     [
+      "qatar artificial intelligence",
+      null,
+      0,
+      0
+     ],
+     [
+      "information technology services",
+      null,
+      0,
+      0
+     ],
+     [
+      "enterprise technology services",
+      null,
+      0,
+      0
+     ],
+     [
+      "it services companies in qatar",
+      null,
+      0,
+      0
+     ],
+     [
+      "cyber security",
+      null,
+      0,
+      0
+     ],
+     [
+      "managed it services",
+      null,
+      0,
+      0
+     ],
+     [
+      "data security",
+      null,
+      0,
+      0
+     ],
+     [
+      "information technology security",
+      null,
+      0,
+      0
+     ],
+     [
+      "artificial intelligence",
+      null,
+      0,
+      0
+     ],
+     [
+      "saudi it companies",
+      null,
+      0,
+      0
+     ],
+     [
+      "technology saudi arabia",
+      null,
+      0,
+      0
+     ],
+     [
+      "digital transformation",
+      null,
+      0,
+      0
+     ],
+     [
+      "network security",
+      null,
+      0,
+      0
+     ],
+     [
+      "it consultancy in dubai",
+      null,
+      0,
+      0
+     ],
+     [
+      "cloud solutions",
+      null,
+      0,
+      0
+     ]
+    ]
    }
   }
  },
- "RANKHIST": {}
+ "RANKHIST": {
+  "compass-arabia.com": {
+   "QA": [
+    [
+     "2026-07-24",
+     3.2
+    ]
+   ],
+   "SA": [
+    [
+     "2026-07-24",
+     7.0
+    ]
+   ],
+   "AE": [
+    [
+     "2026-07-24",
+     11.3
+    ]
+   ],
+   "GCC": [
+    [
+     "2026-07-24",
+     5.4
+    ]
+   ]
+  },
+  "compassfmgcc.com": {
+   "QA": [
+    [
+     "2026-07-24",
+     12.6
+    ]
+   ],
+   "SA": [
+    [
+     "2026-07-24",
+     4.0
+    ]
+   ],
+   "AE": [
+    [
+     "2026-07-24",
+     5.4
+    ]
+   ],
+   "GCC": [
+    [
+     "2026-07-24",
+     11.9
+    ]
+   ]
+  },
+  "compasswaterproof.com": {
+   "QA": [
+    [
+     "2026-07-24",
+     7.7
+    ]
+   ],
+   "SA": [
+    [
+     "2026-07-24",
+     null
+    ]
+   ],
+   "AE": [
+    [
+     "2026-07-24",
+     52.2
+    ]
+   ],
+   "GCC": [
+    [
+     "2026-07-24",
+     21.6
+    ]
+   ]
+  },
+  "compass-lg.com": {
+   "QA": [
+    [
+     "2026-07-24",
+     22.4
+    ]
+   ],
+   "SA": [
+    [
+     "2026-07-24",
+     null
+    ]
+   ],
+   "AE": [
+    [
+     "2026-07-24",
+     null
+    ]
+   ],
+   "GCC": [
+    [
+     "2026-07-24",
+     22.4
+    ]
+   ]
+  },
+  "sunsetmediame.com": {
+   "QA": [
+    [
+     "2026-07-24",
+     1.2
+    ]
+   ],
+   "SA": [
+    [
+     "2026-07-24",
+     2.0
+    ]
+   ],
+   "AE": [
+    [
+     "2026-07-24",
+     4.3
+    ]
+   ],
+   "GCC": [
+    [
+     "2026-07-24",
+     11.5
+    ]
+   ]
+  },
+  "compass-its.com": {
+   "QA": [
+    [
+     "2026-07-24",
+     null
+    ]
+   ],
+   "SA": [
+    [
+     "2026-07-24",
+     null
+    ]
+   ],
+   "AE": [
+    [
+     "2026-07-24",
+     null
+    ]
+   ],
+   "GCC": [
+    [
+     "2026-07-24",
+     null
+    ]
+   ]
+  }
+ }
 }
