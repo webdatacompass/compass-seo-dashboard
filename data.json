@@ -1,20 +1,20 @@
 {
- "generated": "2026-08-04",
+ "generated": "2026-08-05",
  "SITES": {
   "compass-arabia.com": {
    "base": "compass-arabia.com",
    "label": "Compass Arabia",
    "cur": {
-    "clicks": 142,
-    "impr": 5112,
-    "ctr": 2.8,
-    "pos": 10.9
+    "clicks": 149,
+    "impr": 4986,
+    "ctr": 3.0,
+    "pos": 11.0
    },
    "prev": {
-    "clicks": 166,
-    "impr": 7034,
-    "ctr": 2.4,
-    "pos": 10.6
+    "clicks": 158,
+    "impr": 7020,
+    "ctr": 2.3,
+    "pos": 10.5
    },
    "queries": [
     [
@@ -83,7 +83,7 @@
     [
      "land surveyor",
      0,
-     24,
+     23,
      0,
      3.1
     ],
@@ -146,9 +146,9 @@
     [
      "survey companies in saudi arabia",
      0,
-     2,
+     3,
      0,
-     9
+     6.3
     ],
     [
      "surveying company",
@@ -182,149 +182,149 @@
    "pages": [
     [
      "https://compass-arabia.com/",
-     91,
-     2256,
-     4.0,
-     8.7
+     98,
+     2223,
+     4.4,
+     8.8
     ],
     [
      "https://compass-arabia.com/contact-us/",
-     10,
-     826,
-     1.2,
-     11.3
+     12,
+     833,
+     1.4,
+     11.4
     ],
     [
      "https://compass-arabia.com/underground-utilities-survey-services-in-qatar-saudi-arabia-uae/",
      6,
-     222,
-     2.7,
-     21.3
+     209,
+     2.9,
+     22.0
     ],
     [
      "https://compass-arabia.com/about-us/",
      4,
-     274,
-     1.5,
-     14.2
+     281,
+     1.4,
+     14.8
     ],
     [
      "https://compass-arabia.com/bathymetric-survey-for-saudi-arabia-and-qatar-accurately-charting-the-underground/",
      4,
-     138,
-     2.9,
-     15.7
-    ],
-    [
-     "https://compass-arabia.com/3d-laser-scanning-in-saudi-arabia-and-qatar-accuracy-for-contemporary-building/",
-     3,
-     142,
-     2.1,
-     11.5
+     116,
+     3.4,
+     16.9
     ],
     [
      "https://compass-arabia.com/professional-surveying-services-in-qatar-accurate-solutions-for-modern-construction/",
      3,
-     258,
+     255,
      1.2,
-     7.8
+     7.7
     ],
     [
      "https://compass-arabia.com/services/surveying-services/",
      3,
-     107,
-     2.8,
-     9.0
+     104,
+     2.9,
+     9.2
     ],
     [
      "https://compass-arabia.com/surveying-and-geotechnical-services-in-saudi-arabia-qatar-uae/",
      3,
-     103,
+     104,
      2.9,
-     9.6
+     10.0
+    ],
+    [
+     "https://compass-arabia.com/3d-laser-scanning-in-saudi-arabia-and-qatar-accuracy-for-contemporary-building/",
+     2,
+     136,
+     1.5,
+     11.7
     ],
     [
      "https://compass-arabia.com/3d-laser-scanning-services-in-uae-a-faster-way-to-get-accurate-site-data/",
      2,
-     114,
-     1.8,
-     15.1
+     102,
+     2.0,
+     15.0
     ]
    ],
    "ga4": {
-    "users": 504,
-    "sessions": 714,
-    "engRate": 35.29,
-    "avgEng": "13s",
-    "events": 3794,
+    "users": 556,
+    "sessions": 767,
+    "engRate": 31.81,
+    "avgEng": "10s",
+    "events": 4029,
     "keyEvents": 0,
     "channels": [
      [
       "Direct",
-      434,
-      60.78
+      484,
+      63.1
      ],
      [
       "Organic Search",
       222,
-      31.09
+      28.94
+     ],
+     [
+      "Unassigned",
+      54,
+      7.04
      ],
      [
       "AI Assistant",
       26,
-      3.64
-     ],
-     [
-      "Unassigned",
-      26,
-      3.64
+      3.39
      ],
      [
       "Referral",
       15,
-      2.1
-     ],
-     [
-      "Cross-network",
-      2,
-      0.28
+      1.96
      ],
      [
       "Organic Social",
-      2,
-      0.28
+      3,
+      0.39
      ]
     ],
     "topPages": [
      [
       "/",
-      643,
-      386
+      678,
+      408
      ],
      [
       "/contact-us/",
-      95,
+      98,
       79
      ],
      [
       "/about-us/",
-      21,
-      16
+      19,
+      14
      ],
      [
-      "/services/drone-survey/",
-      15,
-      10
+      "/services/",
+      17,
+      14
      ],
      [
       "/services/underground-utilities/",
+      15,
+      12
+     ],
+     [
+      "/services/drone-survey/",
       14,
-      11
+      9
      ],
      [
       "/services/surveying-services/",
-      12,
-      6
+      13,
+      7
      ],
      [
       "/surveying-services-in-qatar/",
@@ -332,19 +332,14 @@
       9
      ],
      [
-      "/services/",
-      11,
-      9
-     ],
-     [
-      "/blog/",
-      10,
-      6
-     ],
-     [
       "/professional-surveying-services-in-qatar-accurate-solutions-for-modern-construction/",
-      10,
+      11,
       7
+     ],
+     [
+      "/services/hydrographic-survey/",
+      11,
+      8
      ]
     ]
    }
@@ -353,24 +348,24 @@
    "base": "compassfmgcc.com",
    "label": "Compass FM GCC",
    "cur": {
-    "clicks": 146,
-    "impr": 3088,
+    "clicks": 148,
+    "impr": 3128,
     "ctr": 4.7,
-    "pos": 15.4
+    "pos": 15.6
    },
    "prev": {
-    "clicks": 113,
-    "impr": 1860,
-    "ctr": 6.1,
+    "clicks": 116,
+    "impr": 1929,
+    "ctr": 6.0,
     "pos": 12.7
    },
    "queries": [
     [
      "facility management companies in Qatar",
-     15,
-     205,
-     7.3,
-     7.1
+     16,
+     208,
+     7.7,
+     6.9
     ],
     [
      "cleaning companies in Qatar",
@@ -382,9 +377,9 @@
     [
      "facility management",
      1,
-     32,
-     3.1,
-     24.8
+     34,
+     2.9,
+     25.3
     ],
     [
      "ac services in Qatar",
@@ -396,9 +391,9 @@
     [
      "list of facilities management companies in qatar",
      0,
-     6,
+     5,
      0,
-     28.2
+     28.8
     ],
     [
      "cleaning company in qatar",
@@ -424,9 +419,9 @@
     [
      "facility management qatar",
      0,
-     23,
+     26,
      0,
-     31.9
+     33.7
     ],
     [
      "integrated facility management",
@@ -452,9 +447,9 @@
     [
      "facilities management",
      0,
-     2,
+     3,
      0,
-     3
+     26.3
     ],
     [
      "facilities management companies",
@@ -480,8 +475,8 @@
     [
      "compass cleaning company",
      2,
-     36,
-     5.6,
+     37,
+     5.4,
      3.1
     ],
     [
@@ -508,9 +503,9 @@
     [
      "hvac maintenance",
      0,
-     3,
+     8,
      0,
-     5
+     6.4
     ],
     [
      "emergency air conditioner repair",
@@ -544,24 +539,24 @@
    "pages": [
     [
      "https://compassfmgcc.com/",
-     109,
-     1885,
+     110,
+     1891,
      5.8,
-     10.3
+     10.7
     ],
     [
      "https://compassfmgcc.com/qatar/",
-     16,
-     305,
-     5.2,
-     14.4
+     17,
+     309,
+     5.5,
+     15.6
     ],
     [
      "https://compassfmgcc.com/contact/",
      4,
-     155,
+     153,
      2.6,
-     33.6
+     33.9
     ],
     [
      "https://compassfmgcc.com/about/",
@@ -573,30 +568,30 @@
     [
      "https://compassfmgcc.com/hvac-maintenance-repair-services/",
      3,
-     88,
-     3.4,
-     27.7
+     92,
+     3.3,
+     26.7
     ],
     [
      "https://compassfmgcc.com/landscaping-irrigation-services/",
      3,
-     133,
-     2.3,
-     16.5
+     135,
+     2.2,
+     16.4
     ],
     [
      "https://compassfmgcc.com/amc-services/",
      2,
-     68,
+     70,
      2.9,
-     19.8
+     20.9
     ],
     [
      "https://compassfmgcc.com/cleaning-housekeeping-services/",
      2,
-     171,
-     1.2,
-     17.1
+     176,
+     1.1,
+     16.2
     ],
     [
      "https://compassfmgcc.com/saudi/",
@@ -614,54 +609,49 @@
     ]
    ],
    "ga4": {
-    "users": 328,
-    "sessions": 470,
-    "engRate": 53.62,
-    "avgEng": "46s",
-    "events": 5029,
+    "users": 318,
+    "sessions": 464,
+    "engRate": 54.31,
+    "avgEng": "45s",
+    "events": 4836,
     "keyEvents": 0,
     "channels": [
      [
       "Organic Search",
-      243,
-      51.7
+      242,
+      52.16
      ],
      [
       "Direct",
       183,
-      38.94
+      39.44
      ],
      [
       "Paid Search",
-      25,
-      5.32
+      23,
+      4.96
      ],
      [
       "AI Assistant",
       12,
-      2.55
-     ],
-     [
-      "Unassigned",
-      8,
-      1.7
+      2.59
      ],
      [
       "Referral",
-      5,
-      1.06
+      3,
+      0.65
      ]
     ],
     "topPages": [
      [
       "/",
-      398,
-      244
+      402,
+      236
      ],
      [
       "/contact/",
-      145,
-      87
+      141,
+      82
      ],
      [
       "/landscaping-irrigation-services/",
@@ -670,23 +660,18 @@
      ],
      [
       "/uae/",
-      102,
-      5
-     ],
-     [
-      "/qatar/",
-      97,
-      45
-     ],
-     [
-      "/saudi/",
-      72,
-      7
+      86,
+      4
      ],
      [
       "/gypsum-work/",
       64,
       2
+     ],
+     [
+      "/qatar/",
+      60,
+      41
      ],
      [
       "/hvac-maintenance-repair-services/",
@@ -695,8 +680,13 @@
      ],
      [
       "/cleaning-housekeeping-services/",
-      51,
+      54,
       18
+     ],
+     [
+      "/saudi/",
+      52,
+      6
      ],
      [
       "/pest-control-services/",
@@ -710,16 +700,16 @@
    "base": "compasswaterproof.com",
    "label": "Compass Waterproof",
    "cur": {
-    "clicks": 33,
-    "impr": 1696,
-    "ctr": 1.9,
-    "pos": 14.0
+    "clicks": 35,
+    "impr": 1744,
+    "ctr": 2.0,
+    "pos": 13.9
    },
    "prev": {
-    "clicks": 18,
-    "impr": 622,
-    "ctr": 2.9,
-    "pos": 10.5
+    "clicks": 17,
+    "impr": 659,
+    "ctr": 2.6,
+    "pos": 10.6
    },
    "queries": [
     [
@@ -753,9 +743,9 @@
     [
      "epoxy flooring qatar",
      0,
-     3,
+     4,
      0,
-     24
+     20.5
     ],
     [
      "polyurethane foam waterproofing",
@@ -809,9 +799,9 @@
     [
      "cementitious waterproofing",
      0,
-     76,
+     68,
      0,
-     30.8
+     31.6
     ],
     [
      "waterproofing paint",
@@ -823,9 +813,9 @@
     [
      "polyurethane foam",
      1,
-     1,
-     100,
-     24
+     2,
+     50.0,
+     23.5
     ],
     [
      "waterproofing membrane",
@@ -867,37 +857,37 @@
     [
      "https://compasswaterproof.com/",
      9,
-     406,
+     410,
      2.2,
-     8.9
+     9.0
     ],
     [
      "https://compasswaterproof.com/services/roof-waterproofing/",
      8,
-     291,
-     2.7,
-     22.8
+     289,
+     2.8,
+     23.1
     ],
     [
      "https://compasswaterproof.com/services/pu-foam-waterproofing/",
      6,
-     291,
-     2.1,
-     11.1
+     299,
+     2.0,
+     11.0
     ],
     [
      "https://compasswaterproof.com/concrete-repair-restoration-qatar/",
      2,
-     49,
-     4.1,
-     11.0
+     51,
+     3.9,
+     10.9
     ],
     [
      "https://compasswaterproof.com/thermal-insulation-heat-reflective-coatings-qatar/",
      2,
-     39,
-     5.1,
-     14.2
+     38,
+     5.3,
+     14.4
     ],
     [
      "https://compasswaterproof.com/water-tank-waterproofing-qatar/",
@@ -909,115 +899,115 @@
     [
      "https://compasswaterproof.com/about/",
      1,
-     86,
+     85,
      1.2,
-     21.1
+     21.4
     ],
     [
      "https://compasswaterproof.com/contact/",
      1,
-     194,
+     196,
      0.5,
-     28.1
+     28.0
     ],
     [
      "https://compasswaterproof.com/how-cementitious-waterproofing-works-a-complete-guide/",
      1,
-     197,
+     184,
      0.5,
-     23.7
+     24.2
     ],
     [
      "https://compasswaterproof.com/how-to-choose-the-right-liquid-membrane-waterproofing-for-your-roof/",
      1,
-     76,
+     79,
      1.3,
-     20
+     19.8
     ]
    ],
    "ga4": {
-    "users": 248,
-    "sessions": 357,
-    "engRate": 51.54,
-    "avgEng": "41s",
-    "events": 2736,
+    "users": 244,
+    "sessions": 350,
+    "engRate": 52.29,
+    "avgEng": "38s",
+    "events": 2639,
     "keyEvents": 0,
     "channels": [
      [
       "Direct",
-      227,
-      63.59
+      219,
+      62.57
      ],
      [
       "Organic Search",
-      104,
-      29.13
-     ],
-     [
-      "Unassigned",
-      16,
-      4.48
+      97,
+      27.71
      ],
      [
       "Referral",
-      11,
-      3.08
+      17,
+      4.86
+     ],
+     [
+      "Unassigned",
+      12,
+      3.43
      ],
      [
       "AI Assistant",
-      3,
-      0.84
+      5,
+      1.43
      ]
     ],
     "topPages": [
      [
       "/",
-      320,
-      183
+      317,
+      177
      ],
      [
       "/contact/",
       77,
-      24
-     ],
-     [
-      "/services/water-proofing-liquid-membrane/",
-      58,
-      6
+      25
      ],
      [
       "/services/cementitious-waterproofing/",
-      51,
-      9
+      49,
+      7
      ],
      [
-      "/services/roof-waterproofing/",
-      30,
-      14
-     ],
-     [
-      "/blog/",
-      29,
-      9
-     ],
-     [
-      "/services/crack-injection/",
-      27,
+      "/services/water-proofing-liquid-membrane/",
+      40,
       6
      ],
      [
-      "/services/concrete-repair-restoration/",
-      24,
+      "/blog/",
+      30,
       10
      ],
      [
-      "/services/epoxy-flooring/",
+      "/services/roof-waterproofing/",
+      27,
+      13
+     ],
+     [
+      "/services/crack-injection/",
+      25,
+      4
+     ],
+     [
+      "/services/concrete-repair-restoration/",
       23,
-      8
+      9
+     ],
+     [
+      "/services/epoxy-flooring/",
+      22,
+      7
      ],
      [
       "/services/pu-foam-waterproofing/",
-      21,
+      20,
       11
      ]
     ]
@@ -1027,16 +1017,16 @@
    "base": "compass-lg.com",
    "label": "Compass Logistics",
    "cur": {
-    "clicks": 54,
-    "impr": 2577,
-    "ctr": 2.1,
-    "pos": 10.8
+    "clicks": 55,
+    "impr": 2543,
+    "ctr": 2.2,
+    "pos": 10.9
    },
    "prev": {
-    "clicks": 4,
-    "impr": 302,
-    "ctr": 1.3,
-    "pos": 8.7
+    "clicks": 5,
+    "impr": 425,
+    "ctr": 1.2,
+    "pos": 8.8
    },
    "queries": [
     [
@@ -1070,9 +1060,9 @@
     [
      "logistics provider",
      0,
-     4,
+     5,
      0,
-     5.2
+     4.4
     ],
     [
      "freight forwarding",
@@ -1126,9 +1116,9 @@
     [
      "logistics systems Qatar",
      1,
-     15,
-     6.7,
-     24.9
+     16,
+     6.2,
+     25.1
     ],
     [
      "shipping service companies",
@@ -1205,44 +1195,44 @@
     [
      "https://compass-lg.com/",
      25,
-     998,
+     1015,
      2.5,
-     7.3
+     7.4
     ],
     [
      "https://compass-lg.com/logistics-service-in-saudi-arabia/",
      11,
-     279,
-     3.9,
+     290,
+     3.8,
      9.8
     ],
     [
      "https://compass-lg.com/customs-clearance-saudi-arabia-2026-guide/",
-     6,
-     587,
-     1.0,
+     7,
+     497,
+     1.4,
      9.3
     ],
     [
      "https://compass-lg.com/about/",
      2,
-     59,
-     3.4,
-     20.9
+     64,
+     3.1,
+     20.5
     ],
     [
      "https://compass-lg.com/services/freight-forwarding-services/",
      2,
-     230,
-     0.9,
-     9.1
+     240,
+     0.8,
+     9.5
     ],
     [
      "https://compass-lg.com/services/transportation-services/",
      2,
-     92,
-     2.2,
-     10.7
+     94,
+     2.1,
+     10.6
     ],
     [
      "https://compass-lg.com/benefits-of-freight-forwarder-logistics/",
@@ -1261,52 +1251,52 @@
     [
      "https://compass-lg.com/logistics-service-in-qatar/",
      1,
-     135,
+     134,
      0.7,
-     15.7
+     16.4
     ],
     [
      "https://compass-lg.com/logistics-service-in-uae/",
      1,
-     174,
+     176,
      0.6,
-     15.8
+     15.7
     ]
    ],
    "ga4": {
-    "users": 125,
-    "sessions": 177,
-    "engRate": 39.55,
-    "avgEng": "39s",
-    "events": 1591,
+    "users": 124,
+    "sessions": 176,
+    "engRate": 39.77,
+    "avgEng": "37s",
+    "events": 1486,
     "keyEvents": 0,
     "channels": [
      [
       "Organic Search",
-      88,
-      49.72
+      89,
+      50.57
      ],
      [
       "Direct",
-      86,
-      48.59
+      85,
+      48.3
      ],
      [
       "AI Assistant",
-      2,
-      1.13
+      1,
+      0.57
      ],
      [
       "Referral",
       1,
-      0.56
+      0.57
      ]
     ],
     "topPages": [
      [
       "/",
-      174,
-      72
+      168,
+      73
      ],
      [
       "/logistics-service-in-saudi-arabia/",
@@ -1314,29 +1304,19 @@
       8
      ],
      [
-      "/services/ecommerce-logistics-services/",
-      25,
-      9
-     ],
-     [
       "/services/freight-forwarding-services/",
-      23,
+      24,
       8
      ],
      [
-      "/services/",
-      22,
-      5
-     ],
-     [
       "/contact/",
-      21,
+      22,
       13
      ],
      [
-      "/services/warehousing-distribution-services/",
+      "/services/ecommerce-logistics-services/",
       21,
-      4
+      9
      ],
      [
       "/about/",
@@ -1344,14 +1324,24 @@
       9
      ],
      [
-      "/customs-clearance-saudi-arabia-2026-guide/",
+      "/services/",
+      17,
+      5
+     ],
+     [
+      "/services/warehousing-distribution-services/",
       15,
-      12
+      4
      ],
      [
       "/logistics-service-in-qatar/",
       14,
       3
+     ],
+     [
+      "/customs-clearance-saudi-arabia-2026-guide/",
+      12,
+      9
      ]
     ]
    }
@@ -1361,15 +1351,15 @@
    "label": "Sunset Media",
    "cur": {
     "clicks": 8,
-    "impr": 272,
-    "ctr": 2.9,
+    "impr": 282,
+    "ctr": 2.8,
     "pos": 14.6
    },
    "prev": {
     "clicks": 1,
-    "impr": 28,
-    "ctr": 3.6,
-    "pos": 12.8
+    "impr": 30,
+    "ctr": 3.3,
+    "pos": 12.4
    },
    "queries": [
     [
@@ -1445,9 +1435,9 @@
     [
      "sunset media",
      0,
-     34,
+     35,
      0,
-     6.5
+     6.6
     ],
     [
      "Content Creation",
@@ -1538,16 +1528,16 @@
     [
      "https://sunsetmediame.com/",
      2,
-     104,
+     107,
      1.9,
-     9.3
+     9.9
     ],
     [
      "https://sunsetmediame.com/about/",
      1,
-     106,
+     107,
      0.9,
-     12.5
+     13.0
     ],
     [
      "https://sunsetmediame.com/category/digital-marketing-seo/",
@@ -1566,9 +1556,9 @@
     [
      "https://sunsetmediame.com/local-seo-services-qatar-service-businesses/",
      1,
-     24,
-     4.2,
-     43.2
+     25,
+     4.0,
+     41.9
     ],
     [
      "https://sunsetmediame.com/project/search-engines-optimization/",
@@ -1580,8 +1570,8 @@
     [
      "https://sunsetmediame.com/project/video-production/",
      1,
-     36,
-     2.8,
+     37,
+     2.7,
      8.4
     ],
     [
@@ -1601,89 +1591,99 @@
     [
      "https://sunsetmediame.com/contact/",
      0,
-     44,
+     46,
      0,
-     12.4
+     12.5
     ]
    ],
    "ga4": {
-    "users": 67,
-    "sessions": 106,
-    "engRate": 35.85,
-    "avgEng": "44s",
-    "events": 1140,
+    "users": 71,
+    "sessions": 108,
+    "engRate": 32.41,
+    "avgEng": "40s",
+    "events": 1062,
     "keyEvents": 0,
     "channels": [
      [
       "Direct",
-      59,
-      55.66
+      61,
+      56.48
      ],
      [
       "Referral",
       26,
-      24.53
+      24.07
      ],
      [
       "Organic Search",
-      19,
-      17.92
+      16,
+      14.81
      ],
      [
       "AI Assistant",
+      3,
+      2.78
+     ],
+     [
+      "Unassigned",
       2,
-      1.89
+      1.85
+     ],
+     [
+      "Cross-network",
+      1,
+      0.93
      ]
     ],
     "topPages": [
      [
       "/",
-      116,
+      110,
       35
      ],
      [
       "/project/content-creation/",
-      22,
+      20,
       5
-     ],
-     [
-      "/work/",
-      22,
-      10
      ],
      [
       "/blog/",
       19,
-      5
+      6
+     ],
+     [
+      "/work/",
+      18,
+      11
      ],
      [
       "/project/social-media-management/",
-      19,
-      4
+      17,
+      5
      ],
      [
       "/project/search-engines-optimization/",
-      18,
+      15,
+      3
+     ],
+     [
+      "/about/",
+      13,
+      6
+     ],
+     [
+      "/contact/",
+      12,
+      5
+     ],
+     [
+      "/project/branding/",
+      12,
       3
      ],
      [
       "/project/video-production/",
-      15,
-      1
-     ],
-     [
-      "/about/",
-      14,
-      7
-     ],
-     [
-      "/contact/",
-      14,
-      7
-     ],
-     [
-      "/project/branding/",
-      14,
+      12,
       2
      ]
     ]
@@ -1693,16 +1693,16 @@
    "base": "compass-its.com",
    "label": "Compass ITS",
    "cur": {
-    "clicks": 12,
-    "impr": 264,
-    "ctr": 4.5,
-    "pos": 17.5
+    "clicks": 10,
+    "impr": 267,
+    "ctr": 3.7,
+    "pos": 18.1
    },
    "prev": {
-    "clicks": 17,
-    "impr": 228,
-    "ctr": 7.5,
-    "pos": 14.9
+    "clicks": 19,
+    "impr": 230,
+    "ctr": 8.3,
+    "pos": 15.1
    },
    "queries": [
     [
@@ -1842,31 +1842,31 @@
    "pages": [
     [
      "https://compass-its.com/",
-     12,
-     189,
-     6.3,
-     11.5
+     10,
+     187,
+     5.3,
+     11.9
     ],
     [
      "https://compass-its.com/blog",
      0,
      21,
      0,
-     20.5
+     18.5
     ],
     [
      "https://compass-its.com/contact",
      0,
-     50,
+     48,
      0,
-     17.2
+     18.2
     ],
     [
      "https://compass-its.com/services/cloud-solutions",
      0,
-     62,
+     66,
      0,
-     24.1
+     25.5
     ]
    ],
    "ga4": null
@@ -2017,6 +2017,10 @@
     [
      "2026-08-04",
      21
+    ],
+    [
+     "2026-08-05",
+     21
     ]
    ]
   },
@@ -2152,6 +2156,10 @@
     [
      "2026-08-04",
      2
+    ],
+    [
+     "2026-08-05",
+     2
     ]
    ]
   },
@@ -2267,6 +2275,10 @@
     [
      "2026-08-04",
      2
+    ],
+    [
+     "2026-08-05",
+     2
     ]
    ]
   },
@@ -2340,6 +2352,10 @@
     ],
     [
      "2026-08-04",
+     null
+    ],
+    [
+     "2026-08-05",
      null
     ]
    ],
@@ -2467,6 +2483,10 @@
     ],
     [
      "2026-08-04",
+     0
+    ],
+    [
+     "2026-08-05",
      0
     ]
    ]
@@ -2615,6 +2635,10 @@
     [
      "2026-08-04",
      36
+    ],
+    [
+     "2026-08-05",
+     36
     ]
    ]
   }
@@ -2623,7 +2647,7 @@
   "compass-arabia.com": {
    "QA": {
     "clicks": 0,
-    "impr": 64,
+    "impr": 63,
     "ctr": 0.0,
     "pos": 3.2,
     "kw": [
@@ -2683,9 +2707,9 @@
      ],
      [
       "land surveyor",
-      3,
+      3.0,
       0,
-      23
+      22
      ],
      [
       "survey surveyor",
@@ -2919,7 +2943,7 @@
       "land surveyor",
       3.1,
       0,
-      24
+      23
      ],
      [
       "survey surveyor",
@@ -2971,9 +2995,9 @@
      ],
      [
       "survey companies in saudi arabia",
-      9,
+      6.3,
       0,
-      2
+      3
      ],
      [
       "surveying company",
@@ -3004,16 +3028,16 @@
   },
   "compassfmgcc.com": {
    "QA": {
-    "clicks": 10,
-    "impr": 231,
-    "ctr": 4.3,
-    "pos": 12.1,
+    "clicks": 11,
+    "impr": 239,
+    "ctr": 4.6,
+    "pos": 12.6,
     "kw": [
      [
       "facility management companies in Qatar",
       6.3,
-      9,
-      172
+      10,
+      176
      ],
      [
       "cleaning companies in Qatar",
@@ -3023,9 +3047,9 @@
      ],
      [
       "facility management",
-      29.5,
+      29.8,
       0,
-      25
+      27
      ],
      [
       "ac services in Qatar",
@@ -3035,9 +3059,9 @@
      ],
      [
       "list of facilities management companies in qatar",
-      28.2,
+      28.8,
       0,
-      6
+      5
      ],
      [
       "cleaning company in qatar",
@@ -3059,9 +3083,9 @@
      ],
      [
       "facility management qatar",
-      32.4,
+      34.3,
       0,
-      21
+      24
      ],
      [
       "integrated facility management",
@@ -3208,16 +3232,16 @@
     ]
    },
    "GCC": {
-    "clicks": 19,
-    "impr": 315,
-    "ctr": 6.0,
-    "pos": 11.1,
+    "clicks": 20,
+    "impr": 329,
+    "ctr": 6.1,
+    "pos": 11.4,
     "kw": [
      [
       "facility management companies in Qatar",
-      7.1,
-      15,
-      205
+      6.9,
+      16,
+      208
      ],
      [
       "cleaning companies in Qatar",
@@ -3227,9 +3251,9 @@
      ],
      [
       "facility management",
-      24.8,
+      25.3,
       1,
-      32
+      34
      ],
      [
       "ac services in Qatar",
@@ -3239,9 +3263,9 @@
      ],
      [
       "list of facilities management companies in qatar",
-      28.2,
+      28.8,
       0,
-      6
+      5
      ],
      [
       "cleaning company in qatar",
@@ -3263,9 +3287,9 @@
      ],
      [
       "facility management qatar",
-      31.9,
+      33.7,
       0,
-      23
+      26
      ],
      [
       "integrated facility management",
@@ -3287,9 +3311,9 @@
      ],
      [
       "facilities management",
-      3,
+      26.3,
       0,
-      2
+      3
      ],
      [
       "facilities management companies",
@@ -3313,7 +3337,7 @@
       "compass cleaning company",
       3.1,
       2,
-      36
+      37
      ],
      [
       "company maintenance",
@@ -3335,9 +3359,9 @@
      ],
      [
       "hvac maintenance",
-      5,
+      6.4,
       0,
-      3
+      8
      ],
      [
       "emergency air conditioner repair",
@@ -3369,8 +3393,8 @@
   "compasswaterproof.com": {
    "QA": {
     "clicks": 1,
-    "impr": 29,
-    "ctr": 3.4,
+    "impr": 30,
+    "ctr": 3.3,
     "pos": 10.0,
     "kw": [
      [
@@ -3399,9 +3423,9 @@
      ],
      [
       "epoxy flooring qatar",
-      29,
+      22.7,
       0,
-      2
+      3
      ],
      [
       "polyurethane foam waterproofing",
@@ -3579,9 +3603,9 @@
    },
    "GCC": {
     "clicks": 2,
-    "impr": 127,
-    "ctr": 1.6,
-    "pos": 22.0,
+    "impr": 121,
+    "ctr": 1.7,
+    "pos": 21.8,
     "kw": [
      [
       "waterproofing companies in qatar",
@@ -3609,9 +3633,9 @@
      ],
      [
       "epoxy flooring qatar",
-      24,
+      20.5,
       0,
-      3
+      4
      ],
      [
       "polyurethane foam waterproofing",
@@ -3657,9 +3681,9 @@
      ],
      [
       "cementitious waterproofing",
-      30.8,
+      31.6,
       0,
-      76
+      68
      ],
      [
       "waterproofing paint",
@@ -3669,9 +3693,9 @@
      ],
      [
       "polyurethane foam",
-      24,
+      23.5,
       1,
-      1
+      2
      ],
      [
       "waterproofing membrane",
@@ -3709,9 +3733,9 @@
   "compass-lg.com": {
    "QA": {
     "clicks": 1,
-    "impr": 19,
-    "ctr": 5.3,
-    "pos": 20.8,
+    "impr": 21,
+    "ctr": 4.8,
+    "pos": 20.2,
     "kw": [
      [
       "shipping companies in Qatar",
@@ -3739,9 +3763,9 @@
      ],
      [
       "logistics provider",
-      5.2,
+      4.4,
       0,
-      4
+      5
      ],
      [
       "freight forwarding",
@@ -3787,9 +3811,9 @@
      ],
      [
       "logistics systems Qatar",
-      24.9,
+      25.1,
       1,
-      15
+      16
      ]
     ]
    },
@@ -3949,9 +3973,9 @@
    },
    "GCC": {
     "clicks": 1,
-    "impr": 19,
-    "ctr": 5.3,
-    "pos": 20.8,
+    "impr": 21,
+    "ctr": 4.8,
+    "pos": 20.2,
     "kw": [
      [
       "shipping companies in Qatar",
@@ -3979,9 +4003,9 @@
      ],
      [
       "logistics provider",
-      5.2,
+      4.4,
       0,
-      4
+      5
      ],
      [
       "freight forwarding",
@@ -4027,9 +4051,9 @@
      ],
      [
       "logistics systems Qatar",
-      24.9,
+      25.1,
       1,
-      15
+      16
      ],
      [
       "shipping service companies",
@@ -4343,9 +4367,9 @@
    },
    "GCC": {
     "clicks": 0,
-    "impr": 34,
+    "impr": 35,
     "ctr": 0.0,
-    "pos": 6.5,
+    "pos": 6.6,
     "kw": [
      [
       "marketing agency digital",
@@ -4409,9 +4433,9 @@
      ],
      [
       "sunset media",
-      6.5,
+      6.6,
       0,
-      34
+      35
      ],
      [
       "Content Creation",
@@ -4867,6 +4891,10 @@
     [
      "2026-08-04",
      3.2
+    ],
+    [
+     "2026-08-05",
+     3.2
     ]
    ],
    "SA": [
@@ -4916,6 +4944,10 @@
     ],
     [
      "2026-08-04",
+     14.5
+    ],
+    [
+     "2026-08-05",
      14.5
     ]
    ],
@@ -4967,6 +4999,10 @@
     [
      "2026-08-04",
      23.0
+    ],
+    [
+     "2026-08-05",
+     23.0
     ]
    ],
    "GCC": [
@@ -5016,6 +5052,10 @@
     ],
     [
      "2026-08-04",
+     5.7
+    ],
+    [
+     "2026-08-05",
      5.7
     ]
    ]
@@ -5069,6 +5109,10 @@
     [
      "2026-08-04",
      12.1
+    ],
+    [
+     "2026-08-05",
+     12.6
     ]
    ],
    "SA": [
@@ -5118,6 +5162,10 @@
     ],
     [
      "2026-08-04",
+     2.0
+    ],
+    [
+     "2026-08-05",
      2.0
     ]
    ],
@@ -5169,6 +5217,10 @@
     [
      "2026-08-04",
      6.7
+    ],
+    [
+     "2026-08-05",
+     6.7
     ]
    ],
    "GCC": [
@@ -5219,6 +5271,10 @@
     [
      "2026-08-04",
      11.1
+    ],
+    [
+     "2026-08-05",
+     11.4
     ]
    ]
   },
@@ -5271,6 +5327,10 @@
     [
      "2026-08-04",
      10.0
+    ],
+    [
+     "2026-08-05",
+     10.0
     ]
    ],
    "SA": [
@@ -5320,6 +5380,10 @@
     ],
     [
      "2026-08-04",
+     7.0
+    ],
+    [
+     "2026-08-05",
      7.0
     ]
    ],
@@ -5371,6 +5435,10 @@
     [
      "2026-08-04",
      52.2
+    ],
+    [
+     "2026-08-05",
+     52.2
     ]
    ],
    "GCC": [
@@ -5421,6 +5489,10 @@
     [
      "2026-08-04",
      22.0
+    ],
+    [
+     "2026-08-05",
+     21.8
     ]
    ]
   },
@@ -5473,6 +5545,10 @@
     [
      "2026-08-04",
      20.8
+    ],
+    [
+     "2026-08-05",
+     20.2
     ]
    ],
    "SA": [
@@ -5522,6 +5598,10 @@
     ],
     [
      "2026-08-04",
+     null
+    ],
+    [
+     "2026-08-05",
      null
     ]
    ],
@@ -5573,6 +5653,10 @@
     [
      "2026-08-04",
      null
+    ],
+    [
+     "2026-08-05",
+     null
     ]
    ],
    "GCC": [
@@ -5623,6 +5707,10 @@
     [
      "2026-08-04",
      20.8
+    ],
+    [
+     "2026-08-05",
+     20.2
     ]
    ]
   },
@@ -5675,6 +5763,10 @@
     [
      "2026-08-04",
      1.0
+    ],
+    [
+     "2026-08-05",
+     1.0
     ]
    ],
    "SA": [
@@ -5724,6 +5816,10 @@
     ],
     [
      "2026-08-04",
+     2.5
+    ],
+    [
+     "2026-08-05",
      2.5
     ]
    ],
@@ -5775,6 +5871,10 @@
     [
      "2026-08-04",
      1.0
+    ],
+    [
+     "2026-08-05",
+     1.0
     ]
    ],
    "GCC": [
@@ -5825,6 +5925,10 @@
     [
      "2026-08-04",
      6.5
+    ],
+    [
+     "2026-08-05",
+     6.6
     ]
    ]
   },
@@ -5877,6 +5981,10 @@
     [
      "2026-08-04",
      null
+    ],
+    [
+     "2026-08-05",
+     null
     ]
    ],
    "SA": [
@@ -5926,6 +6034,10 @@
     ],
     [
      "2026-08-04",
+     null
+    ],
+    [
+     "2026-08-05",
      null
     ]
    ],
@@ -5977,6 +6089,10 @@
     [
      "2026-08-04",
      null
+    ],
+    [
+     "2026-08-05",
+     null
     ]
    ],
    "GCC": [
@@ -6026,6 +6142,10 @@
     ],
     [
      "2026-08-04",
+     null
+    ],
+    [
+     "2026-08-05",
      null
     ]
    ]
