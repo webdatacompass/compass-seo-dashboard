@@ -1,0 +1,20 @@
+# The dashboard is served publicly (GitHub Pages has no access control), so keep
+# it out of search results until it moves behind an auth gate.
+#
+# index.html is deliberately CRAWLABLE: it carries <meta name="robots" content=
+# "noindex"> and a crawler has to fetch the page to see that. Blocking it here
+# instead would stop the noindex ever being read, which is how a page ends up
+# indexed anyway from an external link.
+#
+# The data files cannot carry a meta tag, and GitHub Pages cannot set an
+# X-Robots-Tag header, so Disallow is the only lever available for them.
+# Note what this is and is not: robots.txt keeps well-behaved crawlers out of
+# the index. It is not access control -- anyone who requests these paths still
+# gets them. Only moving off GitHub Pages fixes that.
+
+User-agent: *
+Allow: /
+Disallow: /data.json
+Disallow: /keywords.json
+Disallow: /requirements.txt
+Disallow: /scripts/

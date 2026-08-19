@@ -1,0 +1,18 @@
+# Cloudflare Pages reads this file; GitHub Pages ignores it entirely, so it is
+# safe to land before the migration and takes effect the moment Cloudflare
+# serves the site.
+#
+# X-Robots-Tag is the part robots.txt cannot do: it applies to data.json and
+# keywords.json, which have no way to declare noindex themselves.
+
+/*
+  X-Robots-Tag: noindex, nofollow
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: no-referrer
+  X-Frame-Options: DENY
+
+# The dashboard fetches data.json with cache:'no-store' and the file is rewritten
+# daily, so there is nothing to gain from letting an intermediary hold it.
+/data.json
+  Cache-Control: no-store
+  X-Robots-Tag: noindex, nofollow
