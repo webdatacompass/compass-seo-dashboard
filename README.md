@@ -56,10 +56,50 @@ repository is private, and serving one privately needs an organisation on
 Enterprise Cloud — so making this repo private would hide the source while
 leaving the data served. Closing it means moving the hosting.
 
-**Planned:** Cloudflare Pages with Cloudflare Access in front (free up to 50
-users, real per-person sign-in rather than a shared password). The pipeline does
-not change — the Action still commits `data.json`, and Cloudflare builds from the
-repo instead of Pages.
+**In progress:** Cloudflare Pages with Cloudflare Access in front (free up to 50
+users, real per-person sign-in rather than a shared password).
+
+`.github/workflows/deploy.yml` does the deploying, and it is already committed.
+It stays inert until two repo secrets exist, then publishes on every data
+refresh. It uses **Direct Upload** rather than a Git connection, because a Git
+connection can only be created through the dashboard's OAuth flow, and this way
+the whole pipeline lives in the repo.
+
+It also publishes **only** `index.html`, `data.json`, `robots.txt` and
+`_headers` — the page never requests anything else — so `keywords.json`,
+`requirements.txt` and `scripts/` stop being downloadable at all. That is a real
+reduction on its own, separate from the auth gate.
+
+### Finishing the setup
+
+1. **Cloudflare API token** — dash.cloudflare.com > My Profile > API Tokens >
+   Create Token, template *Edit Cloudflare Workers*, or a custom token with
+   `Account / Cloudflare Pages / Edit`. Copy the account ID from any zone's
+   overview sidebar.
+2. **Repo secrets** (needs repo admin) — Settings > Secrets and variables >
+   Actions:
+   - `CLOUDFLARE_API_TOKEN`
+   - `CLOUDFLARE_ACCOUNT_ID`
+
+   The next data refresh deploys automatically; or run the *Deploy to Cloudflare
+   Pages* workflow by hand.
+3. **Cloudflare Access** — Zero Trust > Access > Applications > Add an
+   application > **Self-hosted**, hostname `compass-seo-dashboard.pages.dev`.
+   One policy: action *Allow*, include the specific emails. Email OTP needs no
+   identity provider; add Google as an IdP for one-click sign-in.
+4. **Then, with repo admin:** disable GitHub Pages (Settings > Pages) so
+   `analysis.compass-arabia.com` stops serving the data unauthenticated. Delete
+   `CNAME` at the same time — it is a Pages artefact and means nothing to
+   Cloudflare.
+
+Two traps in that order of operations:
+
+- **Protecting *preview deployments* is not the same setting** and does not
+  cover the production URL. It has to be a self-hosted application on the
+  production hostname, or the site stays wide open while looking protected.
+- **A custom domain cannot be added to a hostname that already has an Access
+  policy.** If `analysis.compass-arabia.com` is ever pointed at Cloudflare
+  Pages, add the custom domain *first*, then apply Access.
 
 Interim mitigations already in place, and their limits:
 

@@ -1,0 +1,97 @@
+name: Deploy to Cloudflare Pages
+
+# GitHub Pages served every file in the repo root -- keywords.json,
+# requirements.txt and scripts/fetch_data.py included -- and the dashboard
+# requests none of them. It only ever fetches data.json. So this publishes just
+# the four files the site actually needs, which takes the keyword strategy off
+# the public internet on its own, before the Access gate is even considered.
+#
+# Two triggers, because either alone leaves a gap:
+#   push          - a human editing index.html
+#   workflow_run  - the daily data commit. That commit is made with
+#                   GITHUB_TOKEN, and pushes made with GITHUB_TOKEN
+#                   deliberately do not start workflows, so a push trigger by
+#                   itself would never deploy fresh data.
+#
+# Inert until CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID are set, so it is
+# safe to land before the Cloudflare side exists: it reports what is missing and
+# exits green rather than failing every day until someone finishes the setup.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - index.html
+      - data.json
+      - robots.txt
+      - _headers
+      - .github/workflows/deploy.yml
+  workflow_run:
+    workflows: ['Refresh dashboard data']
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages-deploy
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Explicit: on a workflow_run trigger the default ref is not obviously
+          # the branch that was just committed to.
+          ref: main
+
+      - name: Are the Cloudflare secrets set?
+        id: gate
+        env:
+          TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          ACCOUNT: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          if [ -n "$TOKEN" ] && [ -n "$ACCOUNT" ]; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+            echo "Cloudflare secrets present."
+          else
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            echo "::notice title=Cloudflare not configured yet::Set CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID in repo secrets to enable deploys. See the README."
+          fi
+
+      - name: Stage only what the dashboard serves
+        if: steps.gate.outputs.ready == 'true'
+        run: |
+          mkdir -p _site
+          cp index.html data.json robots.txt _headers _site/
+          # Fail loudly rather than quietly publishing something private if this
+          # list is ever edited carelessly.
+          for forbidden in keywords.json requirements.txt scripts .github; do
+            if [ -e "_site/$forbidden" ]; then
+              echo "REFUSING to deploy: _site contains $forbidden"
+              exit 1
+            fi
+          done
+          echo "staging $(find _site -type f | wc -l) files:"
+          find _site -type f -printf '  %p (%s bytes)\n'
+
+      - name: Deploy
+        if: steps.gate.outputs.ready == 'true'
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          # First run creates the project; later runs report it exists, which is
+          # not an error. Direct Upload is used rather than a Git connection
+          # because a Git connection can only be made through the dashboard's
+          # OAuth flow, and this way the whole pipeline stays in the repo.
+          npx --yes wrangler@4 pages project create compass-seo-dashboard \
+            --production-branch=main || echo "project already exists — continuing"
+
+          npx --yes wrangler@4 pages deploy _site \
+            --project-name=compass-seo-dashboard \
+            --branch=main
