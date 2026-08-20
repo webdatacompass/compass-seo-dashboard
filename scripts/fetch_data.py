@@ -89,6 +89,15 @@ def creds():
     path = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS")
     if not path or not os.path.exists(path):
         sys.exit("GOOGLE_APPLICATION_CREDENTIALS not set or file missing.")
+    # Say which identity this is. Every access failure here is some variant of
+    # "that property or sheet was never shared with THIS account", and a 403 that
+    # does not name the account leaves you guessing which of several to share
+    # with. The client_email is an identifier, not a secret.
+    try:
+        with open(path, encoding="utf-8") as f:
+            print("service account: " + json.load(f).get("client_email", "?"))
+    except Exception:
+        pass
     return service_account.Credentials.from_service_account_file(path, scopes=SCOPES)
 
 
