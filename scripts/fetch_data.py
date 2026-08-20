@@ -55,7 +55,30 @@ WINDOW_DAYS = 28
 SCOPES = [
     "https://www.googleapis.com/auth/webmasters.readonly",
     "https://www.googleapis.com/auth/analytics.readonly",
+    "https://www.googleapis.com/auth/spreadsheets.readonly",
 ]
+
+# ---------------------------------------------------------------------------
+# Blog pipeline (the "Blog Pumper" tab).
+#
+# Same Blog Topics sheet the publisher itself works from, so the dashboard
+# reports the real queue rather than a copy that can drift. Read-only here:
+# nothing in this repo ever writes to it.
+#
+# Sheet tab -> the site key used everywhere else in this file. Compass Furniture
+# has a tab but is deliberately absent: it is ON HOLD in the publisher, so
+# showing a queue for it would imply posts are coming.
+# ---------------------------------------------------------------------------
+BLOG_SHEET_ID = os.environ.get("BLOG_SHEET_ID", "1ghE9cTqPa8haS_AIgvpDxS8AcCWRgBxrNQ5VwQgx70o")
+BLOG_TABS = {
+    "Compass Waterproof": "compasswaterproof.com",
+    "Compass Arabia": "compass-arabia.com",
+    "Compass FM": "compassfmgcc.com",
+    "Compass Logistics": "compass-lg.com",
+    "Sunset Media": "sunsetmediame.com",
+    "Compass ITS": "compass-its.com",
+}
+POSTS_PER_WEEK = 2   # the publisher's cadence, used only to turn a count into weeks
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA_PATH = os.path.join(REPO_ROOT, "data.json")
@@ -268,6 +291,73 @@ def fetch_ga4_site(client, prop):
             "events": events, "keyEvents": key_events, "channels": channels, "topPages": top_pages}
 
 
+# ----------------------------- Blog pipeline -------------------------------
+
+def _col_index(header, *names):
+    """Find a column by header name, case-insensitively, falling back to a known
+    position. The publisher addresses these columns positionally (Status is F,
+    the live URL is H), so the fallback is what it actually relies on; matching
+    on the header first just means a reordered sheet does not silently report
+    nonsense."""
+    lowered = [str(h).strip().lower() for h in header]
+    for n in names[:-1]:
+        if n.lower() in lowered:
+            return lowered.index(n.lower())
+    return names[-1]
+
+
+def fetch_blog(svc):
+    """Per-site publishing queue, straight from the Blog Topics sheet.
+
+    Reports; never acts. Topping the queue up is the SEO specialist's job, and a
+    thin queue is a fact to surface rather than a problem for this script to
+    solve."""
+    out = {}
+    resp = svc.spreadsheets().values().batchGet(
+        spreadsheetId=BLOG_SHEET_ID,
+        ranges=[f"'{tab}'!A1:I200" for tab in BLOG_TABS],
+    ).execute()
+
+    for (tab, key), vr in zip(BLOG_TABS.items(), resp.get("valueRanges", [])):
+        rows = vr.get("values", [])
+        if not rows:
+            out[key] = {"tab": tab, "pending": 0, "live": 0, "weeks": 0.0,
+                        "queue": [], "recent": [], "note": "no rows returned"}
+            continue
+
+        header = rows[0]
+        i_title = _col_index(header, "title", "topic", 2)
+        i_status = _col_index(header, "status", 5)
+        i_link = _col_index(header, "live link", "live url", "url", 7)
+
+        cell = lambda r, i: (r[i].strip() if len(r) > i and r[i] else "")
+
+        pending, live, queue, recent = 0, 0, [], []
+        for r in rows[1:]:
+            status = cell(r, i_status).lower()
+            title = cell(r, i_title)
+            if not title:
+                continue
+            if status == "pending":
+                pending += 1
+                if len(queue) < 8:
+                    queue.append(title)
+            elif status == "live":
+                live += 1
+                recent.append([title, cell(r, i_link)])
+
+        out[key] = {
+            "tab": tab,
+            "pending": pending,
+            "live": live,
+            "weeks": round(pending / POSTS_PER_WEEK, 1),
+            # Newest last in the sheet, so the tail is the most recent.
+            "recent": list(reversed(recent[-5:])),
+            "queue": queue,
+        }
+    return out
+
+
 # --------------------------------- main ------------------------------------
 
 def append_history(hist, date_str, value):
@@ -298,6 +388,7 @@ def main():
     old_sites = existing.get("SITES", {})
     old_rankhist = existing.get("RANKHIST", {})
     backlinks = existing.get("BACKLINKS", {})
+    blog = existing.get("BLOG", {})
 
     # Targeted keyword list — the ONLY keywords tracked/shown on the dashboard.
     with open(KEYWORDS_PATH, encoding="utf-8") as f:
@@ -344,12 +435,24 @@ def main():
     for key, bl in backlinks.items():
         bl["history"] = append_history(bl.get("history", []), date_str, bl.get("total"))
 
+    # --- Blog pipeline (independent, like GSC and GA4: a sheet problem must not
+    # cost the day's search data). A 403 here means the Blog Topics sheet has not
+    # been shared with this service account — share it as Viewer; nothing in this
+    # repo writes to it.
+    try:
+        sheets = build("sheets", "v4", credentials=c, cache_discovery=False)
+        blog = fetch_blog(sheets)
+        print("OK  BLOG: " + ", ".join(f"{k}={v['pending']}p/{v['live']}L" for k, v in blog.items()))
+    except Exception as e:
+        print(f"ERR BLOG: {e} — keeping previous blog data", file=sys.stderr)
+
     out = {
         "generated": date_str,
         "SITES": SITES,
         "BACKLINKS": backlinks,
         "RANK": RANK,
         "RANKHIST": RANKHIST,
+        "BLOG": blog,
     }
     with open(DATA_PATH, "w", encoding="utf-8") as f:
         json.dump(out, f, ensure_ascii=False, indent=1)

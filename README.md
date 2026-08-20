@@ -29,6 +29,25 @@ Two deliberate choices worth knowing before changing anything:
 Search Console data lags ~3 days and the window is 28 days, both set at the top
 of `fetch_data.py`.
 
+## The two tabs
+
+**SEO analysis** is everything above: Search Console, GA4, SERP by market,
+backlinks.
+
+**Blog Pumper** reports the publishing pipeline, read from the same Blog Topics
+sheet the publisher itself works from — per-property queue depth, runway in weeks
+at two posts a week, what is next up, and what has gone live. It reports and
+never writes: topping the queue up is the SEO specialist's job, and a thin queue
+is a fact to surface rather than something for this repo to fix.
+
+Compass Furniture has a tab in the sheet but is deliberately excluded, because it
+is ON HOLD in the publisher and showing a queue would imply posts are coming.
+
+The sheet must be shared with this repo's service account as **Viewer**. If it is
+not, the blog panel says so and the run still succeeds — the blog fetch is
+wrapped like Search Console and GA4 are, so a sheet problem cannot cost the day's
+search data.
+
 ## Running it locally
 
 ```bash
