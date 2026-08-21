@@ -82,6 +82,8 @@ jobs:
         run: |
           mkdir -p _site
           cp index.html data.json robots.txt _headers _site/
+          # The header mark is the only image the page requests.
+          mkdir -p _site/assets && cp assets/mark-light.svg _site/assets/
           # Fail loudly rather than quietly publishing something private if this
           # list is ever edited carelessly.
           for forbidden in keywords.json requirements.txt scripts .github; do
@@ -92,7 +94,7 @@ jobs:
           done
           # Assert what the page actually requests, for the same reason the
           # forbidden list exists.
-          for required in index.html data.json robots.txt _headers; do
+          for required in index.html data.json robots.txt _headers assets/mark-light.svg; do
             if [ ! -s "_site/$required" ]; then
               echo "REFUSING to deploy: _site is missing $required"
               exit 1

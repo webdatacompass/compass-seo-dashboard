@@ -63,6 +63,22 @@ percentage.
 | Impressions by position | impressions bucketed 1–3 / 4–10 / 11–20 / 21+ |
 | Position trend | `RANKHIST[domain][market]`, per property and market |
 
+### The hero
+
+The brand monogram sits in the top-right corner of the header, at header size
+rather than scaled up as decoration, and hides below 700px where the title needs
+the width.
+
+The verdict sentence is the focal point: an accent rule, then the conclusion at
+clamp(22-32px), with the supporting clause below it at 14px muted so it reads as
+support rather than competing. It was previously 16px sitting under two lines of
+metadata, which buried the one sentence the page exists to deliver.
+
+The at-a-glance row gives the first card -- clicks, the number every other figure
+qualifies -- double width and a 58px value against 26px for the rest. Five
+identical cards gave the eye nowhere to land. The hierarchy is size only: no new
+colours, no new surfaces.
+
 ### Design
 
 Dark ground, **one accent**, and colour used only where it encodes data — bars,
