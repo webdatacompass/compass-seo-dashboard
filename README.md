@@ -172,6 +172,16 @@ exactly the spot where confusion costs most. Minimum contrast on the ground is
 If a property is added without a colour, it falls back to `--focus` rather than
 rendering colourless.
 
+The **per-property detail band takes a wash of the selected property's colour**,
+so it is obvious at a glance whose numbers are on screen. 8% is the ceiling, not
+a taste call: at 10% the muted labels drop below 4.5:1 against the wash, measured
+for all six colours on both grounds. Light mixes toward the sheet; noir mixes
+toward something darker than its own ground, because the noir company colours
+are light and mixing them into the ground would lift it and cost that contrast.
+Panels inside stay on the plain sheet so they read as cards on the wash. The
+plain `background` declaration precedes the `color-mix()` one, so a browser
+without `color-mix` gets the neutral ground rather than nothing.
+
 ### Two grounds
 
 Everything from the property table down sits on `--ground` (`#f1ece7`), a

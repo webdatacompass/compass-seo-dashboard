@@ -54,6 +54,7 @@
   --focus:       #1f4e79;   /* look here — no judgement implied */
   --bad-wash:    #f9ece8;   /* row ground for the act-on block */
   --ground:      #f1ece7;   /* everything from the property table down */
+  --wash-base:   #fbf9f7;
   --co-arabia:     #5c6118;
   --co-fm:         #0f6357;
   --co-waterproof: #0a5aa8;
@@ -90,6 +91,7 @@
   --focus:       #7fb3e6;
   --bad-wash:    #241511;
   --ground:      #0e0b0a;
+  --wash-base:   #0b0908;
   --co-arabia:     #b9c266;
   --co-fm:         #5fc0b0;
   --co-waterproof: #6fa8e8;
@@ -333,6 +335,18 @@ img, div, span, table, input, button { border-radius: 0; }
 .lower { background: var(--ground); border-top: 1px solid var(--divider); }
 .lower .panel-r,
 .lower .subpanel.tinted { background: var(--sheet); }
+
+/* The per-property band takes a wash of whichever property is selected, so it
+   is obvious at a glance whose numbers you are looking at. 8% is the ceiling:
+   at 10% the muted text drops below 4.5:1 against it, which was measured for
+   all six colours on both grounds rather than judged by eye. The plain
+   declaration first is the fallback for anything without color-mix. */
+.detail { background: var(--ground); }
+.detail { background: color-mix(in srgb, var(--co, transparent) 8%, var(--wash-base)); }
+/* Panels inside stay on the plain sheet, so they read as cards on the wash. */
+.detail .panel-r,
+.detail .subpanel.tinted { background: var(--sheet); }
+.detail .band-head { padding-top: 26px; }
 
 /* --- generic panels -------------------------------------------------- */
 .panels { display: grid; grid-template-columns: 1fr 1px 1fr; }
@@ -936,7 +950,7 @@ function bandDetail(m, d) {
   if (!r || !s) return '';
   var q = s.queries || [], pages = s.pages || [], ga4 = s.ga4, bl = r.backlinks;
 
-  var h = '<div class="band">' +
+  var h = '<div class="band detail" style="--co:' + coOf(curSite) + '">' +
     '<div class="band-head"><div><div class="rule-accent" style="margin-bottom:12px;background:' + coOf(curSite) + '"></div>' +
       '<div class="band-title mono">Per-property detail</div></div>' +
       switcher('siteSwitch', m.rows.map(function (x) {
