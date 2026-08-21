@@ -146,49 +146,90 @@ Where it lands:
 
 `--focus` exists precisely so "important" and "bad" stop being the same signal.
 
+### The governing rule: chroma is inversely proportional to area
+
+This was missing at first and its absence was the whole problem. Large surfaces
+— grounds, washes, rails, bars — stay muted. Saturated colour is reserved for
+small text signals. Brand red is the single loud thing on the page, and it covers
+about 100 characters out of 10,000.
+
+Measured on the rendered page: no colour above chroma 25 covers a large area, and
+2.2% of all characters exceed chroma 40.
+
 ### Each property has its own colour
 
-Separate from status, and never mixed with it. A property keeps one colour in the
-table rail, the share-of-clicks bar, the property switcher, its detail band rule
-and its own charts, so it can be followed down the page without reading names.
+Separate from status, never mixed with it. A property keeps one colour in the
+table rail, the property switcher, its detail band rule, its charts and the wash
+behind its detail band.
 
 | Property | Light | Noir |
 | --- | --- | --- |
-| Compass Arabia | `#5c6118` olive | `#b9c266` |
-| Compass FM GCC | `#0f6357` teal | `#5fc0b0` |
-| Compass Waterproof | `#0a5aa8` blue | `#6fa8e8` |
-| Compass Logistics | `#4a4bc4` indigo | `#9a9bf0` |
-| Sunset Media | `#99306b` magenta | `#e07fb4` |
-| Compass ITS | `#4a5560` slate | `#9aa8b4` |
+| Compass Arabia | `#70684e` | `#c0b695` |
+| Compass FM GCC | `#546e5a` | `#9ebea5` |
+| Compass Waterproof | `#426f73` | `#8abfc3` |
+| Compass Logistics | `#4d6c81` | `#97bbd4` |
+| Sunset Media | `#646681` | `#b2b4d5` |
+| Compass ITS | `#796175` | `#ccadc7` |
 
-These were picked against two constraints, not by eye: each must be distinct
-from the others (closest pair is dE 26 in Lab, comfortably above the ~20 needed)
-**and** from all four status colours (closest is dE 22). Arabia is olive rather
-than its brand bronze because bronze sat dE 13 from the warn amber that the
-runway column immediately beside it uses — the two would have been confusable in
-exactly the spot where confusion costs most. Minimum contrast on the ground is
-5.6:1 in light and 7.1:1 in noir.
+**These are generated, not picked.** Fixed lightness and fixed chroma, varying
+only hue: L* 44, C* 16, measured spread of 0.2 and 0.8 on the rendered page. That
+is what makes a categorical set read as one family.
 
-If a property is added without a colour, it falls back to `--focus` rather than
-rendering colourless.
+The first attempt did the opposite and looked terrible. It chose the six by
+*maximising* Lab distance between them, which sounds rigorous and is the wrong
+objective: maximising distance spreads hue **and** chroma **and** lightness, so
+chroma ran from 8 (a near-grey slate) to 73 (a vivid indigo) and the set read as
+a handful of highlighter pens. Discriminability and harmony are different
+properties, and only the first was being checked.
 
-The **per-property detail band takes a wash of the selected property's colour**,
-so it is obvious at a glance whose numbers are on screen. 8% is the ceiling, not
-a taste call: at 10% the muted labels drop below 4.5:1 against the wash, measured
-for all six colours on both grounds. Light mixes toward the sheet; noir mixes
-toward something darker than its own ground, because the noir company colours
-are light and mixing them into the ground would lift it and cost that contrast.
-Panels inside stay on the plain sheet so they read as cards on the wash. The
-plain `background` declaration precedes the `color-mix()` one, so a browser
-without `color-mix` gets the neutral ground rather than nothing.
+Hues also stay at least 60 degrees clear of the brand red, so a company marker
+can never be misread as the alarm.
+
+Two placement rules matter as much as the values:
+
+- **One identity marker per row.** The rail carries it. The share-of-clicks bar
+  used to carry it too, which doubled the table's colour weight for no extra
+  information; it is neutral again and encodes only magnitude.
+- **Only the selected property is coloured in the switcher.** Six swatches in a
+  row is the same rainbow in miniature, and greying the rest makes the selection
+  read faster anyway.
+
+Colour appears at full strength only in the per-property detail band, where by
+construction exactly one property is on screen, so there is nothing for it to
+clash with.
+
+### Links
+
+Links take `--focus`. There was no global `a` rule for a while, so every anchor
+outside a data table fell through to the browser default `#0000ee` — chroma 127,
+louder than anything in the palette, on more characters than the brand red. Worth
+recording because it is invisible in a stylesheet review and obvious in a
+measurement of what actually rendered.
 
 ### Two grounds
 
-Everything from the property table down sits on `--ground` (`#f1ece7`), a
-slightly deeper paper than the sheet above it, so the summary you read first and
-the detail you dig through separate at a glance. Panels that are tinted on the
-sheet invert inside that region — they become the lighter colour — so they still
-read as raised rather than sunken.
+Separate the two regions by **lightness**, not by hue. The first attempt did the
+opposite and it clashed: sheet L* 98.0, alert wash L* 94.3, ground L* 93.7 — the
+wash and the ground sat 0.6 L* apart and differed only in hue, and two large
+adjacent areas at equal lightness with different hue is exactly what vibrates.
+
+Everything from the property table down sits on `--ground` (`#e9e3db`), which is
+7.5 L* below the sheet and 3.8 below the pink act-on wash — so the summary you
+read first and the detail you dig through separate at a glance, and the rows that
+need attention read as lighter and lift off the ground rather than fighting it.
+Panels that are tinted on the sheet invert inside that region, so they still read
+as raised rather than sunken.
+
+Two knock-on fixes that region needs, both applied by redefining the token inside
+`.lower` rather than chasing individual rules:
+
+- **`--muted` is darker there** (`#655f59`). The normal muted grey cleared 4.5:1
+  on the sheet but only 4.30 on the deeper ground, and read washed out well before
+  that — grey text on a grey background.
+- **`--hair` is darker there** (`#d8d0c5`). The sheet hairline against the new
+  ground measures **1.01**, which is invisible: every row separator in the table
+  would have disappeared. `#d8d0c5` reproduces the exact 1.20 the hairlines have
+  on the sheet.
 
 ### Charts
 
@@ -290,7 +331,19 @@ override, and both times the figures silently vanished on mobile instead.
 
 Wide tables scroll inside their own box, so the page itself never scrolls
 sideways. Brand assets are in `assets/` (wordmark and monogram, each in ink and
-off-white). The masthead uses the **monogram**: the supplied wordmark is a
+off-white). The **watermark** sits in the clear area beside the headline, whole.
+It used to be positioned against the two-column grid at `top: -90px`, so it
+straddled the column divider and lost a quarter of its height to
+`overflow: hidden` — what showed was a fragment of a chevron. It lives inside the
+left cell now. It is smaller than before because the gap beside the headline is
+only about 180px tall, and correspondingly less transparent since nothing sits
+behind it any more.
+
+The headline carries a two-line `min-height`. The headline is generated, so its
+length moves with the data, and without that reservation a short one pulls the
+metrics row up into the watermark. It also keeps the hero the same height from day
+to day, which matters for a page that gets screenshotted.
+The masthead uses the **monogram**: the supplied wordmark is a
 stacked lockup, so at masthead height its "COMPASS GROUP" text rendered about
 10px tall and read as mush, and the band already says what this is in words.
 

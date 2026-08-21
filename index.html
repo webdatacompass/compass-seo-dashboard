@@ -53,14 +53,14 @@
   --warn:        #8a5a10;   /* not wrong yet, but close */
   --focus:       #1f4e79;   /* look here — no judgement implied */
   --bad-wash:    #f9ece8;   /* row ground for the act-on block */
-  --ground:      #f1ece7;   /* everything from the property table down */
+  --ground:      #e9e3db;   /* everything from the property table down */
   --wash-base:   #fbf9f7;
-  --co-arabia:     #5c6118;
-  --co-fm:         #0f6357;
-  --co-waterproof: #0a5aa8;
-  --co-logistics:  #4a4bc4;
-  --co-sunset:     #99306b;
-  --co-its:        #4a5560;
+  --co-arabia:     #70684e;
+  --co-fm:         #546e5a;
+  --co-waterproof: #426f73;
+  --co-logistics:  #4d6c81;
+  --co-sunset:     #646681;
+  --co-its:        #796175;
   --good-wash:   #eef4ef;
   /* One padding token, so every band lines up and widens together. */
   --pad: clamp(20px, 3.2vw, 60px);
@@ -103,12 +103,12 @@
   --bad-wash:    #241511;
   --ground:      #0e0b0a;
   --wash-base:   #0b0908;
-  --co-arabia:     #b9c266;
-  --co-fm:         #5fc0b0;
-  --co-waterproof: #6fa8e8;
-  --co-logistics:  #9a9bf0;
-  --co-sunset:     #e07fb4;
-  --co-its:        #9aa8b4;
+  --co-arabia:     #c0b695;
+  --co-fm:         #9ebea5;
+  --co-waterproof: #8abfc3;
+  --co-logistics:  #97bbd4;
+  --co-sunset:     #b2b4d5;
+  --co-its:        #ccadc7;
   --good-wash:   #16201a;
 }
 
@@ -125,6 +125,8 @@ body {
 }
 /* Radius 0 everywhere. Load-bearing to the aesthetic — do not soften. */
 img, div, span, table, input, button { border-radius: 0; }
+a { color: var(--focus); text-decoration: none; }
+a:hover { text-decoration: underline; }
 
 /* The sheet fills the window: no desk, no border, no shadow. The broadsheet
    grammar is carried by the ink bands and rule weights, not by a card. */
@@ -199,16 +201,19 @@ img, div, span, table, input, button { border-radius: 0; }
 /* --- hero ------------------------------------------------------------ */
 .hero { overflow: hidden; }
 .watermark {
-  position: absolute; right: 26%; top: -90px; width: 380px;
-  opacity: 0.05; pointer-events: none;
+  position: absolute; right: 4%; top: 12px;
+  width: clamp(112px, 11vw, 168px);
+  opacity: 0.1; pointer-events: none;
 }
-:root[data-theme="noir"] .watermark { opacity: 0.045; }
+:root[data-theme="noir"] .watermark { opacity: 0.085; }
+
 .hero-left  { position: relative; padding: 32px var(--pad) 26px; }
 .hero-right { position: relative; padding: 32px var(--pad) 26px; background: var(--tint); }
 .kicker { width: 44px; height: 3px; background: var(--accent); margin-bottom: 18px; }
 .headline {
   font-weight: 700; font-size: clamp(32px, 3.2vw, 48px); line-height: 1.06;
   letter-spacing: -0.024em; max-width: 19ch; text-wrap: pretty;
+  min-height: 2.12em;
 }
 .metrics {
   display: flex; align-items: flex-end; gap: 30px; flex-wrap: wrap;
@@ -330,7 +335,7 @@ img, div, span, table, input, button { border-radius: 0; }
 .psub { font-size: var(--fs-small); color: var(--muted); margin-top: 2px; }
 .psub-extra { display: none; }
 .track { height: 7px; background: var(--hair); }
-.fill { height: 7px; background: var(--focus); }
+.fill { height: 7px; background: var(--bar-neutral); }
 .pclicks { font-weight: 600; font-size: var(--fs-row); letter-spacing: -0.02em; }
 .pfig { font-size: var(--fs-body); color: var(--body); }
 .pvs { font-size: var(--fs-body); font-weight: 600; color: var(--body); }
@@ -344,7 +349,13 @@ img, div, span, table, input, button { border-radius: 0; }
 /* Everything from the property table down sits on a slightly deeper paper, so
    the summary you read first and the detail you dig through are separable at a
    glance. Panels that were tinted invert inside it, to stay readable. */
-.lower { background: var(--ground); border-top: 1px solid var(--divider); }
+.lower {
+  background: var(--ground);
+  border-top: 1px solid var(--divider);
+  --muted: #655f59;
+  --hair: #d8d0c5;
+}
+:root[data-theme="noir"] .lower { --muted: #95897e; --hair: #2e2721; }
 .lower .panel-r,
 .lower .subpanel.tinted { background: var(--sheet); }
 
@@ -402,7 +413,7 @@ img, div, span, table, input, button { border-radius: 0; }
 .dt td { padding: 9px 10px 9px 0; border-bottom: 1px solid var(--hair); vertical-align: top; }
 .dt tr:last-child td { border-bottom: 0; }
 .dt .kw { max-width: 42ch; overflow-wrap: anywhere; }
-.dt a { color: var(--accent); text-decoration: none; }
+.dt a { color: var(--focus); }
 .dt a:hover { text-decoration: underline; }
 .scrollx { overflow-x: auto; }
 
@@ -471,6 +482,9 @@ img, div, span, table, input, button { border-radius: 0; }
   .secondaries { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 0; }
   .secondary { border-left: 0; padding: 0 16px 0 0; }
   .kpi { padding: 0 14px; }
+}
+@media (max-width: 900px) {
+  .watermark { display: none; }
 }
 @media (max-width: 620px) {
   .masthead, .foot { flex-direction: column; align-items: flex-start; gap: 12px; }
@@ -823,7 +837,9 @@ function barRow(label, value, max, sub, accent) {
 
 function switcher(id, items, active) {
   return '<div class="switch" id="' + id + '">' + items.map(function (it) {
-    var sw = it.colour ? '<span class="swatch" style="background:' + it.colour + '"></span>' : '';
+    var on = it.value === active;
+    var sw = it.colour ? '<span class="swatch" style="background:' +
+      (on ? it.colour : 'var(--bar-neutral)') + '"></span>' : '';
     var style = (it.colour && it.value === active) ? ' style="color:' + it.colour + '"' : '';
     return '<button type="button" class="sw-btn' + (it.value === active ? ' active' : '') +
       '" data-v="' + esc(it.value) + '"' + style + '>' + sw + esc(it.label) + '</button>';
@@ -849,8 +865,7 @@ function bandProperties(m) {
         '<span class="psub-extra"> · ' + n0(r.impr) + ' impr · pos ' +
           (r.pos == null ? '—' : r.pos) + (r.weeks != null ? ' · ' + r.weeks.toFixed(1) + ' wk queue' : '') + '</span>' +
       '</div></div>' +
-      '<div class="col-share"><div class="track"><div class="fill" style="width:' + r.share +
-        '%;background:' + coOf(r.key) + '"></div></div></div>' +
+      '<div class="col-share"><div class="track"><div class="fill" style="width:' + r.share + '%"></div></div></div>' +
       '<div class="pclicks mono num right">' + n0(r.clicks) + '</div>' +
       '<div class="pvs num right' + dirClass(r.vs) + '">' + pctStr(r.vs) + '</div>' +
       '<div class="pfig num right col-impr">' + n0(r.impr) + '</div>' +
@@ -1177,8 +1192,9 @@ function render() {
   h += '<div id="tab-search"' + (curTab === 'search' ? '' : ' hidden') + '>';
 
   h += '<div class="split hero band">' +
-    '<img class="watermark" src="assets/mark-ink.svg" alt="">' +
-    '<div class="hero-left"><div class="kicker"></div>' +
+    '<div class="hero-left">' +
+      '<img class="watermark" src="assets/mark-ink.svg" alt="">' +
+      '<div class="kicker"></div>' +
       '<div class="headline mono">' + esc(headline(m)) + '</div>' +
       '<div class="metrics"><div><div class="lead-row">' +
         '<div class="lead mono num">' + n0(m.clicks) + '</div>' +
