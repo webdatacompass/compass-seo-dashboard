@@ -1,1320 +1,199 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="robots" content="noindex, nofollow">
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23201c1a'/%3E%3Crect x='6' y='19' width='5' height='7' fill='%23a89e97'/%3E%3Crect x='13.5' y='13' width='5' height='13' fill='%23a89e97'/%3E%3Crect x='21' y='7' width='5' height='19' fill='%23c02a10'/%3E%3C/svg%3E">
-<title>Compass Group — SEO Performance Dashboard</title>
-<style>
-/* Self-hosted so the page has no third-party requests: it carries commercial
-   figures and is moving behind an auth gate, where a font call to a CDN would
-   leak the referrer. Both families are variable, so one file covers every
-   weight the design uses. */
-@font-face {
-  font-family: 'Inter';
-  src: url('fonts/inter-latin-var.woff2') format('woff2');
-  font-weight: 400 700;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'InterTight';
-  src: url('fonts/inter-tight-latin-var.woff2') format('woff2');
-  font-weight: 500 700;
-  font-display: swap;
-}
-
-/* Light is the approved design. The noir variant is opt-in via
-   <html data-theme="noir"> rather than prefers-color-scheme, because this sheet
-   is regularly exported as an image and the export should not depend on whose
-   laptop rendered it. */
-:root {
-  --sheet:       #fbf9f7;
-  --tint:        #f6f3f0;
-  --alert:       #f9ece8;
-  --alert-div:   #e8d8d2;
-  --ink:         #201c1a;
-  --ink-hair:    #4a4441;
-  --on-ink:      #f0ebe8;
-  --on-ink-mute: #b3aba7;
-  --text:        #201c1a;
-  --strong:      #3f3a37;
-  --body:        #55504c;
-  --muted:       #6f6862;
-  --muted-alert: #665f5a;
-  --divider:     #cdc6c1;
-  --hair:        #e9e4e0;
-  --hair-tint:   #e2ddd8;
-  --bar-neutral: #a89e97;
-  --tick-steady: #c2b9b3;
-  --accent:      #c02a10;
-  --bad:         #c02a10;   /* something is wrong or falling */
-  --good:        #276b32;   /* something improved */
-  --warn:        #8a5a10;   /* not wrong yet, but close */
-  --focus:       #1f4e79;   /* look here — no judgement implied */
-  --bad-wash:    #f9ece8;   /* row ground for the act-on block */
-  --ground:      #e9e3db;   /* everything from the property table down */
-  --wash-base:   #fbf9f7;
-  --co-arabia:     #70684e;
-  --co-fm:         #546e5a;
-  --co-waterproof: #426f73;
-  --co-logistics:  #4d6c81;
-  --co-sunset:     #646681;
-  --co-its:        #796175;
-  --good-wash:   #eef4ef;
-  /* One padding token, so every band lines up and widens together. */
-  --pad: clamp(20px, 3.2vw, 60px);
-  /* Type ramp. Floor is 12px: nothing on a screen dashboard should be smaller,
-     and tracked uppercase labels least of all. */
-  --fs-micro:  12px;
-  --fs-small:  13px;
-  --fs-body:   15px;
-  --fs-strong: 17px;
-  --fs-sub:    20px;
-  --fs-row:    24px;
-  --fs-alert:  24px;
-  --fs-metric: 30px;
-  --fs-chart:  38px;
-}
-:root[data-theme="noir"] {
-  --sheet:       #14100e;
-  --tint:        #1d1512;
-  --alert:       #1d1512;
-  --alert-div:   #3a322c;
-  --ink:         #0b0908;
-  --ink-hair:    #3a322c;
-  --on-ink:      #f0e9df;
-  --on-ink-mute: #8a7f75;
-  --text:        #f0e9df;
-  --strong:      #cfc5ba;
-  --body:        #b8ada2;
-  --muted:       #8a7f75;
-  --muted-alert: #8a7f75;
-  --divider:     #3a322c;
-  --hair:        #262019;
-  --hair-tint:   #262019;
-  --bar-neutral: #4a4038;
-  --tick-steady: #4a4038;
-  --accent:      #ff4a2b;
-  --bad:         #ff4a2b;
-  --good:        #7ecb8c;
-  --warn:        #e0a63c;
-  --focus:       #7fb3e6;
-  --bad-wash:    #241511;
-  --ground:      #0e0b0a;
-  --wash-base:   #0b0908;
-  --co-arabia:     #c0b695;
-  --co-fm:         #9ebea5;
-  --co-waterproof: #8abfc3;
-  --co-logistics:  #97bbd4;
-  --co-sunset:     #b2b4d5;
-  --co-its:        #ccadc7;
-  --good-wash:   #16201a;
-}
-
-*, *::before, *::after { box-sizing: border-box; }
-html, body { min-height: 100%; }
-body {
-  margin: 0;
-  background: var(--sheet);
-  color: var(--text);
-  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  font-size: var(--fs-body);
-  line-height: 1.5;
-  -webkit-font-smoothing: antialiased;
-}
-/* Radius 0 everywhere. Load-bearing to the aesthetic — do not soften. */
-img, div, span, table, input, button { border-radius: 0; }
-a { color: var(--focus); text-decoration: none; }
-a:hover { text-decoration: underline; }
-
-/* The sheet fills the window: no desk, no border, no shadow. The broadsheet
-   grammar is carried by the ink bands and rule weights, not by a card. */
-.sheet { width: 100%; background: var(--sheet); }
-.mono  { font-family: 'InterTight', 'Inter', system-ui, sans-serif; }
-.num   { font-variant-numeric: tabular-nums; }
-.right { text-align: right; }
-.pad   { padding-left: var(--pad); padding-right: var(--pad); }
-
-/* --- masthead -------------------------------------------------------- */
-.topbar { position: sticky; top: 0; z-index: 5; }
-.masthead {
-  display: flex; align-items: center; justify-content: space-between;
-  gap: 24px; padding: 16px var(--pad); background: var(--ink);
-}
-.masthead-left { display: flex; align-items: center; gap: 16px; min-width: 0; }
-.masthead-left img { height: 34px; width: 34px; display: block; flex: none; }
-.vrule { width: 1px; height: 24px; background: var(--ink-hair); flex: none; }
-.masthead-title {
-  font-weight: 600; font-size: var(--fs-small); letter-spacing: 0.1em;
-  text-transform: uppercase; color: var(--on-ink); white-space: nowrap;
-}
-.chips {
-  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
-  font-size: var(--fs-micro); letter-spacing: 0.12em; text-transform: uppercase;
-  color: var(--on-ink-mute);
-}
-.chip { border: 1px solid var(--ink-hair); padding: 4px 9px; white-space: nowrap; }
-.chip-date {
-  background: var(--accent); color: var(--sheet); padding: 4px 9px;
-  font-weight: 600; white-space: nowrap; border: 0;
-}
-
-/* --- tabs ------------------------------------------------------------ */
-.tabbar {
-  display: flex; gap: 0; background: var(--ink);
-  padding: 0 var(--pad); border-top: 1px solid var(--ink-hair);
-  overflow-x: auto;
-}
-.tab {
-  background: transparent; border: 0; border-bottom: 3px solid transparent;
-  color: var(--on-ink-mute); font-family: 'InterTight', 'Inter', system-ui, sans-serif;
-  font-weight: 600; font-size: var(--fs-small); letter-spacing: 0.08em; text-transform: uppercase;
-  padding: 13px 0 10px; margin-right: 28px; cursor: pointer;
-}
-.tab:hover { color: var(--on-ink); }
-.tab.active { color: var(--on-ink); border-bottom-color: var(--accent); }
-.tab:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.tab-count {
-  display: inline-block; margin-left: 8px; background: var(--ink-hair);
-  color: var(--on-ink); padding: 1px 7px; font-size: var(--fs-small); letter-spacing: 0.04em;
-}
-.tab.active .tab-count { background: var(--accent); color: #fff; }
-
-/* --- band scaffolding ------------------------------------------------- */
-.split { display: grid; grid-template-columns: 1.48fr 1px 1fr; position: relative; }
-.split-even { grid-template-columns: 1fr 1px 1fr; }
-.divider { background: var(--divider); }
-.band { border-bottom: 1px solid var(--divider); }
-.band-head {
-  display: flex; align-items: baseline; justify-content: space-between;
-  gap: 16px; flex-wrap: wrap;
-  padding: 22px var(--pad) 0;
-}
-.band-title { font-weight: 700; font-size: var(--fs-strong); letter-spacing: 0.01em; }
-.band-sub {
-  font-weight: 400; color: var(--muted); font-size: var(--fs-small);
-  padding: 6px var(--pad) 0; max-width: 92ch; text-wrap: pretty;
-}
-.rule-accent { width: 44px; height: 3px; background: var(--accent); }
-
-/* --- hero ------------------------------------------------------------ */
-.hero { overflow: hidden; }
-.watermark {
-  position: absolute; right: 4%; top: 12px;
-  width: clamp(112px, 11vw, 168px);
-  opacity: 0.1; pointer-events: none;
-}
-:root[data-theme="noir"] .watermark { opacity: 0.085; }
-
-.hero-left  { position: relative; padding: 32px var(--pad) 26px; }
-.hero-right { position: relative; padding: 32px var(--pad) 26px; background: var(--tint); }
-.kicker { width: 44px; height: 3px; background: var(--accent); margin-bottom: 18px; }
-.headline {
-  font-weight: 700; font-size: clamp(32px, 3.2vw, 48px); line-height: 1.06;
-  letter-spacing: -0.024em; max-width: 19ch; text-wrap: pretty;
-  min-height: 2.12em;
-}
-.metrics {
-  display: flex; align-items: flex-end; gap: 30px; flex-wrap: wrap;
-  margin-top: 26px; padding-top: 20px; border-top: 1px solid var(--divider);
-}
-.lead-row { display: flex; align-items: flex-start; gap: 10px; }
-.lead { font-weight: 700; font-size: clamp(56px, 4.9vw, 76px); line-height: 0.86; letter-spacing: -0.04em; }
-.delta-chip {
-  background: var(--ink); color: var(--sheet); font-size: var(--fs-small); font-weight: 600;
-  letter-spacing: 0.04em; padding: 3px 7px; margin-top: 4px; white-space: nowrap;
-}
-.delta-chip.up   { background: var(--good); color: #fff; }
-.delta-chip.down { background: var(--bad);  color: #fff; }
-:root[data-theme="noir"] .delta-chip { background: var(--strong); color: var(--ink); }
-:root[data-theme="noir"] .delta-chip.up,
-:root[data-theme="noir"] .delta-chip.down { color: var(--ink); }
-.caption {
-  font-size: var(--fs-micro); letter-spacing: 0.08em; text-transform: uppercase;
-  color: var(--muted); margin-top: 12px;
-}
-.secondaries { display: flex; flex-wrap: wrap; padding-bottom: 4px; }
-.secondary { padding: 0 20px; border-left: 1px solid var(--hair-tint); }
-.secondary-val {
-  font-weight: 600; font-size: var(--fs-metric); line-height: 1;
-  letter-spacing: -0.022em; color: var(--strong);
-}
-.secondary-den { font-size: var(--fs-sub); color: var(--muted); }
-.secondary .caption { margin-top: 7px; }
-
-/* --- charts ---------------------------------------------------------- */
-.chart-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 4px; }
-.chart-label { font-weight: 600; font-size: var(--fs-small); letter-spacing: 0.09em; text-transform: uppercase; }
-.chart-hint { font-size: var(--fs-small); color: var(--muted); }
-.chart-value-row { display: flex; align-items: baseline; gap: 8px; margin: 10px 0 16px; }
-.chart-value { font-weight: 700; font-size: var(--fs-chart); line-height: 1; letter-spacing: -0.03em; }
-.chart-from { font-size: var(--fs-small); color: var(--body); }
-.chart-grid { display: grid; grid-template-columns: 52px 1fr; gap: 10px; }
-/* Not decoration: average position improves as the number falls, so without
-   these the rising line reads as the metric getting worse. */
-/* The axis labels sit in HTML, not in the SVG: the plot is stretched
-   horizontally with preserveAspectRatio="none", which would distort any text
-   inside it. Vertical scale is 1:1, so a viewBox y is a CSS pixel y. */
-.chart-gutter { position: relative; }
-.tick {
-  position: absolute; right: 0; transform: translateY(-50%);
-  font-size: var(--fs-micro); color: var(--muted); font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-}
-.axis-end {
-  position: absolute; right: 0; font-size: var(--fs-micro); letter-spacing: 0.1em;
-  text-transform: uppercase; color: var(--muted);
-}
-.chart-legend {
-  display: flex; gap: 14px; align-items: center; margin-top: 8px;
-  font-size: var(--fs-micro); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted);
-}
-.chart-legend i { display: inline-block; width: 16px; height: 0; margin-right: 5px; vertical-align: middle; }
-.chart-legend .solid { border-top: 2px solid var(--accent); }
-.chart-legend .dash { border-top: 2px dashed var(--muted); }
-.chart-dates {
-  display: flex; justify-content: space-between; font-size: var(--fs-micro);
-  letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-top: 8px;
-}
-.chart-note {
-  margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--hair-tint);
-  font-size: var(--fs-body); line-height: 1.6; color: var(--body); text-wrap: pretty;
-}
-
-/* --- alert band ------------------------------------------------------ */
-.alert { background: var(--alert); }
-.alert .divider { background: var(--alert-div); }
-.alert-left { display: flex; gap: 18px; padding: 20px var(--pad); }
-.alert-bar { width: 3px; background: var(--accent); flex: none; }
-.alert-label {
-  font-weight: 600; font-size: var(--fs-micro); letter-spacing: 0.09em;
-  text-transform: uppercase; color: var(--accent); margin-bottom: 8px;
-}
-.alert-headline { font-weight: 600; font-size: var(--fs-alert); line-height: 1.32; letter-spacing: -0.014em; text-wrap: pretty; }
-.alert-meta { font-size: var(--fs-small); color: var(--muted-alert); margin-top: 9px; }
-.alert-right { padding: 20px var(--pad); display: flex; flex-direction: column; justify-content: center; gap: 10px; }
-.watch-label { font-weight: 600; font-size: var(--fs-micro); letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted-alert); }
-.watch-list { display: flex; flex-direction: column; gap: 8px; font-size: var(--fs-body); line-height: 1.5; color: var(--body); }
-.watch-row { display: flex; gap: 9px; }
-.watch-dash { color: var(--accent); font-weight: 700; }
-.watch-name { color: var(--text); font-weight: 600; }
-
-/* --- property table -------------------------------------------------- */
-.table { padding: 0 var(--pad) 26px; }
-.trow {
-  display: grid;
-  grid-template-columns: minmax(210px, 1fr) 140px 94px 88px 108px 88px 102px 106px;
-  gap: 16px; align-items: center;
-}
-.thead {
-  align-items: baseline; padding: 14px 0 9px;
-  /* Heavier than the row rules on purpose: this is the one structural line. */
-  border-bottom: 1px solid var(--ink);
-  font-weight: 600; font-size: var(--fs-micro); letter-spacing: 0.08em;
-  text-transform: uppercase; color: var(--muted);
-}
-:root[data-theme="noir"] .thead { border-bottom-color: var(--divider); }
-.group { display: flex; align-items: center; gap: 10px; padding: 15px 0 7px; }
-.group.steady { padding-top: 18px; }
-.group-tick { width: 18px; height: 2px; background: var(--accent); }
-.group.steady .group-tick { background: var(--good); }
-.group-name { font-weight: 600; font-size: var(--fs-micro); letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
-.group.steady .group-name { color: var(--good); }
-/* Every row carries its company's colour as a left rail, so a property is
-   identifiable without reading its name. The act-on wash is separate, so
-   identity and status never compete for the same channel. */
-.prow {
-  padding: 11px 0 11px 12px; border-bottom: 1px solid var(--hair);
-  border-left: 4px solid transparent; margin-left: -16px;
-  padding-right: 12px; margin-right: -12px;
-}
-.prow.act { background: var(--bad-wash); }
-.prow:last-child { border-bottom: 0; }
-.pname { font-size: var(--fs-strong); font-weight: 600; }
-.psub { font-size: var(--fs-small); color: var(--muted); margin-top: 2px; }
-.psub-extra { display: none; }
-.track { height: 7px; background: var(--hair); }
-.fill { height: 7px; background: var(--bar-neutral); }
-.pclicks { font-weight: 600; font-size: var(--fs-row); letter-spacing: -0.02em; }
-.pfig { font-size: var(--fs-body); color: var(--body); }
-.pvs { font-size: var(--fs-body); font-weight: 600; color: var(--body); }
-.pvs.up { color: var(--good); }
-.pvs.bad { color: var(--bad); }
-.pqueue { font-size: var(--fs-small); color: var(--muted); font-weight: 600; }
-.pqueue.ok   { color: var(--good); }
-.pqueue.warn { color: var(--warn); }
-.pqueue.thin { color: var(--bad); }
-
-/* Everything from the property table down sits on a slightly deeper paper, so
-   the summary you read first and the detail you dig through are separable at a
-   glance. Panels that were tinted invert inside it, to stay readable. */
-.lower {
-  background: var(--ground);
-  border-top: 1px solid var(--divider);
-  --muted: #655f59;
-  --hair: #d8d0c5;
-}
-:root[data-theme="noir"] .lower { --muted: #95897e; --hair: #2e2721; }
-.lower .panel-r,
-.lower .subpanel.tinted { background: var(--sheet); }
-
-/* The per-property band takes a wash of whichever property is selected, so it
-   is obvious at a glance whose numbers you are looking at. 8% is the ceiling:
-   at 10% the muted text drops below 4.5:1 against it, which was measured for
-   all six colours on both grounds rather than judged by eye. The plain
-   declaration first is the fallback for anything without color-mix. */
-.detail { background: var(--ground); }
-.detail { background: color-mix(in srgb, var(--co, transparent) 8%, var(--wash-base)); }
-/* Panels inside stay on the plain sheet, so they read as cards on the wash. */
-.detail .panel-r,
-.detail .subpanel.tinted { background: var(--sheet); }
-.detail .band-head { padding-top: 26px; }
-
-/* --- generic panels -------------------------------------------------- */
-.panels { display: grid; grid-template-columns: 1fr 1px 1fr; }
-.panel-l { padding: 22px var(--pad) 26px; }
-.panel-r { padding: 22px var(--pad) 26px; background: var(--tint); }
-.panel-title { font-weight: 600; font-size: var(--fs-micro); letter-spacing: 0.09em; text-transform: uppercase; margin-bottom: 14px; }
-.subpanel { padding: 22px var(--pad) 26px; }
-.subpanel.tinted { background: var(--tint); }
-
-/* --- kpi strip ------------------------------------------------------- */
-.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0; }
-.kpi { padding: 0 20px; border-left: 1px solid var(--hair-tint); }
-.kpi:first-child { padding-left: 0; border-left: 0; }
-.kpi-lbl { font-size: var(--fs-micro); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
-.kpi-val { font-weight: 600; font-size: var(--fs-metric); line-height: 1.1; letter-spacing: -0.02em; color: var(--text); margin-top: 6px; }
-.kpi-sub { font-size: var(--fs-small); color: var(--muted); margin-top: 5px; }
-.kpi-sub.bad  { color: var(--bad); font-weight: 600; }
-.kpi-sub.good { color: var(--good); font-weight: 600; }
-.kpi-sub.warn { color: var(--warn); font-weight: 600; }
-
-/* --- bar rows -------------------------------------------------------- */
-.bars { display: flex; flex-direction: column; gap: 11px; }
-.bar-head { display: flex; justify-content: space-between; gap: 12px; font-size: var(--fs-body); margin-bottom: 5px; }
-.bar-lbl { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.bar-val { color: var(--muted); white-space: nowrap; }
-.bar-track { height: 7px; background: var(--hair-tint); }
-.bar-fill { height: 7px; background: var(--bar-neutral); }
-.bar-fill.accent { background: var(--focus); }
-.bar-fill.good { background: var(--good); }
-.bar-fill.bad { background: var(--bad); }
-
-/* --- data tables ----------------------------------------------------- */
-.dt { width: 100%; border-collapse: collapse; font-size: var(--fs-body); }
-.dt th {
-  text-align: left; font-family: 'InterTight', 'Inter', system-ui, sans-serif;
-  font-weight: 600; font-size: var(--fs-micro); letter-spacing: 0.08em; text-transform: uppercase;
-  color: var(--muted); padding: 0 10px 8px 0; border-bottom: 1px solid var(--ink);
-  white-space: nowrap;
-}
-:root[data-theme="noir"] .dt th { border-bottom-color: var(--divider); }
-.dt td { padding: 9px 10px 9px 0; border-bottom: 1px solid var(--hair); vertical-align: top; }
-.dt tr:last-child td { border-bottom: 0; }
-.dt .kw { max-width: 42ch; overflow-wrap: anywhere; }
-.dt a { color: var(--focus); }
-.dt a:hover { text-decoration: underline; }
-.scrollx { overflow-x: auto; }
-
-/* --- switchers ------------------------------------------------------- */
-.switch { display: flex; gap: 6px; flex-wrap: wrap; }
-.sw-btn {
-  background: var(--sheet); color: var(--muted); border: 1px solid var(--divider);
-  padding: 6px 13px; font-family: 'Inter', system-ui, sans-serif; font-size: var(--fs-body);
-  cursor: pointer; line-height: 1.2;
-}
-.sw-btn:hover { color: var(--text); }
-.sw-btn.active { background: var(--ink); color: var(--on-ink); border-color: var(--ink); }
-:root[data-theme="noir"] .sw-btn.active { background: var(--strong); color: var(--ink); border-color: var(--strong); }
-.sw-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
-.sw-btn .swatch {
-  display: inline-block; width: 9px; height: 9px; margin-right: 7px;
-  vertical-align: baseline;
-}
-.sw-btn.active { border-color: currentColor; }
-.filter {
-  border: 1px solid var(--divider); background: var(--sheet); color: var(--text);
-  font-family: 'Inter', system-ui, sans-serif; font-size: var(--fs-body); padding: 6px 10px;
-  min-width: 200px;
-}
-.filter:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
-
-/* --- pills / small ---------------------------------------------------- */
-.pos-pill { font-weight: 600; font-variant-numeric: tabular-nums; }
-.pos-1 { color: var(--good); }
-.pos-2 { color: var(--focus); }
-.pos-3 { color: var(--warn); }
-.pos-4 { color: var(--bad); }
-.dim { color: var(--muted); }
-.qlist { margin: 0; padding-left: 18px; font-size: var(--fs-body); color: var(--body); }
-.qlist li { margin: 3px 0; }
-.qlist li.next { color: var(--text); font-weight: 600; }
-.emptyq { color: var(--accent); font-size: var(--fs-body); }
-
-/* --- footer ---------------------------------------------------------- */
-.foot {
-  display: flex; align-items: center; justify-content: space-between; gap: 20px;
-  flex-wrap: wrap; padding: 12px var(--pad); background: var(--ink);
-  font-size: var(--fs-micro); letter-spacing: 0.1em; text-transform: uppercase; color: var(--on-ink-mute);
-}
-.stale { color: var(--accent); font-weight: 600; }
-.msg { padding: 60px var(--pad); font-size: var(--fs-body); color: var(--body); }
-
-/* --- responsive ------------------------------------------------------ */
-@media (max-width: 1400px) {
-  .trow { grid-template-columns: minmax(190px, 1fr) 120px 94px 88px 108px 88px 102px; }
-  .trow > .col-sessions { display: none; }
-}
-@media (max-width: 1180px) {
-  .split, .panels { grid-template-columns: 1fr; }
-  .split > .divider, .panels > .divider { display: none; }
-  .hero-right, .panel-r { border-top: 1px solid var(--divider); }
-  .watermark { right: -40px; }
-  .trow { grid-template-columns: minmax(170px, 1fr) 94px 88px 108px 106px; }
-  .trow > .col-share, .trow > .col-pos { display: none; }
-}
-@media (max-width: 900px) {
-  .trow { grid-template-columns: 1fr 94px 88px; }
-  .trow > .col-impr, .trow > .col-queue { display: none; }
-  .psub-extra { display: inline; }
-  .metrics { flex-direction: column; align-items: flex-start; gap: 22px; }
-  .secondaries { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 0; }
-  .secondary { border-left: 0; padding: 0 16px 0 0; }
-  .kpi { padding: 0 14px; }
-}
-@media (max-width: 900px) {
-  .watermark { display: none; }
-}
-@media (max-width: 620px) {
-  .masthead, .foot { flex-direction: column; align-items: flex-start; gap: 12px; }
-  .topbar { position: static; }
-  .kpis { grid-template-columns: 1fr 1fr; gap: 18px 0; }
-  .kpi, .kpi:first-child { border-left: 0; padding: 0 12px 0 0; }
-}
-@media print {
-  .topbar { position: static; }
-  .switch, .filter { display: none; }
-}
-</style>
-</head>
-<body>
-<div class="sheet" id="sheet">
-  <div class="msg" id="msg">Loading…</div>
+<!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <meta name="robots" content="noindex, nofollow"> <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230d1117'/%3E%3Crect x='6' y='19' width='5' height='7' rx='1.5' fill='%233b82f6'/%3E%3Crect x='13.5' y='13' width='5' height='13' rx='1.5' fill='%238b5cf6'/%3E%3Crect x='21' y='7' width='5' height='19' rx='1.5' fill='%232dd4bf'/%3E%3C/svg%3E"> <title>Compass Group — SEO Performance Dashboard</title> <style> :root{ --bg:#0d1117; --panel:#161b22; --panel2:#1c2230; --border:#2a3140; --txt:#e6edf3; --muted:#8b949e; --accent:#3b82f6; --accent2:#8b5cf6; --green:#3fb950; --lime:#a3e635; --amber:#f59e0b; --red:#f85149; --teal:#2dd4bf; } *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--txt);font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;font-size:14px;line-height:1.5} a{color:var(--accent);text-decoration:none} .wrap{max-width:1200px;margin:0 auto;padding:24px 20px 60px} header h1{margin:0 0 4px;font-size:22px;font-weight:700} header p{margin:0;color:var(--muted);font-size:13px} .verdict{margin:10px 0 0;font-size:16px;line-height:1.5;color:var(--txt);max-width:88ch;font-weight:600}
+.lag{margin-top:6px;font-size:12px;color:var(--amber)} h2{font-size:16px;font-weight:600;margin:28px 0 12px;border-left:3px solid var(--accent);padding-left:10px} .panel{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:16px 18px;margin-bottom:14px} .glance{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px} .gcard{background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:14px 16px} .gcard .lbl{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.04em} .gcard .val{font-size:26px;font-weight:700;margin-top:4px} .gcard .sub{font-size:12px;color:var(--muted);margin-top:4px} .chips{margin-top:6px} .chip{display:inline-block;background:#21304a;color:var(--txt);border:1px solid #2f4564;border-radius:20px;padding:3px 10px;margin:3px 4px 0 0;font-size:12px} .chip b{color:var(--lime)} table{width:100%;border-collapse:collapse;font-size:13px} th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--border)} th{color:var(--muted);font-weight:600;cursor:pointer;user-select:none;white-space:nowrap} th.num,td.num{text-align:right} tbody tr:hover{background:var(--panel2)} .arrow-up{color:var(--green)} .arrow-down{color:var(--red)} .arrow-new{color:var(--accent2)} .tnote{margin-top:10px;font-size:13px;color:var(--muted);line-height:1.55}
+.tchart{display:grid;grid-template-columns:46px 1fr;gap:10px}
+.tgut{position:relative}
+.tk{position:absolute;right:0;transform:translateY(-50%);font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.tk.end{transform:none;font-size:12px;text-transform:uppercase;letter-spacing:.04em}
+.tdates{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:6px}
+.tlegend{display:flex;gap:14px;margin-top:8px;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.tlegend i{display:inline-block;width:16px;height:0;margin-right:5px;vertical-align:middle}
+.tlegend .sol{border-top:2px solid var(--accent)}
+.tlegend .dsh{border-top:2px dashed var(--muted)}
+.bar-row{display:flex;align-items:center;gap:10px;margin:6px 0} .bar-lbl{flex:0 0 230px;font-size:12px;color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis} .bar-track{flex:1;background:var(--panel2);border-radius:5px;height:16px;overflow:hidden} .bar-fill{height:100%;border-radius:5px;background:linear-gradient(90deg,var(--accent),var(--accent2))} .bar-fill.ga4{background:linear-gradient(90deg,var(--teal),#22d3ee)} .bar-val{flex:0 0 90px;text-align:right;font-size:12px;color:var(--muted)} .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px} .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px} .kpi{background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:14px} .kpi .lbl{color:var(--muted);font-size:12px;text-transform:uppercase} .kpi .val{font-size:24px;font-weight:700;margin-top:4px} .kpi .prev{font-size:12px;color:var(--muted);margin-top:2px} .kpi .chg{font-size:13px;font-weight:600;margin-top:4px} .kpi.ga4k{border-color:#1f4a44} .kpi.ga4k .val{color:var(--teal)} .bl-sec{border:1px solid var(--amber);border-radius:10px;padding:16px 18px;margin-bottom:14px;background:linear-gradient(180deg,rgba(245,158,11,0.06),rgba(245,158,11,0))} .bl-hdr{font-weight:700;font-size:15px;color:var(--amber);margin-bottom:2px} .bl-subt{font-weight:400;color:var(--muted);font-size:12px;margin-bottom:12px} .kpi.blk{border-color:#4a3a1f} .kpi.blk .val{color:var(--amber)} .bar-fill.bl{background:linear-gradient(90deg,var(--amber),#fbbf24)} .serp-sec{border:1px solid var(--accent2);border-radius:10px;padding:16px 18px;margin-bottom:14px;background:linear-gradient(180deg,rgba(139,92,246,0.07),rgba(139,92,246,0))} .serp-hdr{font-weight:700;font-size:15px;color:#a78bfa} .serp-subt{font-weight:400;color:var(--muted);font-size:12px;margin:6px 0 12px} .ctry-switch{display:flex;gap:6px;flex-wrap:wrap} .ctry-btn{background:var(--panel2);color:var(--muted);border:1px solid var(--border);border-radius:8px;padding:5px 12px;font-size:13px;cursor:pointer} .ctry-btn.active{background:var(--accent2);color:#fff;border-color:var(--accent2)} .pos{color:var(--green)} .neg{color:var(--red)} .neu{color:var(--muted)} select,input{background:var(--panel2);color:var(--txt);border:1px solid var(--border);border-radius:8px;padding:8px 10px;font-size:14px} select:focus,input:focus{outline:1px solid var(--accent)} .switchbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px} .recs li{margin:6px 0} .pill{display:inline-block;width:34px;text-align:center;border-radius:6px;padding:2px 0;font-weight:600;font-size:12px} .p-g{background:#13351f;color:var(--green)} .p-l{background:#27310f;color:var(--lime)} .p-a{background:#3a2b08;color:var(--amber)} .p-r{background:#3a1414;color:var(--red)} .ga4-sec{border:1px solid var(--teal);border-radius:10px;padding:16px 18px;margin-bottom:14px;background:linear-gradient(180deg,rgba(45,212,191,0.06),rgba(45,212,191,0))} .ga4-hdr{font-weight:700;font-size:15px;color:var(--teal);margin-bottom:2px} .ga4-subt{font-weight:400;color:var(--muted);font-size:12px;margin-bottom:12px} @media(max-width:820px){.grid2{grid-template-columns:1fr}.bar-lbl{flex:0 0 150px}} .foot{margin-top:30px;color:var(--muted);font-size:12px;text-align:center} 
+.tabbar{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 4px;border-bottom:1px solid var(--border);padding-bottom:12px}
+.tab-btn{background:var(--panel2);color:var(--muted);border:1px solid var(--border);border-radius:8px;padding:8px 16px;font-size:14px;font-weight:600;cursor:pointer}
+.tab-btn:hover{color:var(--txt)}
+.tab-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.tab-btn .badge{display:inline-block;margin-left:7px;background:rgba(255,255,255,.18);border-radius:10px;padding:1px 7px;font-size:12px;font-weight:600}
+.blog-sec{border:1px solid var(--teal);border-radius:10px;padding:16px 18px;margin-bottom:14px;background:linear-gradient(180deg,rgba(45,212,191,0.07),rgba(45,212,191,0))}
+.blog-hdr{font-weight:700;font-size:15px;color:var(--teal)}
+.blog-subt{font-weight:400;color:var(--muted);font-size:12px;margin:6px 0 12px}
+.runway{display:inline-block;border-radius:20px;padding:2px 10px;font-size:12px;font-weight:600}
+.runway.good{background:rgba(63,185,80,.15);color:var(--green)}
+.runway.warn{background:rgba(245,158,11,.15);color:var(--amber)}
+.runway.bad{background:rgba(248,81,73,.15);color:var(--red)}
+.qlist{margin:0;padding-left:18px;color:var(--muted);font-size:13px}
+.qlist li{margin:2px 0}
+.qlist li.next{color:var(--txt);font-weight:600}
+.emptyq{color:var(--red);font-size:13px}
+</style> </head> <body> <div class="wrap"> <header> <h1>Compass Group — SEO Performance Dashboard</h1> <p>Search Console (search visibility) + Google Analytics GA4 (on-site behaviour) · last 28 days · <span id="propcount">…</span></p> <p class="lag" id="genline"></p>
+<p class="verdict" id="verdict"></p> </header>
+<div class="tabbar" id="tabbar">
+<button class="tab-btn active" data-tab="seo">SEO analysis</button>
+<button class="tab-btn" data-tab="blog">Blog Pumper<span class="badge" id="blogbadge">–</span></button>
+</div> <div id="tab-seo" class="tabpanel"><h2>At a glance</h2> <div class="glance" id="glance"></div> <div class="panel" style="margin-top:14px"> <div style="color:var(--muted);font-size:12px;text-transform:uppercase;margin-bottom:6px">Top quick-win keywords (position 4–20, highest impressions)</div> <div class="chips" id="quickwins"></div> </div> <h2>All properties overview</h2> <div class="panel" style="overflow-x:auto"> <table id="ovtable"> <thead> <tr> <th data-k="site">Property</th> <th class="num" data-k="clicks">GSC clicks</th> <th class="num" data-k="cpct">% vs prev</th> <th class="num" data-k="impr">Impressions</th> <th class="num" data-k="pos">Avg pos</th> <th class="num" data-k="sessions">GA4 sessions</th> <th class="num" data-k="users">GA4 users</th> <th class="num" data-k="trend">GSC trend</th> </tr> </thead> <tbody></tbody> </table> </div> <h2>Per-property detail</h2> <div class="switchbar"> <label for="siteSel" style="color:var(--muted)">Property:</label> <select id="siteSel"></select> </div> <div style="font-weight:600;margin:0 0 10px;color:var(--accent)">Search Console — search visibility</div> <div class="kpis" id="kpis"></div> <div class="grid2"> <div class="panel"> <div style="font-weight:600;margin-bottom:10px">Top queries by clicks</div> <div id="qchart"></div> </div> <div class="panel"> <div style="font-weight:600;margin-bottom:10px">Impressions by ranking position</div> <div id="pchart"></div> </div> </div>  <div class="panel"> <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:10px"> <div style="font-weight:600">Keywords</div> <input id="kwsearch" type="text" placeholder="Filter keywords…" style="min-width:220px"> </div> <div style="overflow-x:auto"> <table id="kwtable"> <thead><tr> <th data-k="0">Query</th> <th class="num" data-k="1">Clicks</th> <th class="num" data-k="2">Impr</th> <th class="num" data-k="3">CTR</th> <th class="num" data-k="4">Pos</th> </tr></thead> <tbody></tbody> </table> </div> </div> <div class="panel"> <div style="font-weight:600;margin-bottom:10px">Top pages <span style="color:var(--muted);font-weight:400;font-size:12px">· Search Console (clicks)</span></div> <div style="overflow-x:auto"> <table id="pgtable"> <thead><tr> <th>Page</th> <th class="num">Clicks</th> <th class="num">Impr</th> <th class="num">CTR</th> <th class="num">Pos</th> </tr></thead> <tbody></tbody> </table> </div> </div> <div class="serp-sec"> <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px"> <div class="serp-hdr">SERP rankings by country (Search Console)</div> <div class="ctry-switch" id="ctrySwitch"> <button class="ctry-btn active" data-c="GCC">GCC / all</button> <button class="ctry-btn" data-c="QA">Qatar</button> <button class="ctry-btn" data-c="SA">Saudi</button> <button class="ctry-btn" data-c="AE">UAE</button> </div> </div> <div class="serp-subt">Where this site ranks for your targeted keywords in the selected market, last 28 days. Keywords with no Search Console impressions in the period show "—" (tracked but not ranking yet). Lower position is better (green ≤3, lime ≤10, amber ≤20, red beyond). This is GSC's averaged position per market — not a live SERP check.</div> <div class="kpis" id="serpkpis"></div> <div class="grid2" style="margin-top:14px"> <div class="panel" style="margin-bottom:0"> <div style="font-weight:600;margin-bottom:10px">Average position over time</div> <div id="serptrend"></div> </div> <div class="panel" style="margin-bottom:0"> <div style="font-weight:600;margin-bottom:10px">Top keywords &amp; position</div> <div style="overflow-x:auto"> <table id="serptable"> <thead><tr><th>Keyword</th><th class="num">Pos</th><th class="num">Clicks</th><th class="num">Impr</th></tr></thead> <tbody></tbody> </table> </div> </div> </div> </div> <div class="ga4-sec"> <div class="ga4-hdr">Google Analytics (GA4) — on-site behaviour</div> <div class="ga4-subt">What visitors do once they arrive · last 28 days. Complements the Search Console data above, which only covers Google Search (GA4 also captures direct, referral, social and AI-assistant traffic).</div> <div class="kpis" id="ga4kpis"></div> <div class="grid2" style="margin-top:14px"> <div class="panel" style="margin-bottom:0"> <div style="font-weight:600;margin-bottom:10px">Sessions by channel</div> <div id="ga4chart"></div> </div> <div class="panel" style="margin-bottom:0"> <div style="font-weight:600;margin-bottom:10px">Top pages by views (GA4)</div> <div style="overflow-x:auto"> <table id="ga4pages"> <thead><tr><th>Page</th><th class="num">Views</th><th class="num">Users</th></tr></thead> <tbody></tbody> </table> </div> </div> </div> </div> <div class="bl-sec"> <div class="bl-hdr">Backlinks (Search Console)</div> <div class="bl-subt">External links Google has discovered for this site. Counts are approximate and update in irregular batches, so weekly/monthly change is more reliable than day-to-day. Velocity builds from 28 Jun 2026 onward.</div> <div class="kpis" id="blkpis"></div> <div class="grid2" style="margin-top:14px"> <div class="panel" style="margin-bottom:0"> <div style="font-weight:600;margin-bottom:10px">Total backlinks over time</div> <div id="blchart"></div> </div> <div class="panel" style="margin-bottom:0"> <div style="font-weight:600;margin-bottom:10px">Top linking domains</div> <div style="overflow-x:auto"> <table id="bltable"> <thead><tr><th>Linking domain</th><th class="num">Links</th></tr></thead> <tbody></tbody> </table> </div> </div> </div> </div> </div>
+<div id="tab-blog" class="tabpanel" hidden>
+<div class="blog-sec">
+<div class="blog-hdr">Blog Pumper — publishing pipeline</div>
+<div class="blog-subt">Read live from the Blog Topics sheet, which is the same queue the publisher works from. Two posts per site per week, Tuesdays and Fridays. Topping up the queue is the SEO specialist's job — this only reports it. Compass Furniture is on hold and deliberately absent.</div>
+<div class="kpis" id="blogkpis"></div>
 </div>
-
-<script>
-'use strict';
-
-/* Every figure and every sentence on this page is derived here from data.json.
-   Nothing is typed into the markup, the editorial copy included — the design's
-   power is that it states a conclusion, and a hardcoded conclusion is a lie the
-   moment the data moves. */
-
-var D = null, M = null;
-var curSite = null, curMarket = 'GCC', kwFilter = '', curTab = 'search';
-
-var esc = function (s) {
-  return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
-    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
-  });
-};
-var sum = function (a) { return a.reduce(function (x, y) { return x + y; }, 0); };
-var n0 = function (v) { return v == null ? '—' : Number(v).toLocaleString('en-US'); };
-var pctStr = function (v) { return v == null ? '—' : (v > 0 ? '+' : v < 0 ? '−' : '') + Math.abs(v) + '%'; };
-var short = function (l) { return String(l).replace(/^Compass\s+/, ''); };
-var fmtDate = function (iso) {
-  return new Date(iso + 'T00:00:00Z').toLocaleDateString('en-GB', { day: 'numeric', month: 'short', timeZone: 'UTC' });
-};
-// Direction as a class, so 'up' and 'down' are never the same colour.
-var dirClass = function (v, goodIsUp) {
-  if (v == null || v === 0) return '';
-  var good = goodIsUp === false ? v < 0 : v > 0;
-  return good ? ' up' : ' bad';
-};
-var posClass = function (p) {
-  if (p == null) return 'dim';
-  return p <= 3 ? 'pos-1' : p <= 10 ? 'pos-2' : p <= 20 ? 'pos-3' : 'pos-4';
-};
-// Identity, not status. A property keeps the same colour in the table rail, the
-// switcher and its own charts, so it can be tracked down the page.
-var CO = {
-  'compass-arabia.com':    'var(--co-arabia)',
-  'compassfmgcc.com':      'var(--co-fm)',
-  'compasswaterproof.com': 'var(--co-waterproof)',
-  'compass-lg.com':        'var(--co-logistics)',
-  'sunsetmediame.com':     'var(--co-sunset)',
-  'compass-its.com':       'var(--co-its)'
-};
-var coOf = function (key) { return CO[key] || 'var(--focus)'; };
-
-var store = {
-  get: function (k, d) { try { return localStorage.getItem(k) || d; } catch (e) { return d; } },
-  set: function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
-};
-
-/* ---------- derivation ---------- */
-
-function derive(d) {
-  var S = d.SITES || {}, B = d.BLOG || {}, RH = d.RANKHIST || {}, BL = d.BACKLINKS || {};
-  var keys = Object.keys(S);
-
-  var clicks = sum(keys.map(function (k) { return (S[k].cur && S[k].cur.clicks) || 0; }));
-  var prevClicks = sum(keys.map(function (k) { return (S[k].prev && S[k].prev.clicks) || 0; }));
-  var impr = sum(keys.map(function (k) { return (S[k].cur && S[k].cur.impr) || 0; }));
-  var sessions = sum(keys.map(function (k) { return (S[k].ga4 && S[k].ga4.sessions) || 0; }));
-  var users = sum(keys.map(function (k) { return (S[k].ga4 && S[k].ga4.users) || 0; }));
-  var ranking = sum(keys.map(function (k) { return (S[k].queries || []).filter(function (q) { return q[4] != null; }).length; }));
-  var tracked = sum(keys.map(function (k) { return (S[k].queries || []).length; }));
-  var delta = prevClicks ? (clicks - prevClicks) / prevClicks * 100 : null;
-
-  var withHist = keys.filter(function (k) { return RH[k] && RH[k].GCC && RH[k].GCC.length; });
-  var dates = withHist.length ? RH[withHist[0]].GCC.map(function (p) { return p[0]; }) : [];
-  var series = dates.map(function (date, i) {
-    var vals = withHist.map(function (k) { var p = RH[k].GCC[i]; return p ? p[1] : null; })
-                       .filter(function (v) { return v != null; });
-    return { date: date, value: vals.length ? sum(vals) / vals.length : null };
-  }).filter(function (p) { return p.value != null; });
-
-  var maxClicks = Math.max.apply(null, keys.map(function (k) { return (S[k].cur && S[k].cur.clicks) || 0; }).concat([1]));
-
-  var rows = keys.map(function (k) {
-    var s = S[k], q = s.queries || [], cur = (s.cur && s.cur.clicks) || 0;
-    var prev = s.prev ? s.prev.clicks : null;
-    var rank = q.filter(function (x) { return x[4] != null; }).length;
-    var weeks = B[k] ? B[k].weeks : null;
-    var vs = prev ? Math.round((cur - prev) / prev * 100) : null;
-    return {
-      key: k, label: s.label || k, short: short(s.label || k),
-      clicks: cur, prevClicks: prev, vs: vs,
-      impr: (s.cur && s.cur.impr) || 0, prevImpr: s.prev ? s.prev.impr : null,
-      ctr: s.cur ? s.cur.ctr : null, prevCtr: s.prev ? s.prev.ctr : null,
-      pos: s.cur ? s.cur.pos : null, prevPos: s.prev ? s.prev.pos : null,
-      share: Math.round(cur / maxClicks * 100),
-      ranking: rank, tracked: q.length,
-      sessions: s.ga4 ? s.ga4.sessions : null,
-      users: s.ga4 ? s.ga4.users : null,
-      weeks: weeks, blog: B[k] || null, backlinks: BL[k] || null,
-      // Act on a property that is losing clicks, about to run out of content,
-      // or invisible for every keyword it targets.
-      acting: (vs != null && vs < 0) || (weeks != null && weeks < 3.5) || rank === 0
-    };
-  }).sort(function (a, b) { return (a.vs == null ? 1e9 : a.vs) - (b.vs == null ? 1e9 : b.vs); });
-
-  var wins = keys.reduce(function (acc, k) {
-    (S[k].queries || []).forEach(function (q) {
-      if (q[4] != null && q[4] >= 4 && q[4] <= 20) acc.push({ q: q[0], impr: q[2], pos: q[4], site: short(S[k].label || k) });
-    });
-    return acc;
-  }, []).sort(function (a, b) { return b.impr - a.impr; }).slice(0, 6);
-
-  var chAgg = {};
-  keys.forEach(function (k) {
-    ((S[k].ga4 && S[k].ga4.channels) || []).forEach(function (c) { chAgg[c[0]] = (chAgg[c[0]] || 0) + c[1]; });
-  });
-  // Percentages are of total sessions, not of the channel sum: GA4's channel
-  // breakdown does not reconcile with its own session total.
-  var channels = Object.keys(chAgg).map(function (name) {
-    return { name: name, sessions: chAgg[name], pct: sessions ? chAgg[name] / sessions * 100 : 0 };
-  }).sort(function (a, b) { return b.sessions - a.sessions; });
-
-  var blTotal = sum(keys.map(function (k) { return (BL[k] && BL[k].total) || 0; }));
-
-  return {
-    clicks: clicks, prevClicks: prevClicks, delta: delta, impr: impr, sessions: sessions,
-    users: users, ranking: ranking, tracked: tracked, series: series, rows: rows,
-    wins: wins, channels: channels, blTotal: blTotal,
-    ctr: impr ? clicks / impr * 100 : 0,
-    sitesWithGa4: keys.filter(function (k) { return S[k].ga4; }).length,
-    siteCount: keys.length, generated: d.generated,
-    byKey: rows.reduce(function (o, r) { o[r.key] = r; return o; }, {})
-  };
+<div class="panel" style="overflow-x:auto">
+<div style="font-weight:600;margin-bottom:10px">Queue by property</div>
+<table id="blogtable"><thead><tr><th>Property</th><th class="num">Pending</th><th class="num">Runway</th><th class="num">Published</th><th>Next up</th></tr></thead><tbody></tbody></table>
+</div>
+<div class="grid2">
+<div class="panel"><div style="font-weight:600;margin-bottom:10px">Queued topics</div><div id="blogqueue"></div></div>
+<div class="panel"><div style="font-weight:600;margin-bottom:10px">Recently published</div><div id="blogrecent"></div></div>
+</div><div class="foot"> Search Console data lags ~2 days; GA4 is near real-time. Generated automatically from the webdata.compass Search Console &amp; GA4 account. </div> </div> <script> let SITES, BACKLINKS, RANK, RANKHIST, BLOG; const fmt = n => n>=1000 ? (n/1000).toFixed(2).replace(/\.?0+$/,'')+"K" : ""+n; const pct = v => (v>0?"+":"")+v.toFixed(0)+"%"; function posPill(p){ if(p==null) return '<span style="color:var(--muted)" title="tracked — no Search Console impressions in this period">—</span>'; let c="p-r"; if(p<=3)c="p-g"; else if(p<=10)c="p-l"; else if(p<=20)c="p-a"; return '<span class="pill '+c+'">'+p.toFixed(1)+'</span>'; } function buildGlance(){ const keys=Object.keys(SITES); let totalClicks=0, totalSessions=0, improved=0, comparable=0, mover=null, moverAbs=-1e9; keys.forEach(k=>{ const s=SITES[k]; totalClicks+=s.cur.clicks; totalSessions+=(s.ga4?s.ga4.sessions:0); if(s.prev){ comparable++; const ch=((s.cur.clicks-s.prev.clicks)/((s.prev.clicks)||1))*100; if(s.cur.clicks>s.prev.clicks) improved++; const absCh=s.cur.clicks-s.prev.clicks; if(absCh>moverAbs){moverAbs=absCh;mover={k,absCh,ch};} } }); let totalBacklinks=0; Object.keys(BACKLINKS).forEach(k=>{ if(BACKLINKS[k].total) totalBacklinks+=BACKLINKS[k].total; }); document.getElementById('glance').innerHTML= card("GSC clicks (28d)", totalClicks, "total across all properties")+ card("GA4 sessions (28d)", fmt(totalSessions), "on-site visits across all sites")+ card("Backlinks (total)", totalBacklinks, "external links Google sees")+ card("Sites improved", improved+" / "+comparable, "GSC clicks vs previous 28 days")+ card("Biggest mover", mover?mover.k:"—", mover?("+"+mover.absCh+" clicks ("+pct(mover.ch)+")"):""); } function card(lbl,val,sub){ return '<div class="gcard"><div class="lbl">'+lbl+'</div><div class="val">'+val+'</div><div class="sub">'+sub+'</div></div>'; } function buildQuickWins(){ let all=[]; Object.keys(SITES).forEach(k=>{ SITES[k].queries.forEach(q=>{ if(q[4]>=4 && q[4]<=20) all.push({site:k,q:q[0],impr:q[2],pos:q[4]}); }); }); all.sort((a,b)=>b.impr-a.impr); document.getElementById('quickwins').innerHTML=all.slice(0,6).map(x=> '<span class="chip"><b>'+x.q+'</b> · '+x.impr+' impr · pos '+x.pos.toFixed(1)+' · <span style="color:var(--muted)">'+x.site+'</span></span>' ).join(''); } let ovSort={k:'clicks',asc:false}; function buildOverview(){ const tb=document.querySelector('#ovtable tbody'); let rows=Object.keys(SITES).map(k=>{ const s=SITES[k]; const cpct = s.prev ? ((s.cur.clicks-(s.prev.clicks||0))/((s.prev.clicks)||1))*100 : null; let trend = !s.prev ? {t:'new'} : s.cur.clicks>s.prev.clicks ? {t:'up',v:cpct} : s.cur.clicks<s.prev.clicks ? {t:'down',v:cpct} : {t:'flat'}; return {site:k,clicks:s.cur.clicks,cpct:cpct,impr:s.cur.impr,pos:s.cur.pos,sessions:s.ga4?s.ga4.sessions:0,users:s.ga4?s.ga4.users:0,trend:trend}; }); const k=ovSort.k; rows.sort((a,b)=>{ let av,bv; if(k==='site'){return ovSort.asc?a.site.localeCompare(b.site):b.site.localeCompare(a.site);} if(k==='trend'||k==='cpct'){av=a.cpct==null?-1e9:a.cpct;bv=b.cpct==null?-1e9:b.cpct;} else {av=a[k];bv=b[k];} return ovSort.asc?av-bv:bv-av; }); tb.innerHTML=rows.map(r=>{ let ar = r.trend.t==='up'?'<span class="arrow-up">▲ '+pct(r.trend.v)+'</span>' : r.trend.t==='down'?'<span class="arrow-down">▼ '+pct(r.trend.v)+'</span>' : r.trend.t==='new'?'<span class="arrow-new">● new</span>' : '<span class="neu">– 0%</span>'; let cpctTxt = r.cpct==null?'<span class="neu">new</span>':(r.cpct>=0?'<span class="pos">'+pct(r.cpct)+'</span>':'<span class="neg">'+pct(r.cpct)+'</span>'); return '<tr><td>'+r.site+'</td><td class="num">'+r.clicks+'</td><td class="num">'+cpctTxt+'</td><td class="num">'+fmt(r.impr)+'</td><td class="num">'+r.pos.toFixed(1)+'</td><td class="num">'+r.sessions+'</td><td class="num">'+r.users+'</td><td class="num">'+ar+'</td></tr>'; }).join(''); } document.querySelectorAll('#ovtable th').forEach(th=>{ th.addEventListener('click',()=>{ const k=th.dataset.k; if(ovSort.k===k) ovSort.asc=!ovSort.asc; else {ovSort.k=k;ovSort.asc=(k==='site');} buildOverview(); }); }); let curSite=null, kwSort={k:1,asc:false}; function buildKpis(s,k){ const el=document.getElementById('kpis'); function kc(lbl,cur,prev,unit,lowerBetter){ let chg=''; if(prev!=null){ const diff=cur-prev; let p = prev!==0 ? (diff/Math.abs(prev))*100 : (cur!==0?100:0); const good = lowerBetter ? diff<0 : diff>0; const cls = diff===0?'neu':(good?'pos':'neg'); const sym = diff>0?'▲':(diff<0?'▼':'–'); chg='<div class="chg '+cls+'">'+sym+' '+pct(p)+'</div>'; } else { chg='<div class="chg neu">no prior data</div>'; } const prevTxt = prev!=null ? ('prev: '+(unit==='K'?fmt(prev):prev)+(unit&&unit!=='K'?unit:'')) : 'prev: —'; const valTxt = unit==='K'?fmt(cur):cur+(unit&&unit!=='K'?unit:''); return '<div class="kpi"><div class="lbl">'+lbl+'</div><div class="val">'+valTxt+'</div><div class="prev">'+prevTxt+'</div>'+chg+'</div>'; } function blCard(){ const b = k ? BACKLINKS[k] : null; if(!b || b.total===null){ return '<div class="kpi"><div class="lbl">Backlinks</div><div class="val">—</div><div class="prev">'+((b&&b.note)?b.note:'no data yet')+'</div><div class="chg neu">—</div></div>'; } const d7=blDelta(b.history,7); let chg = d7===null ? '<div class="chg neu">building history</div>' : '<div class="chg '+(d7>0?'pos':(d7<0?'neg':'neu'))+'">'+(d7>0?'▲ +'+d7:(d7<0?'▼ '+Math.abs(d7):'– 0'))+' / 7d</div>'; return '<div class="kpi"><div class="lbl">Backlinks</div><div class="val">'+b.total+'</div><div class="prev">external links (GSC)</div>'+chg+'</div>'; } const p=s.prev; el.innerHTML= kc("Clicks", s.cur.clicks, p?p.clicks:null, "", false)+ kc("Impressions", s.cur.impr, p?p.impr:null, "K", false)+ kc("CTR", s.cur.ctr, p?p.ctr:null, "%", false)+ kc("Avg position", s.cur.pos, p?p.pos:null, "", true)+ blCard(); } function niceTicks(lo,hi,count){
+  const raw=(hi-lo)/Math.max(1,count-1);
+  if(!isFinite(raw)||raw<=0) return [lo];
+  const mag=Math.pow(10,Math.floor(Math.log10(raw)));
+  const norm=raw/mag;
+  const step=(norm<=1.5?1:norm<=3?2:norm<=7?5:10)*mag;
+  const out=[]; for(let v=Math.ceil(lo/step)*step; v<=hi+1e-9; v+=step) out.push(Math.round(v*1e6)/1e6);
+  return out.length?out:[lo];
 }
-
-/* ---------- generated copy ---------- */
-
-var FRACTIONS = [
-  [100, 'double'], [75, 'three quarters'], [66.67, 'two thirds'], [50, 'a half'],
-  [33.33, 'a third'], [25, 'a quarter'], [20, 'a fifth'], [16.67, 'a sixth'], [14.29, 'a seventh']
-];
-function fraction(pct) {
-  for (var i = 0; i < FRACTIONS.length; i++) {
-    if (Math.abs(pct - FRACTIONS[i][0]) <= 0.5) return FRACTIONS[i][1];
+function fit(vals){
+  const n=vals.length; if(n<3) return null;
+  let sx=0,sy=0,sxy=0,sxx=0;
+  for(let i=0;i<n;i++){sx+=i;sy+=vals[i];sxy+=i*vals[i];sxx+=i*i;}
+  const d=n*sxx-sx*sx; if(!d) return null;
+  const m=(n*sxy-sx*sy)/d, c=(sy-m*sx)/n;
+  return {slope:m, at:i=>c+m*i};
+}
+// pts: [[date,value],...]  opts:{lowerBetter, unit}
+function trendChart(pts, opts){
+  opts=opts||{};
+  if(pts.length<2) return '<div style="color:var(--muted);font-size:12px">Not enough history yet.</div>';
+  const W=420,H=120,TOP=10,BOT=H-12;
+  const vals=pts.map(p=>p[1]);
+  let lo=Math.min(...vals), hi=Math.max(...vals);
+  const pad=(hi-lo)*0.12 || Math.max(1,Math.abs(hi)*0.05);
+  lo-=pad; hi+=pad;
+  const y=v=>TOP+(v-lo)/(hi-lo)*(BOT-TOP);
+  const x=i=>i/(pts.length-1)*W;
+  const ticks=niceTicks(lo,hi,4);
+  const dec=(hi-lo)<4?1:0;
+  const grid=ticks.map(t=>'<line x1="0" y1="'+y(t).toFixed(1)+'" x2="'+W+'" y2="'+y(t).toFixed(1)+'" stroke="var(--border)" stroke-width="1"></line>').join('');
+  const line=pts.map((p,i)=>x(i).toFixed(1)+','+y(p[1]).toFixed(1)).join(' ');
+  const f=fit(vals);
+  let dash='';
+  if(f){
+    const y0=Math.max(TOP,Math.min(BOT,y(f.at(0)))), y1=Math.max(TOP,Math.min(BOT,y(f.at(pts.length-1))));
+    dash='<line x1="0" y1="'+y0.toFixed(1)+'" x2="'+W+'" y2="'+y1.toFixed(1)+'" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="5 4" vector-effect="non-scaling-stroke"></line>';
   }
-  return null;
+  const fmt=d=>new Date(d).toLocaleDateString('en-GB',{day:'numeric',month:'short'});
+  const gutter=ticks.map(t=>'<span class="tk" style="top:'+y(t).toFixed(1)+'px">'+t.toFixed(dec)+'</span>').join('')+
+    (opts.lowerBetter===undefined?'':
+      '<span class="tk end" style="top:0">'+(opts.lowerBetter?'better':'worse')+'</span>'+
+      '<span class="tk end" style="bottom:10px">'+(opts.lowerBetter?'worse':'better')+'</span>');
+  return '<div class="tchart"><div class="tgut" style="height:'+H+'px">'+gutter+'</div><div>'+
+    '<svg viewBox="0 0 '+W+' '+H+'" width="100%" height="'+H+'" preserveAspectRatio="none" style="display:block">'+
+    grid+dash+'<polyline points="'+line+'" fill="none" stroke="var(--accent)" stroke-width="2" vector-effect="non-scaling-stroke"></polyline></svg>'+
+    '<div class="tdates"><span>'+fmt(pts[0][0])+'</span><span>'+fmt(pts[pts.length-1][0])+'</span></div>'+
+    '<div class="tlegend"><span><i class="sol"></i>'+(opts.unit||'value')+'</span>'+(f?'<span><i class="dsh"></i>trend</span>':'')+'</div>'+
+    '</div></div>';
 }
-
-function headline(m) {
-  var a;
-  if (m.delta == null) a = 'Clicks at ' + n0(m.clicks);
+function trendWords(pts, lowerBetter){
+  const f=fit(pts.map(p=>p[1])); if(!f) return '';
+  const per=f.slope*(pts.length-1);
+  if(Math.abs(per)<0.15) return 'The trend is flat.';
+  const good=lowerBetter? per<0 : per>0;
+  return 'The trend is '+(good?'improving':'worsening')+', about '+Math.abs(per).toFixed(1)+' over the period.';
+}
+function bar(label,val,max,sub){ const w=Math.max(2,(val/max)*100); return '<div class="bar-row"><div class="bar-lbl" title="'+label.replace(/"/g,'&quot;')+'">'+label+'</div><div class="bar-track"><div class="bar-fill" style="width:'+w+'%"></div></div><div class="bar-val">'+sub+'</div></div>'; } function buildQChart(s){ const top=s.queries.filter(q=>q[1]>0).sort((a,b)=>b[1]-a[1]).slice(0,10); const data = top.length? top : s.queries.slice().sort((a,b)=>b[2]-a[2]).slice(0,10); const useClicks = top.length>0; const max=Math.max(1,...data.map(q=>useClicks?q[1]:q[2])); const el=document.getElementById('qchart'); if(!data.length){el.innerHTML='<div style="color:var(--muted)">No query data.</div>';return;} el.innerHTML=(useClicks?'':'<div style="color:var(--muted);font-size:12px;margin-bottom:6px">No clicks yet — showing impressions.</div>')+ data.map(q=>bar(q[0],useClicks?q[1]:q[2],max,(useClicks?q[1]+' clk':q[2]+' imp'))).join(''); } function buildPChart(s){ const buckets={"1–3":0,"4–10":0,"11–20":0,"21+":0}; s.queries.forEach(q=>{ const p=q[4]; if(p==null)return; if(p<=3)buckets["1–3"]+=q[2]; else if(p<=10)buckets["4–10"]+=q[2]; else if(p<=20)buckets["11–20"]+=q[2]; else buckets["21+"]+=q[2]; }); const max=Math.max(1,...Object.values(buckets)); document.getElementById('pchart').innerHTML=Object.keys(buckets).map(b=>bar("Position "+b,buckets[b],max,buckets[b]+' imp')).join(''); } function buildKwTable(s){ const tb=document.querySelector('#kwtable tbody'); const term=(document.getElementById('kwsearch').value||'').toLowerCase(); let rows=s.queries.filter(q=>q[0].toLowerCase().includes(term)); const k=kwSort.k; rows.sort((a,b)=>{ if(k===0)return kwSort.asc?a[0].localeCompare(b[0]):b[0].localeCompare(a[0]); const av=a[k]==null?(kwSort.asc?Infinity:-Infinity):a[k]; const bv=b[k]==null?(kwSort.asc?Infinity:-Infinity):b[k]; return kwSort.asc?av-bv:bv-av; }); tb.innerHTML=rows.map(q=> '<tr><td>'+q[0]+'</td><td class="num">'+q[1]+'</td><td class="num">'+q[2]+'</td><td class="num">'+q[3]+'%</td><td class="num">'+posPill(q[4])+'</td></tr>' ).join(''); } document.querySelectorAll('#kwtable th').forEach(th=>{ th.addEventListener('click',()=>{ const k=parseInt(th.dataset.k); if(kwSort.k===k)kwSort.asc=!kwSort.asc; else {kwSort.k=k;kwSort.asc=(k===0);} buildKwTable(curSite); }); }); document.getElementById('kwsearch').addEventListener('input',()=>buildKwTable(curSite)); function buildPgTable(s){ const tb=document.querySelector('#pgtable tbody'); tb.innerHTML=s.pages.map(p=>{ const short=p[0].replace(s.base,'/').replace(/^\/\//,'/'); return '<tr><td><a href="'+p[0]+'" target="_blank" title="'+p[0]+'">'+ (short==='/'? '/ (home)':short) +'</a></td><td class="num">'+p[1]+'</td><td class="num">'+p[2]+'</td><td class="num">'+p[3]+'%</td><td class="num">'+posPill(p[4])+'</td></tr>'; }).join(''); } function buildGA4(s){ const g=s.ga4; const kp=document.getElementById('ga4kpis'); const ch=document.getElementById('ga4chart'); const tb=document.querySelector('#ga4pages tbody'); if(!g){kp.innerHTML='<div style="color:var(--muted)">No GA4 data for this property.</div>';ch.innerHTML='';tb.innerHTML='';return;} function k4(lbl,val,sub){ return '<div class="kpi ga4k"><div class="lbl">'+lbl+'</div><div class="val">'+val+'</div><div class="prev">'+sub+'</div></div>'; } kp.innerHTML= k4("Users", g.users, "active users (GA4)")+ k4("Sessions", g.sessions, "visits in last 28 days")+ k4("Engagement rate", g.engRate.toFixed(2)+"%", "engaged / total sessions")+ k4("Avg engagement", g.avgEng, "per session")+ k4("Key events", g.keyEvents, g.keyEvents===0?"none configured in GA4":"conversions"); const maxC=Math.max(1,...g.channels.map(c=>c[1])); ch.innerHTML=g.channels.map(c=> '<div class="bar-row"><div class="bar-lbl" title="'+c[0]+'">'+c[0]+'</div><div class="bar-track"><div class="bar-fill ga4" style="width:'+Math.max(2,(c[1]/maxC)*100)+'%"></div></div><div class="bar-val">'+c[1]+' ('+c[2].toFixed(1)+'%)</div></div>' ).join(''); tb.innerHTML=g.topPages.map(p=>{ const full=s.base.replace(/\/$/,'')+p[0]; return '<tr><td><a href="'+full+'" target="_blank" title="'+full+'">'+(p[0]==='/'? '/ (home)':p[0])+'</a></td><td class="num">'+p[1]+'</td><td class="num">'+p[2]+'</td></tr>'; }).join(''); } function blDelta(hist, days){ if(!hist || hist.length<2) return null; const last=hist[hist.length-1]; const lastDate=new Date(last[0]); const target=new Date(lastDate.getTime()-days*86400000); let base=null; for(let i=hist.length-1;i>=0;i--){ if(new Date(hist[i][0])<=target){ base=hist[i]; break; } } if(base===null) base=hist[0]; /* not enough history yet — compare to earliest */ if(base[1]===null || last[1]===null) return null; return last[1]-base[1]; } function buildBacklinks(k){ const b=BACKLINKS[k]; const kp=document.getElementById('blkpis'); const ch=document.getElementById('blchart'); const tb=document.querySelector('#bltable tbody'); if(!b || b.total===null){ kp.innerHTML='<div class="kpi blk"><div class="lbl">Backlinks</div><div class="val">—</div><div class="prev">'+((b&&b.note)?b.note:'no data yet')+'</div></div>'; ch.innerHTML='<div style="color:var(--muted)">No backlink history yet.</div>'; tb.innerHTML=''; return; } function dcard(lbl,d){ if(d===null) return '<div class="kpi blk"><div class="lbl">'+lbl+'</div><div class="val">—</div><div class="prev">building history</div></div>'; const cls=d>0?'pos':(d<0?'neg':'neu'); const sym=d>0?'▲ +':(d<0?'▼ ':'– '); return '<div class="kpi blk"><div class="lbl">'+lbl+'</div><div class="val">'+(d>0?'+':'')+d+'</div><div class="prev '+cls+'">'+sym+Math.abs(d)+' links</div></div>'; } kp.innerHTML= '<div class="kpi blk"><div class="lbl">Total backlinks</div><div class="val">'+b.total+'</div><div class="prev">external links (GSC)</div></div>'+ dcard("Added · 1 day", blDelta(b.history,1))+ dcard("Added · 7 days", blDelta(b.history,7))+ dcard("Added · 30 days", blDelta(b.history,30)); if(!b.history.length){ ch.innerHTML='<div style="color:var(--muted)">No history yet.</div>'; } else { const hist=b.history.filter(h=>h[1]!=null);
+   ch.innerHTML=trendChart(hist,{lowerBetter:false,unit:'links'})+
+     '<div class="tnote">More is better here, the opposite of the position charts. '+trendWords(hist,false)+'</div>'; } tb.innerHTML = b.topSites.length ? b.topSites.map(s=>'<tr><td>'+s[0]+'</td><td class="num">'+s[1]+'</td></tr>').join('') : '<tr><td colspan="2" style="color:var(--muted)">No linking domains reported.</td></tr>'; } let curCountry='GCC', curKey=null; const CNAME={GCC:"GCC / all",QA:"Qatar",SA:"Saudi Arabia",AE:"UAE"}; function posColor(p){ if(p==null) return 'var(--muted)'; if(p<=3) return 'var(--green)'; if(p<=10) return 'var(--lime)'; if(p<=20) return 'var(--amber)'; return 'var(--red)'; } function serpData(k,c){ const r=RANK[k]&&RANK[k][c]; return r?{clicks:r.clicks,impr:r.impr,ctr:r.ctr,pos:r.pos,kw:r.kw.slice()}:{clicks:0,impr:0,ctr:0,pos:null,kw:[]}; } function buildSERP(k){ document.querySelectorAll('#ctrySwitch .ctry-btn').forEach(b=>b.classList.toggle('active',b.dataset.c===curCountry)); const d=serpData(k,curCountry), cn=CNAME[curCountry]; document.getElementById('serpkpis').innerHTML= '<div class="kpi"><div class="lbl">Avg position · '+cn+'</div><div class="val" style="color:'+posColor(d.pos)+'">'+(d.pos==null?'—':d.pos.toFixed(1))+'</div><div class="prev">'+(d.impr?'lower is better':'no impressions here')+'</div></div>'+ '<div class="kpi"><div class="lbl">Clicks</div><div class="val">'+d.clicks+'</div><div class="prev">in '+cn+'</div></div>'+ '<div class="kpi"><div class="lbl">Impressions</div><div class="val">'+fmt(d.impr)+'</div><div class="prev">in '+cn+'</div></div>'+ '<div class="kpi"><div class="lbl">CTR</div><div class="val">'+d.ctr+'%</div><div class="prev">in '+cn+'</div></div>'; const hist=(RANKHIST[k]&&RANKHIST[k][curCountry])||[]; const pts=hist.filter(h=>h[1]!=null); const tr=document.getElementById('serptrend'); if(!pts.length){ tr.innerHTML='<div style="color:var(--muted)">No ranking in '+cn+' yet.</div>'; } else { tr.innerHTML=trendChart(pts,{lowerBetter:true,unit:'position'})+
+   '<div class="tnote">In '+cn+'. '+trendWords(pts,true)+'</div>'; } const tb=document.querySelector('#serptable tbody'); tb.innerHTML = d.kw.length ? d.kw.slice(0,15).map(q=>'<tr><td>'+q[0]+'</td><td class="num">'+posPill(q[1])+'</td><td class="num">'+q[2]+'</td><td class="num">'+q[3]+'</td></tr>').join('') : '<tr><td colspan="4" style="color:var(--muted)">No keywords ranking in '+cn+'.</td></tr>'; } function selectSite(k){ curSite=SITES[k]; curKey=k; buildKpis(curSite,k); buildQChart(curSite); buildPChart(curSite); buildKwTable(curSite); buildPgTable(curSite); buildGA4(curSite); buildBacklinks(k); buildSERP(k); try{localStorage.setItem('compass_seo_site',k);}catch(e){} } // Only names a fraction when the figure really is within half a point of it,
+// so the phrasing can never overstate the movement.
+const FRACTIONS=[[100,'double'],[75,'three quarters'],[66.67,'two thirds'],[50,'a half'],
+  [33.33,'a third'],[25,'a quarter'],[20,'a fifth'],[16.67,'a sixth'],[14.29,'a seventh']];
+function fraction(p){ for(const [v,w] of FRACTIONS){ if(Math.abs(p-v)<=0.5) return w; } return null; }
+function verdict(){
+  const keys=Object.keys(SITES);
+  const sum=f=>keys.reduce((t,k)=>t+(f(SITES[k])||0),0);
+  const cur=sum(s=>s.cur&&s.cur.clicks), prev=sum(s=>s.prev&&s.prev.clicks);
+  const ranking=sum(s=>(s.queries||[]).filter(q=>q[4]!=null).length);
+  const tracked=sum(s=>(s.queries||[]).length);
+  let a;
+  if(!prev){ a='Search clicks at '+cur.toLocaleString('en-US'); }
   else {
-    var mag = Math.abs(m.delta), f = fraction(mag);
-    var dir = m.delta > 0 ? 'up' : m.delta < 0 ? 'down' : 'flat';
-    if (dir === 'flat') a = 'Clicks flat at ' + n0(m.clicks);
-    else if (f === 'double') a = 'Clicks ' + (m.delta > 0 ? 'doubled' : 'halved');
-    else if (f) a = 'Clicks ' + dir + ' ' + f;
-    else a = 'Clicks ' + dir + ' ' + Math.round(mag) + '%';
+    const d=(cur-prev)/prev*100, mag=Math.abs(d), f=fraction(mag);
+    const dir=d>0?'up':d<0?'down':'flat';
+    if(dir==='flat') a='Clicks flat at '+cur.toLocaleString('en-US');
+    else if(f==='double') a='Clicks '+(d>0?'doubled':'halved');
+    else if(f) a='Clicks '+dir+' '+f;
+    else a='Clicks '+dir+' '+Math.round(mag)+'%';
   }
-  var blind = m.rows.filter(function (r) { return r.ranking === 0 && r.tracked > 0; });
-  var falling = m.rows.filter(function (r) { return r.vs != null && r.vs <= -20; });
-  var thin = m.rows.filter(function (r) { return r.weeks != null && r.weeks < 3.5; });
-  var b = null;
-  if (blind.length === 1) b = 'and still nothing ranks at ' + blind[0].short;
-  else if (blind.length > 1) b = 'and nothing ranks at ' + blind.length + ' of ' + m.siteCount + ' properties';
-  else if (falling.length) b = 'but ' + falling[0].short + ' fell ' + Math.abs(falling[0].vs) + '%';
-  else if (thin.length) b = 'and ' + thin[0].short + ' is ' + thin[0].weeks.toFixed(1) + ' weeks from an empty queue';
-  return b ? a + ', ' + b : a;
+  const short=k=>(SITES[k].label||k).replace(/^Compass\s+/,'');
+  const blind=keys.filter(k=>(SITES[k].queries||[]).length && !(SITES[k].queries||[]).some(q=>q[4]!=null));
+  const falling=keys.filter(k=>SITES[k].prev&&SITES[k].prev.clicks&&
+    (SITES[k].cur.clicks-SITES[k].prev.clicks)/SITES[k].prev.clicks<=-0.2)
+    .sort((x,y)=>(SITES[x].cur.clicks/SITES[x].prev.clicks)-(SITES[y].cur.clicks/SITES[y].prev.clicks));
+  const thin=keys.filter(k=>BLOG[k]&&BLOG[k].weeks!=null&&BLOG[k].weeks<3.5)
+    .sort((x,y)=>BLOG[x].weeks-BLOG[y].weeks);
+  let b=null;
+  if(blind.length===1) b='and still nothing ranks at '+short(blind[0]);
+  else if(blind.length>1) b='and nothing ranks at '+blind.length+' of '+keys.length+' properties';
+  else if(falling.length){ const k=falling[0];
+    b='but '+short(k)+' fell '+Math.round(Math.abs((SITES[k].cur.clicks-SITES[k].prev.clicks)/SITES[k].prev.clicks*100))+'%'; }
+  else if(thin.length) b='and '+short(thin[0])+' is '+BLOG[thin[0]].weeks.toFixed(1)+' weeks from an empty queue';
+  const head=(b?a+', '+b:a)+'.';
+  return head+' Only '+ranking+' of '+tracked+' tracked keywords return a result at all.';
 }
-
-function chartNote(m) {
-  if (!m.series.length) return 'No ranking history yet.';
-  var f = m.series[0], l = m.series[m.series.length - 1];
-  var dir = l.value < f.value ? 'improved' : l.value > f.value ? 'slipped' : 'held';
-  var better = m.rows.filter(function (r) { return r.pos != null && r.prevPos != null && r.pos < r.prevPos; }).length;
-  var comparable = m.rows.filter(function (r) { return r.pos != null && r.prevPos != null; }).length;
-  return 'The group mean ' + dir + ' from ' + f.value.toFixed(1) + ' to ' + l.value.toFixed(1) +
-         ' across ' + m.series.length + ' days. ' + better + ' of ' + comparable +
-         ' properties improved their own 28-day average. Only ' + m.ranking + ' of ' + m.tracked +
-         ' tracked keywords return a result at all.' +
-         (trendWord(m.series, true) ? ' Across the whole window ' + trendWord(m.series, true) + '.' : '');
-}
-
-function alertContent(m) {
-  var blind = m.rows.filter(function (r) { return r.ranking === 0 && r.tracked > 0; });
-  var primary = blind[0] || m.rows.filter(function (r) { return r.vs != null && r.vs < 0; })[0] || null;
-  if (!primary) return null;
-  var head, meta = [];
-  if (primary.ranking === 0) {
-    head = primary.label + ' was shown ' + n0(primary.impr) + ' times, clicked ' + n0(primary.clicks) +
-           ', and none of its ' + primary.tracked + ' tracked keywords rank.';
-  } else {
-    head = primary.label + ' lost ' + Math.abs(primary.vs) + '% of its clicks, ' +
-           n0(primary.prevClicks) + ' down to ' + n0(primary.clicks) + '.';
+function init(){ (function(){ const pc=document.getElementById('propcount'); if(pc){ const n=Object.keys(SITES).length, g=Object.values(SITES).filter(s=>s.ga4).length; pc.textContent = n+' propert'+(n===1?'y':'ies')+(g<n?' · GA4 on '+g:''); } })(); document.getElementById('verdict').textContent=verdict();
+  document.getElementById('genline').textContent='Search Console data lags ~2 days · dashboard generated '+new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}); buildGlance(); buildQuickWins(); buildOverview(); buildBlog(); initTabs(); const sel=document.getElementById('siteSel'); sel.innerHTML=Object.keys(SITES).map(k=>'<option value="'+k+'">'+k+' — '+SITES[k].label+'</option>').join(''); let saved=null; try{saved=localStorage.getItem('compass_seo_site');}catch(e){} if(saved&&SITES[saved])sel.value=saved; sel.addEventListener('change',()=>selectSite(sel.value)); try{const sc=localStorage.getItem('compass_seo_country'); if(sc&&CNAME[sc])curCountry=sc;}catch(e){} document.querySelectorAll('#ctrySwitch .ctry-btn').forEach(b=>b.addEventListener('click',()=>{ curCountry=b.dataset.c; try{localStorage.setItem('compass_seo_country',curCountry);}catch(e){} buildSERP(curKey); })); selectSite(sel.value); } fetch('data.json',{cache:'no-store'}).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();}).then(function(d){SITES=d.SITES;BACKLINKS=d.BACKLINKS;RANK=d.RANK;RANKHIST=d.RANKHIST;BLOG=d.BLOG||{};init();}).catch(function(e){var g=document.getElementById('genline');if(g)g.textContent='Could not load data.json - '+e.message;});  function runwayCls(w){ return w>=3 ? 'good' : (w>=1.5 ? 'warn' : 'bad'); }
+function blogLabel(k){ return (SITES[k]&&SITES[k].label) || (BLOG[k]&&BLOG[k].tab) || k; }
+function buildBlog(){
+  const keys=Object.keys(BLOG||{});
+  const badge=document.getElementById('blogbadge');
+  if(!keys.length){
+    if(badge)badge.textContent='0';
+    document.getElementById('blogkpis').innerHTML='<div class="kpi"><div class="lbl">No data</div><div class="val">—</div><div class="prev">Most likely this page is one build behind: a deploy takes a minute or two and the CDN caches for ten, so reload before assuming anything is broken. If it is still empty after the next daily refresh, the Blog Topics sheet is no longer readable by the dashboard service account.</div></div>';
+    return;
   }
-  if (primary.prevClicks != null) meta.push('clicks ' + primary.prevClicks + ' → ' + primary.clicks);
-  if (primary.sessions == null) meta.push('no GA4 property connected');
-
-  var watch = [];
-  m.rows.forEach(function (r) {
-    if (r === primary || watch.length >= 3) return;
-    // Impressions climbing while clicks do not is a CTR problem rather than a
-    // visibility one, and it is the failure most easily missed.
-    if (r.prevImpr && r.impr / r.prevImpr >= 1.25 && r.vs != null && r.vs <= 5 && r.ctr != null && r.prevCtr) {
-      watch.push({ name: r.short, text: 'impressions ' + pctStr(Math.round((r.impr - r.prevImpr) / r.prevImpr * 100)) +
-        ', clicks ' + (Math.abs(r.vs) <= 2 ? 'flat' : pctStr(r.vs)) +
-        '; CTR ' + (r.ctr < r.prevCtr ? 'fell' : 'rose') + ' from ' + r.prevCtr + '% to ' + r.ctr + '%.' });
-    }
-  });
-  var thinnest = m.rows.filter(function (r) { return r.weeks != null && r !== primary; })
-                       .sort(function (a, b) { return a.weeks - b.weeks; })[0];
-  if (thinnest && watch.length < 3 && thinnest.weeks < 4) {
-    watch.push({ name: thinnest.short, text: thinnest.weeks.toFixed(1) + ' weeks of queue left, thinnest in the group.' });
-  }
-  m.rows.forEach(function (r) {
-    if (watch.length >= 3 || r === primary) return;
-    if (r.tracked && r.ranking / r.tracked < 0.15) {
-      watch.push({ name: r.short, text: 'only ' + r.ranking + ' of ' + r.tracked + ' tracked keywords rank.' });
-    }
-  });
-  return { head: head, meta: meta.join(' · '), watch: watch };
-}
-
-/* ---------- chart + component helpers ---------- */
-
-// Round tick values for a domain, so the axis reads 12 / 13 / 14 rather than
-// 12.37 / 13.44 / 14.51.
-function niceTicks(lo, hi, count) {
-  var raw = (hi - lo) / Math.max(1, count - 1);
-  if (!isFinite(raw) || raw <= 0) return [lo];
-  var mag = Math.pow(10, Math.floor(Math.log10(raw)));
-  var norm = raw / mag;
-  var step = (norm <= 1.5 ? 1 : norm <= 3 ? 2 : norm <= 7 ? 5 : 10) * mag;
-  var out = [];
-  for (var v = Math.ceil(lo / step) * step; v <= hi + 1e-9; v += step) out.push(Math.round(v * 1e6) / 1e6);
-  return out.length ? out : [lo];
-}
-
-// Least-squares fit. Reported as well as drawn: "is this going the right way"
-// is the question the chart exists to answer, and eyeballing a 28-point line
-// that wobbles is exactly where people guess wrong.
-function trend(series) {
-  var n = series.length;
-  if (n < 3) return null;
-  var sx = 0, sy = 0, sxy = 0, sxx = 0;
-  for (var i = 0; i < n; i++) { sx += i; sy += series[i].value; sxy += i * series[i].value; sxx += i * i; }
-  var d = n * sxx - sx * sx;
-  if (!d) return null;
-  var slope = (n * sxy - sx * sy) / d;
-  return { slope: slope, at: function (i) { return (sy - slope * sx) / n + slope * i; } };
-}
-
-// Returns the whole chart block: numeric axis in a gutter, plot, date row and
-// legend. opts.lowerBetter flips the "better/worse" end markers.
-function axisChart(series, opts) {
-  opts = opts || {};
-  if (!series || series.length < 2) return '<div class="chart-from">Not enough history yet.</div>';
-  var W = 420, H = opts.height || 132, TOP = 12, BOT = H - 14;
-  var colour = opts.colour || 'var(--accent)';
-  var vals = series.map(function (p) { return p.value; });
-  var lo = Math.min.apply(null, vals), hi = Math.max.apply(null, vals);
-  var pad = (hi - lo) * 0.12 || Math.max(1, Math.abs(hi) * 0.05);
-  lo -= pad; hi += pad;
-  var y = function (v) { return TOP + (v - lo) / (hi - lo) * (BOT - TOP); };
-  var x = function (i) { return i / (series.length - 1) * W; };
-
-  var ticks = niceTicks(lo, hi, 5);
-  var grid = ticks.map(function (t) {
-    return '<line x1="0" y1="' + y(t).toFixed(1) + '" x2="' + W + '" y2="' + y(t).toFixed(1) +
-      '" stroke="var(--hair-tint)" stroke-width="1"></line>';
+  const totP=keys.reduce((s,k)=>s+(BLOG[k].pending||0),0);
+  const totL=keys.reduce((s,k)=>s+(BLOG[k].live||0),0);
+  const low=keys.filter(k=>(BLOG[k].weeks||0)<1.5);
+  const thinnest=keys.slice().sort((a,b)=>(BLOG[a].weeks||0)-(BLOG[b].weeks||0))[0];
+  if(badge)badge.textContent=totP;
+  const kc=(lbl,val,sub)=>'<div class="kpi"><div class="lbl">'+lbl+'</div><div class="val">'+val+'</div><div class="prev">'+sub+'</div></div>';
+  document.getElementById('blogkpis').innerHTML=
+    kc('Topics queued',totP,'across '+keys.length+' properties')+
+    kc('Published to date',totL,'rows marked Live in the sheet')+
+    kc('Weekly output',keys.length+' posts','1 per property per run, 2 runs a week')+
+    kc('Thinnest queue',(BLOG[thinnest].weeks||0).toFixed(1)+' wks',blogLabel(thinnest))+
+    kc('Needs topics',low.length,low.length?low.map(blogLabel).join(', '):'every queue has runway');
+  const tb=document.querySelector('#blogtable tbody');
+  tb.innerHTML=keys.map(k=>{
+    const b=BLOG[k], w=b.weeks||0;
+    return '<tr><td>'+blogLabel(k)+'</td><td class="num">'+(b.pending||0)+'</td>'+
+      '<td class="num"><span class="runway '+runwayCls(w)+'">'+w.toFixed(1)+' wks</span></td>'+
+      '<td class="num">'+(b.live||0)+'</td>'+
+      '<td>'+((b.queue&&b.queue[0])?b.queue[0]:'<span class="emptyq">nothing queued — site will be skipped</span>')+'</td></tr>';
   }).join('');
-
-  var pts = series.map(function (p, i) { return x(i).toFixed(1) + ',' + y(p.value).toFixed(1); }).join(' ');
-  var tr = trend(series);
-  var trLine = '';
-  if (tr) {
-    var y0 = Math.max(TOP, Math.min(BOT, y(tr.at(0))));
-    var y1 = Math.max(TOP, Math.min(BOT, y(tr.at(series.length - 1))));
-    trLine = '<line x1="0" y1="' + y0.toFixed(1) + '" x2="' + W + '" y2="' + y1.toFixed(1) +
-      '" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="5 4" vector-effect="non-scaling-stroke"></line>';
-  }
-
-  var svg = '<svg viewBox="0 0 ' + W + ' ' + H + '" width="100%" height="' + H + '" preserveAspectRatio="none" ' +
-    'style="display:block" role="img" aria-label="' + esc(opts.label || 'trend') + ' over ' + series.length + ' points">' +
-    grid + '<line x1="0" y1="' + (H - 1) + '" x2="' + W + '" y2="' + (H - 1) +
-    '" stroke="var(--divider)" stroke-width="1"></line>' + trLine +
-    '<polyline points="' + pts + '" fill="none" stroke="' + colour + '" stroke-width="2" vector-effect="non-scaling-stroke"></polyline></svg>';
-
-  var dec = (hi - lo) < 4 ? 1 : 0;
-  var gutter = '<div class="chart-gutter" style="height:' + H + 'px">' +
-    ticks.map(function (t) {
-      return '<span class="tick" style="top:' + y(t).toFixed(1) + 'px">' + t.toFixed(dec) + '</span>';
-    }).join('') +
-    // Direction markers survive from the original design: average position
-    // improves as the number falls, so the axis alone can still be misread.
-    (opts.lowerBetter === undefined ? '' :
-      '<span class="axis-end" style="top:0">' + (opts.lowerBetter ? 'Better' : 'Worse') + '</span>' +
-      '<span class="axis-end" style="bottom:14px">' + (opts.lowerBetter ? 'Worse' : 'Better') + '</span>') +
-  '</div>';
-
-  var dates = opts.dates === false ? '' :
-    '<div class="chart-dates"><span>' + fmtDate(series[0].date) + '</span><span>' +
-    fmtDate(series[series.length - 1].date) + '</span></div>';
-
-  var legend = '<div class="chart-legend"><span><i class="solid" style="border-top-color:' + colour +
-    '"></i>' + esc(opts.seriesName || 'Actual') + '</span>' +
-    (tr ? '<span><i class="dash"></i>Trend</span>' : '') + '</div>';
-
-  return '<div class="chart-grid">' + gutter + '<div>' + svg + dates + legend + '</div></div>';
+  document.getElementById('blogqueue').innerHTML=keys.map(k=>{
+    const q=(BLOG[k].queue)||[];
+    return '<div style="margin-bottom:12px"><div style="font-weight:600;font-size:13px;margin-bottom:4px">'+blogLabel(k)+'</div>'+
+      (q.length?'<ol class="qlist">'+q.map((t,i)=>'<li'+(i===0?' class="next"':'')+'>'+t+'</li>').join('')+'</ol>'
+               :'<div class="emptyq">nothing queued</div>')+'</div>';
+  }).join('');
+  document.getElementById('blogrecent').innerHTML=keys.map(k=>{
+    const r=(BLOG[k].recent)||[];
+    if(!r.length)return '';
+    return '<div style="margin-bottom:12px"><div style="font-weight:600;font-size:13px;margin-bottom:4px">'+blogLabel(k)+'</div>'+
+      '<ul class="qlist">'+r.map(p=>'<li>'+(p[1]?'<a href="'+p[1]+'" target="_blank" rel="noopener">'+p[0]+'</a>':p[0])+'</li>').join('')+'</ul></div>';
+  }).join('')||'<div style="color:var(--muted);font-size:13px">Nothing marked Live yet.</div>';
 }
-
-// Plain-language direction, for the note under a chart.
-function trendWord(series, lowerBetter) {
-  var tr = trend(series);
-  if (!tr) return null;
-  var per = tr.slope * (series.length - 1);
-  if (Math.abs(per) < 0.15) return 'the trend is flat';
-  var improving = lowerBetter ? per < 0 : per > 0;
-  return 'the trend is ' + (improving ? 'improving' : 'worsening') +
-    ', about ' + Math.abs(per).toFixed(1) + ' over the period';
+function showTab(name){
+  document.querySelectorAll('.tabpanel').forEach(p=>{p.hidden = (p.id!=='tab-'+name);});
+  document.querySelectorAll('#tabbar .tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===name));
+  try{localStorage.setItem('compass_seo_tab',name);}catch(e){}
 }
-
-// state: 'good' | 'bad' | 'warn' | null. Booleans only ever said "bad or
-// nothing", which is how a page ends up with no colour on good news.
-function kpi(label, value, sub, state) {
-  var cls = state === true ? ' bad' : state ? ' ' + state : '';
-  return '<div class="kpi"><div class="kpi-lbl">' + esc(label) + '</div>' +
-    '<div class="kpi-val mono num">' + value + '</div>' +
-    (sub ? '<div class="kpi-sub' + cls + '">' + sub + '</div>' : '') + '</div>';
+function initTabs(){
+  document.querySelectorAll('#tabbar .tab-btn').forEach(b=>b.addEventListener('click',()=>showTab(b.dataset.tab)));
+  let t='seo'; try{const s=localStorage.getItem('compass_seo_tab'); if(s==='blog'||s==='seo')t=s;}catch(e){}
+  showTab(t);
 }
-function dirWord(v) { return v == null || v === 0 ? null : v > 0 ? 'good' : 'bad'; }
-
-function barRow(label, value, max, sub, accent) {
-  var w = Math.max(1, Math.min(100, max ? value / max * 100 : 0));
-  return '<div><div class="bar-head"><span class="bar-lbl" title="' + esc(label) + '">' + esc(label) + '</span>' +
-    '<span class="bar-val num">' + sub + '</span></div>' +
-    '<div class="bar-track"><div class="bar-fill' + (accent ? ' accent' : '') + '" style="width:' + w.toFixed(1) + '%"></div></div></div>';
-}
-
-function switcher(id, items, active) {
-  return '<div class="switch" id="' + id + '">' + items.map(function (it) {
-    var on = it.value === active;
-    var sw = it.colour ? '<span class="swatch" style="background:' +
-      (on ? it.colour : 'var(--bar-neutral)') + '"></span>' : '';
-    var style = (it.colour && it.value === active) ? ' style="color:' + it.colour + '"' : '';
-    return '<button type="button" class="sw-btn' + (it.value === active ? ' active' : '') +
-      '" data-v="' + esc(it.value) + '"' + style + '>' + sw + esc(it.label) + '</button>';
-  }).join('') + '</div>';
-}
-
-/* ---------- bands ---------- */
-
-// Amber before red: a runway that only turns red at 3.5 weeks gives no
-// warning while there is still time to commission topics.
-function runwayClass(w) {
-  if (w == null) return '';
-  return w < 3.5 ? ' thin' : w < 5 ? ' warn' : ' ok';
-}
-
-function bandProperties(m) {
-  function row(r, isLast) {
-    return '<div class="trow prow' + (r.acting ? ' act' : '') +
-      '" style="border-left-color:' + coOf(r.key) + '">' +
-      '<div><div class="pname">' + esc(r.label) + '</div><div class="psub">' +
-        (r.sessions == null ? 'no GA4' : n0(r.sessions) + ' sessions') +
-        ' · ' + r.ranking + ' of ' + r.tracked + ' keywords ranking' +
-        '<span class="psub-extra"> · ' + n0(r.impr) + ' impr · pos ' +
-          (r.pos == null ? '—' : r.pos) + (r.weeks != null ? ' · ' + r.weeks.toFixed(1) + ' wk queue' : '') + '</span>' +
-      '</div></div>' +
-      '<div class="col-share"><div class="track"><div class="fill" style="width:' + r.share + '%"></div></div></div>' +
-      '<div class="pclicks mono num right">' + n0(r.clicks) + '</div>' +
-      '<div class="pvs num right' + dirClass(r.vs) + '">' + pctStr(r.vs) + '</div>' +
-      '<div class="pfig num right col-impr">' + n0(r.impr) + '</div>' +
-      '<div class="pfig num right col-pos">' + (r.pos == null ? '—' : r.pos) + '</div>' +
-      '<div class="pfig num right col-sessions">' + (r.sessions == null ? '<span class="dim">no GA4</span>' : n0(r.sessions)) + '</div>' +
-      '<div class="pqueue num right col-queue' + runwayClass(r.weeks) + '">' +
-        (r.weeks == null ? '—' : r.weeks.toFixed(1) + ' wk') + '</div>' +
-    '</div>';
-  }
-  var acting = m.rows.filter(function (r) { return r.acting; });
-  var steady = m.rows.filter(function (r) { return !r.acting; });
-  var h = '<div class="table">' +
-    '<div class="trow thead"><div>Property</div><div class="col-share">Share of clicks</div>' +
-      '<div class="right">Clicks</div><div class="right">vs prev</div>' +
-      '<div class="right col-impr">Impressions</div><div class="right col-pos">Avg pos</div>' +
-      '<div class="right col-sessions">Sessions</div><div class="right col-queue">Queue left</div></div>';
-  if (acting.length) {
-    h += '<div class="group"><span class="group-tick"></span><span class="group-name mono">Acting on</span></div>' +
-      acting.map(function (r) { return row(r); }).join('');
-  }
-  if (steady.length) {
-    h += '<div class="group steady"><span class="group-tick"></span><span class="group-name mono">Steady</span></div>' +
-      steady.map(function (r) { return row(r); }).join('');
-  }
-  return h + '</div>';
-}
-
-function bandBlog(m) {
-  var rows = m.rows.filter(function (r) { return r.blog; });
-  if (!rows.length) {
-    return '<div class="band"><div class="band-head"><div class="band-title mono">Blog Pumper — publishing pipeline</div></div>' +
-      '<div class="band-sub">No queue data. Most likely this page is one build behind: a deploy takes a minute or two and the CDN caches for ten, so reload before assuming anything is broken. If it is still empty after the next daily refresh, the Blog Topics sheet is no longer readable by the dashboard service account.</div>' +
-      '<div style="height:22px"></div></div>';
-  }
-  var totalPending = sum(rows.map(function (r) { return r.blog.pending || 0; }));
-  var totalLive = sum(rows.map(function (r) { return r.blog.live || 0; }));
-  var thinnest = rows.slice().sort(function (a, b) { return a.blog.weeks - b.blog.weeks; })[0];
-  var lowCount = rows.filter(function (r) { return r.blog.weeks < 3.5; }).length;
-
-  var h = '<div class="band">' +
-    '<div class="band-head"><div class="band-title mono">Blog Pumper — publishing pipeline</div>' +
-      '<div class="chart-hint">two posts per property per week · Tuesdays and Fridays</div></div>' +
-    '<div class="band-sub">Read from the same Blog Topics sheet the publisher works from. It reports and never writes: topping the queue up is the SEO specialist\'s job, and a thin queue is a fact to surface rather than something this page should fix. Compass Furniture is on hold in the publisher and deliberately absent.</div>' +
-    '<div class="subpanel"><div class="kpis">' +
-      kpi('Topics queued', n0(totalPending), 'across ' + rows.length + ' properties') +
-      kpi('Published to date', n0(totalLive), 'rows marked Live in the sheet') +
-      kpi('Weekly output', rows.length + ' posts', '1 per property per run, 2 runs a week') +
-      kpi('Thinnest queue', thinnest.blog.weeks.toFixed(1) + ' wks', esc(thinnest.short),
-        thinnest.blog.weeks < 3.5 ? 'bad' : thinnest.blog.weeks < 5 ? 'warn' : 'good') +
-      kpi('Needs topics', n0(lowCount), lowCount ? 'under 3.5 weeks of runway' : 'every queue has runway',
-        lowCount > 0 ? 'bad' : 'good') +
-    '</div></div>';
-
-  h += '<div class="subpanel" style="padding-top:0"><div class="scrollx"><table class="dt">' +
-    '<thead><tr><th>Property</th><th class="right">Pending</th><th class="right">Runway</th>' +
-    '<th class="right">Published</th><th>Next up</th></tr></thead><tbody>' +
-    rows.slice().sort(function (a, b) { return a.blog.weeks - b.blog.weeks; }).map(function (r) {
-      var b = r.blog;
-      return '<tr><td><span class="swatch" style="display:inline-block;width:9px;height:9px;margin-right:8px;background:' +
-        coOf(r.key) + '"></span>' + esc(r.label) + '</td>' +
-        '<td class="right num">' + n0(b.pending) + '</td>' +
-        '<td class="right num' + (b.weeks < 3.5 ? ' pos-4' : b.weeks < 5 ? ' pos-3' : ' pos-1') + '" style="font-weight:600">' + b.weeks.toFixed(1) + ' wk</td>' +
-        '<td class="right num">' + n0(b.live) + '</td>' +
-        '<td>' + (b.queue && b.queue.length ? esc(b.queue[0]) : '<span class="emptyq">nothing queued — site will be skipped</span>') + '</td></tr>';
-    }).join('') + '</tbody></table></div></div>';
-
-  h += '<div class="panels"><div class="panel-l"><div class="panel-title mono">Queued topics</div>' +
-    rows.map(function (r) {
-      var q = (r.blog.queue || []);
-      return '<div style="margin-bottom:14px"><div style="font-size:14px;font-weight:600;margin-bottom:4px">' + esc(r.label) +
-        ' <span class="dim" style="font-weight:400">' + n0(r.blog.pending) + ' queued</span></div>' +
-        (q.length ? '<ol class="qlist">' + q.slice(0, 5).map(function (t, i) {
-          return '<li' + (i === 0 ? ' class="next"' : '') + '>' + esc(t) + '</li>';
-        }).join('') + '</ol>' : '<div class="emptyq">nothing queued</div>') + '</div>';
-    }).join('') + '</div><div class="divider"></div>' +
-    '<div class="panel-r"><div class="panel-title mono">Recently published</div>' +
-    rows.map(function (r) {
-      var rec = (r.blog.recent || []);
-      if (!rec.length) return '';
-      return '<div style="margin-bottom:14px"><div style="font-size:14px;font-weight:600;margin-bottom:4px">' + esc(r.label) + '</div>' +
-        '<ul class="qlist">' + rec.map(function (p) {
-          return '<li>' + (p[1] ? '<a href="' + esc(p[1]) + '" target="_blank" rel="noopener">' + esc(p[0]) + '</a>' : esc(p[0])) + '</li>';
-        }).join('') + '</ul></div>';
-    }).join('') || '<div class="chart-from">Nothing marked Live yet.</div>' +
-    '</div></div>';
-
-  return h + '</div>';
-}
-
-function positionBuckets(queries) {
-  var b = { '1–3': 0, '4–10': 0, '11–20': 0, '21+': 0 };
-  // Non-ranking keywords are excluded. The previous dashboard used `p <= 3`,
-  // and null <= 3 is true in JS, so every keyword that did not rank was counted
-  // into the best bucket.
-  queries.forEach(function (q) {
-    var p = q[4];
-    if (p == null) return;
-    if (p <= 3) b['1–3'] += q[2];
-    else if (p <= 10) b['4–10'] += q[2];
-    else if (p <= 20) b['11–20'] += q[2];
-    else b['21+'] += q[2];
-  });
-  return b;
-}
-
-function bandDetail(m, d) {
-  var r = m.byKey[curSite];
-  var s = (d.SITES || {})[curSite];
-  if (!r || !s) return '';
-  var q = s.queries || [], pages = s.pages || [], ga4 = s.ga4, bl = r.backlinks;
-
-  var h = '<div class="band detail" style="--co:' + coOf(curSite) + '">' +
-    '<div class="band-head"><div><div class="rule-accent" style="margin-bottom:12px;background:' + coOf(curSite) + '"></div>' +
-      '<div class="band-title mono">Per-property detail</div></div>' +
-      switcher('siteSwitch', m.rows.map(function (x) {
-        return { value: x.key, label: x.short, colour: coOf(x.key) };
-      }), curSite) +
-    '</div>';
-
-  /* -- Search Console -- */
-  var ctrDelta = (r.ctr != null && r.prevCtr) ? Math.round((r.ctr - r.prevCtr) / r.prevCtr * 100) : null;
-  h += '<div class="subpanel"><div class="chart-head"><div class="chart-label mono">Search Console — search visibility</div>' +
-      '<div class="chart-hint">last 28 days, against the 28 before it</div></div>' +
-    '<div class="kpis" style="margin-top:14px">' +
-      kpi('Clicks', n0(r.clicks), pctStr(r.vs) + ' · ' + n0(r.prevClicks) + ' prior', dirWord(r.vs)) +
-      kpi('Impressions', n0(r.impr), r.prevImpr ? pctStr(Math.round((r.impr - r.prevImpr) / r.prevImpr * 100)) + ' · ' + n0(r.prevImpr) + ' prior' : '',
-        r.prevImpr ? dirWord(r.impr - r.prevImpr) : null) +
-      kpi('CTR', (r.ctr == null ? '—' : r.ctr + '%'), r.prevCtr ? pctStr(ctrDelta) + ' · ' + r.prevCtr + '% prior' : '', dirWord(ctrDelta)) +
-      kpi('Avg position', (r.pos == null ? '—' : r.pos), r.prevPos ? (r.pos < r.prevPos ? 'better than ' : 'worse than ') + r.prevPos : '',
-        r.prevPos == null ? null : dirWord(r.prevPos - r.pos)) +
-      kpi('Keywords ranking', r.ranking + '<span class="secondary-den">/' + r.tracked + '</span>', 'targeted keywords with a result',
-        r.ranking === 0 ? 'bad' : r.tracked && r.ranking / r.tracked >= 0.6 ? 'good' : null) +
-      kpi('Backlinks', bl ? n0(bl.total) : '—', bl ? 'discovered by Search Console' : 'no data yet') +
-    '</div></div>';
-
-  /* -- top queries + impressions by position -- */
-  var byClicks = q.slice().sort(function (a, b) { return b[1] - a[1]; });
-  var useClicks = byClicks.length && byClicks[0][1] > 0;
-  var topQ = (useClicks ? byClicks : q.slice().sort(function (a, b) { return b[2] - a[2]; })).slice(0, 8);
-  var maxQ = topQ.length ? (useClicks ? topQ[0][1] : topQ[0][2]) : 1;
-  var buckets = positionBuckets(q);
-  var maxB = Math.max.apply(null, Object.keys(buckets).map(function (k) { return buckets[k]; }).concat([1]));
-
-  h += '<div class="panels"><div class="panel-l">' +
-      '<div class="panel-title mono">Top queries by ' + (useClicks ? 'clicks' : 'impressions') + '</div>' +
-      (useClicks ? '' : '<div class="chart-hint" style="margin:-8px 0 12px">No clicks yet — showing impressions.</div>') +
-      '<div class="bars">' + (topQ.length ? topQ.map(function (x) {
-        return barRow(x[0], useClicks ? x[1] : x[2], maxQ, (useClicks ? n0(x[1]) + ' clk' : n0(x[2]) + ' imp'), useClicks);
-      }).join('') : '<div class="chart-from">No query data.</div>') + '</div>' +
-    '</div><div class="divider"></div><div class="panel-r">' +
-      '<div class="panel-title mono">Impressions by ranking position</div>' +
-      '<div class="bars">' + Object.keys(buckets).map(function (k) {
-        return barRow('Position ' + k, buckets[k], maxB, n0(buckets[k]) + ' imp', k === '1–3' || k === '4–10');
-      }).join('') + '</div>' +
-      '<div class="chart-note">Keywords with no impressions in the period are excluded, so these four add up to the impressions this property actually earned.</div>' +
-    '</div></div>';
-
-  /* -- keywords table + top pages -- */
-  var filtered = q.filter(function (x) { return !kwFilter || x[0].toLowerCase().indexOf(kwFilter) >= 0; })
-                  .sort(function (a, b) {
-                    if ((a[4] == null) !== (b[4] == null)) return a[4] == null ? 1 : -1;
-                    return (a[4] || 0) - (b[4] || 0);
-                  });
-  h += '<div class="panels"><div class="panel-l">' +
-      '<div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px">' +
-        '<div class="panel-title mono" style="margin:0">Keywords · ' + filtered.length + ' of ' + q.length + '</div>' +
-        '<input class="filter" id="kwFilter" type="text" placeholder="Filter keywords…" value="' + esc(kwFilter) + '">' +
-      '</div>' +
-      '<div class="scrollx"><table class="dt"><thead><tr><th>Query</th><th class="right">Clicks</th>' +
-        '<th class="right">Impr</th><th class="right">CTR</th><th class="right">Pos</th></tr></thead><tbody>' +
-        (filtered.length ? filtered.map(function (x) {
-          return '<tr><td class="kw">' + esc(x[0]) + '</td><td class="right num">' + n0(x[1]) + '</td>' +
-            '<td class="right num">' + n0(x[2]) + '</td><td class="right num">' + (x[3] || 0) + '%</td>' +
-            '<td class="right"><span class="pos-pill ' + posClass(x[4]) + '">' +
-              (x[4] == null ? '—' : x[4]) + '</span></td></tr>';
-        }).join('') : '<tr><td colspan="5" class="dim">Nothing matches that filter.</td></tr>') +
-      '</tbody></table></div>' +
-      '<div class="chart-note">A dash means the keyword is tracked but returned no impressions in the period — tracked, not ranking.</div>' +
-    '</div><div class="divider"></div><div class="panel-r">' +
-      '<div class="panel-title mono">Top pages · Search Console</div>' +
-      '<div class="scrollx"><table class="dt"><thead><tr><th>Page</th><th class="right">Clicks</th>' +
-        '<th class="right">Impr</th><th class="right">CTR</th><th class="right">Pos</th></tr></thead><tbody>' +
-        (pages.length ? pages.slice(0, 10).map(function (p) {
-          var path = String(p[0]).replace(/^https?:\/\/[^/]+/, '') || '/';
-          return '<tr><td class="kw"><a href="' + esc(p[0]) + '" target="_blank" rel="noopener">' + esc(path) + '</a></td>' +
-            '<td class="right num">' + n0(p[1]) + '</td><td class="right num">' + n0(p[2]) + '</td>' +
-            '<td class="right num">' + (p[3] || 0) + '%</td><td class="right num">' + (p[4] == null ? '—' : p[4]) + '</td></tr>';
-        }).join('') : '<tr><td colspan="5" class="dim">No page data.</td></tr>') +
-      '</tbody></table></div></div></div>';
-
-  /* -- SERP by market -- */
-  var RK = (d.RANK || {})[curSite] || {};
-  var RHm = ((d.RANKHIST || {})[curSite] || {});
-  var mk = RK[curMarket] || null;
-  var mSeries = (RHm[curMarket] || []).map(function (p) { return { date: p[0], value: p[1] }; })
-                                      .filter(function (p) { return p.value != null; });
-  var MARKETS = [{ value: 'GCC', label: 'GCC / all' }, { value: 'QA', label: 'Qatar' },
-                 { value: 'SA', label: 'Saudi' }, { value: 'AE', label: 'UAE' }];
-  h += '<div class="subpanel tinted">' +
-    '<div class="chart-head"><div class="chart-label mono">SERP rankings by market</div>' +
-      switcher('mktSwitch', MARKETS, curMarket) + '</div>' +
-    '<div class="band-sub" style="padding:8px 0 0">Where this property ranks for its targeted keywords in the selected market. A dash means tracked but not ranking. This is Search Console\'s averaged position per market, not a live SERP check.</div>';
-  if (mk) {
-    h += '<div class="kpis" style="margin-top:16px">' +
-        kpi('Clicks', n0(mk.clicks), curMarket === 'GCC' ? 'all markets' : 'in ' + curMarket) +
-        kpi('Impressions', n0(mk.impr), '') +
-        kpi('CTR', (mk.ctr == null ? '—' : mk.ctr + '%'), '') +
-        kpi('Avg position', (mk.pos == null ? '—' : mk.pos.toFixed ? mk.pos.toFixed(1) : mk.pos), mk.pos == null ? 'nothing ranking' : 'impression-weighted', mk.pos == null) +
-      '</div>' +
-      '<div class="panels" style="margin-top:18px"><div style="padding-right:22px">' +
-        '<div class="panel-title mono">Average position over time</div>' +
-        axisChart(mSeries, { label: 'Average position in ' + curMarket, lowerBetter: true,
-          colour: coOf(curSite), seriesName: 'Position' }) +
-        (trendWord(mSeries, true) ? '<div class="chart-note">In ' + esc(curMarket) + ', ' +
-          esc(trendWord(mSeries, true)) + '.</div>' : '') +
-      '</div><div class="divider"></div><div style="padding-left:22px">' +
-        '<div class="panel-title mono">Targeted keywords · ' + curMarket + '</div>' +
-        '<div class="scrollx"><table class="dt"><thead><tr><th>Keyword</th><th class="right">Pos</th>' +
-          '<th class="right">Clicks</th><th class="right">Impr</th></tr></thead><tbody>' +
-          ((mk.kw || []).length ? mk.kw.slice().sort(function (a, b) {
-            if ((a[1] == null) !== (b[1] == null)) return a[1] == null ? 1 : -1;
-            return (a[1] || 0) - (b[1] || 0);
-          }).map(function (k) {
-            return '<tr><td class="kw">' + esc(k[0]) + '</td>' +
-              '<td class="right"><span class="pos-pill ' + posClass(k[1]) + '">' + (k[1] == null ? '—' : k[1]) + '</span></td>' +
-              '<td class="right num">' + n0(k[2]) + '</td><td class="right num">' + n0(k[3]) + '</td></tr>';
-          }).join('') : '<tr><td colspan="4" class="dim">No keywords tracked for this market.</td></tr>') +
-        '</tbody></table></div></div></div>';
-  } else {
-    h += '<div class="chart-from" style="margin-top:14px">No market breakdown for this property.</div>';
-  }
-  h += '</div>';
-
-  /* -- GA4 -- */
-  h += '<div class="subpanel">' +
-    '<div class="chart-head"><div class="chart-label mono">Google Analytics — on-site behaviour</div>' +
-      '<div class="chart-hint">what visitors do once they arrive</div></div>';
-  if (ga4) {
-    var chMax = Math.max.apply(null, (ga4.channels || []).map(function (c) { return c[1]; }).concat([1]));
-    var pgMax = Math.max.apply(null, (ga4.topPages || []).map(function (p) { return p[1]; }).concat([1]));
-    h += '<div class="kpis" style="margin-top:14px">' +
-        kpi('Users', n0(ga4.users), '') +
-        kpi('Sessions', n0(ga4.sessions), '') +
-        kpi('Engagement rate', (ga4.engRate == null ? '—' : ga4.engRate + '%'), '') +
-        kpi('Avg engaged', esc(ga4.avgEng || '—'), 'per session') +
-        kpi('Events', n0(ga4.events), '') +
-        kpi('Key events', n0(ga4.keyEvents), 'conversions') +
-      '</div>' +
-      '<div class="panels" style="margin-top:18px"><div style="padding-right:22px">' +
-        '<div class="panel-title mono">Sessions by channel</div><div class="bars">' +
-        ((ga4.channels || []).length ? ga4.channels.slice(0, 8).map(function (c) {
-          return barRow(c[0], c[1], chMax, n0(c[1]) + ' · ' + c[2].toFixed(1) + '%', /organic search/i.test(c[0]));
-        }).join('') : '<div class="chart-from">No channel data.</div>') + '</div>' +
-      '</div><div class="divider"></div><div style="padding-left:22px">' +
-        '<div class="panel-title mono">Top pages by views</div><div class="bars">' +
-        ((ga4.topPages || []).length ? ga4.topPages.slice(0, 8).map(function (p) {
-          return barRow(p[0], p[1], pgMax, n0(p[1]) + ' views · ' + n0(p[2]) + ' users', false);
-        }).join('') : '<div class="chart-from">No page data.</div>') + '</div>' +
-      '</div></div>';
-  } else {
-    h += '<div class="chart-from" style="margin-top:14px">This property has no GA4 property connected, so nothing after the click is measured. Search Console figures above are unaffected.</div>';
-  }
-  h += '</div>';
-
-  /* -- backlinks -- */
-  h += '<div class="subpanel tinted">' +
-    '<div class="chart-head"><div class="chart-label mono">Backlinks</div>' +
-      '<div class="chart-hint">counts are approximate and update in irregular batches</div></div>';
-  if (bl) {
-    var hist = (bl.history || []).map(function (p) { return { date: p[0], value: p[1] }; })
-                                 .filter(function (p) { return p.value != null; });
-    var change = hist.length > 1 ? hist[hist.length - 1].value - hist[0].value : null;
-    h += '<div class="kpis" style="margin-top:14px">' +
-        kpi('Total backlinks', n0(bl.total), 'discovered by Search Console') +
-        kpi('Change', (change == null ? '—' : (change > 0 ? '+' : '') + n0(change)), hist.length ? 'since ' + fmtDate(hist[0].date) : '') +
-        kpi('Linking domains', n0((bl.topSites || []).length), 'in the top list') +
-      '</div>' +
-      '<div class="panels" style="margin-top:18px"><div style="padding-right:22px">' +
-        '<div class="panel-title mono">Total over time</div>' +
-        (hist.length > 1 ? axisChart(hist, { label: 'Backlinks', height: 118, lowerBetter: false,
-          colour: coOf(curSite), seriesName: 'Backlinks' })
-        : '<div class="chart-from">Not enough history yet.</div>') +
-        '<div class="chart-note">This series counts up, so a rising line is good here — the opposite of the position charts' +
-        (trendWord(hist, false) ? ', and ' + esc(trendWord(hist, false)) : '') + '.</div>' +
-      '</div><div class="divider"></div><div style="padding-left:22px">' +
-        '<div class="panel-title mono">Top linking domains</div>' +
-        '<div class="scrollx"><table class="dt"><thead><tr><th>Domain</th><th class="right">Links</th></tr></thead><tbody>' +
-        ((bl.topSites || []).length ? bl.topSites.map(function (t) {
-          return '<tr><td>' + esc(t[0]) + '</td><td class="right num">' + n0(t[1]) + '</td></tr>';
-        }).join('') : '<tr><td colspan="2" class="dim">No linking domains recorded.</td></tr>') +
-        '</tbody></table></div></div></div>';
-  } else {
-    h += '<div class="chart-from" style="margin-top:14px">No backlink data for this property yet.</div>';
-  }
-  return h + '</div></div>';
-}
-
-/* ---------- render ---------- */
-
-function render() {
-  var d = D, m = M;
-  var alert = alertContent(m);
-  var series = m.series, first = series[0], last = series[series.length - 1];
-  var genDate = new Date(m.generated + 'T00:00:00Z');
-  var ageDays = Math.floor((Date.now() - genDate.getTime()) / 86400000);
-  var stale = ageDays > 8;
-  var dateStr = genDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
-
-  var h = '';
-
-  h += '<div class="topbar"><div class="masthead">' +
-    '<div class="masthead-left"><img src="assets/mark-light.svg" alt="Compass Group">' +
-      '<div class="vrule"></div><div class="masthead-title mono">Search performance</div></div>' +
-    '<div class="chips"><span class="chip">' + m.siteCount + ' properties</span>' +
-      '<span class="chip">last 28 days</span><span class="chip-date">' + dateStr + '</span></div></div>';
-
-  var pending = sum(m.rows.map(function (r) { return (r.blog && r.blog.pending) || 0; }));
-  h += '<div class="tabbar" id="tabbar" role="tablist">' +
-    '<button type="button" class="tab' + (curTab === 'search' ? ' active' : '') + '" data-t="search" role="tab">Search performance</button>' +
-    '<button type="button" class="tab' + (curTab === 'blog' ? ' active' : '') + '" data-t="blog" role="tab">Blog Pumper' +
-      (pending ? '<span class="tab-count num">' + n0(pending) + '</span>' : '') + '</button>' +
-  '</div>';
-  h += '</div>';                       // close .topbar
-  h += '<div id="tab-search"' + (curTab === 'search' ? '' : ' hidden') + '>';
-
-  h += '<div class="split hero band">' +
-    '<div class="hero-left">' +
-      '<img class="watermark" src="assets/mark-ink.svg" alt="">' +
-      '<div class="kicker"></div>' +
-      '<div class="headline mono">' + esc(headline(m)) + '</div>' +
-      '<div class="metrics"><div><div class="lead-row">' +
-        '<div class="lead mono num">' + n0(m.clicks) + '</div>' +
-        (m.delta == null ? '' : '<div class="delta-chip' + (m.delta > 0 ? ' up' : m.delta < 0 ? ' down' : '') +
-          '">' + pctStr(Math.round(m.delta)) + '</div>') +
-      '</div><div class="caption">Search clicks · ' + n0(m.prevClicks) + ' prior</div></div>' +
-      '<div class="secondaries">' +
-        '<div class="secondary"><div class="secondary-val mono num">' + n0(m.impr) + '</div><div class="caption">Impressions</div></div>' +
-        '<div class="secondary"><div class="secondary-val mono num">' + m.ctr.toFixed(1) + '%</div><div class="caption">Blended CTR</div></div>' +
-        '<div class="secondary"><div class="secondary-val mono num">' + n0(m.sessions) + '</div><div class="caption">Sessions</div></div>' +
-        '<div class="secondary"><div class="secondary-val mono num">' + m.ranking +
-          '<span class="secondary-den">/' + m.tracked + '</span></div><div class="caption">Keywords ranking</div></div>' +
-      '</div></div></div>' +
-    '<div class="divider"></div>' +
-    '<div class="hero-right">' +
-      '<div class="chart-head"><div class="chart-label mono">Average position</div>' +
-        '<div class="chart-hint">lower is better</div></div>' +
-      (series.length ?
-        '<div class="chart-value-row"><span class="chart-value mono num">' + last.value.toFixed(1) + '</span>' +
-          '<span class="chart-from">from ' + first.value.toFixed(1) + ' on ' + fmtDate(first.date) + '</span></div>' +
-        axisChart(series, { label: 'Group average position', lowerBetter: true, seriesName: 'Position' })
-        : '<div class="chart-from">No ranking history yet.</div>') +
-      '<div class="chart-note">' + esc(chartNote(m)) + '</div>' +
-    '</div></div>';
-
-  if (alert) {
-    h += '<div class="split alert band">' +
-      '<div class="alert-left"><div class="alert-bar"></div><div>' +
-        '<div class="alert-label mono">Needs attention</div>' +
-        '<div class="alert-headline mono">' + esc(alert.head) + '</div>' +
-        (alert.meta ? '<div class="alert-meta">' + esc(alert.meta) + '</div>' : '') +
-      '</div></div><div class="divider"></div>' +
-      '<div class="alert-right"><div class="watch-label mono">Also watch</div><div class="watch-list">' +
-        alert.watch.map(function (w) {
-          return '<div class="watch-row"><span class="watch-dash">—</span><span>' +
-            '<span class="watch-name">' + esc(w.name) + '</span> ' + esc(w.text) + '</span></div>';
-        }).join('') + '</div></div></div>';
-  }
-
-  h += '<div class="lower">';
-  h += '<div class="band">' + bandProperties(m) + '</div>';
-
-  h += '<div class="split split-even band"><div class="panel-l">' +
-      '<div class="panel-title mono">Quick wins · position 4–20</div><div class="bars">' +
-      (m.wins.length ? m.wins.map(function (w, i) {
-        return '<div style="display:grid;grid-template-columns:20px 1fr auto;gap:12px;align-items:baseline;font-size:13px">' +
-          '<span class="mono" style="font-weight:600;font-size:13px;color:var(--accent)">' + ('0' + (i + 1)).slice(-2) + '</span>' +
-          '<span>' + esc(w.q) + ' <span class="dim">· ' + esc(w.site) + '</span></span>' +
-          '<span class="bar-val num">' + n0(w.impr) + ' impr · ' + w.pos + '</span></div>';
-      }).join('') : '<div class="chart-from">Nothing ranking between 4 and 20 yet.</div>') +
-      '</div><div class="chart-note">Already on page one or close to it. Moving these is usually cheaper than ranking something new.</div>' +
-    '</div><div class="divider"></div><div class="panel-r">' +
-      '<div class="panel-title mono">Where the sessions came from</div><div class="bars">' +
-      m.channels.slice(0, 6).map(function (c) {
-        return barRow(c.name, c.pct, 100, n0(c.sessions) + ' · ' + Math.round(c.pct) + '%', /organic search/i.test(c.name));
-      }).join('') + '</div>' +
-      '<div class="chart-note">Percentages are of total sessions (' + n0(m.sessions) + '), not of the channel sum — GA4\'s breakdown does not reconcile with its own total. Organic is the only channel search work moves, so it is the only one coloured.</div>' +
-    '</div></div>';
-
-  h += bandDetail(m, d);
-  h += '</div>';                       // close .lower
-  h += '</div>';                       // close #tab-search
-  h += '<div id="tab-blog"' + (curTab === 'blog' ? '' : ' hidden') + '><div class="lower">' +
-    bandBlog(m) + '</div></div>';
-
-  h += '<div class="foot">' +
-    '<span>Search Console · GA4 on ' + m.sitesWithGa4 + ' of ' + m.siteCount + ' properties · ' +
-      n0(m.blTotal) + ' backlinks</span>' +
-    '<span>' + (stale ? '<span class="stale">Data is ' + ageDays + ' days old</span> · ' : 'Console data lags about three days · ') +
-      'generated ' + dateStr + '</span></div>';
-
-  document.getElementById('sheet').innerHTML = h;
-  wire();
-}
-
-function wire() {
-  var tb = document.getElementById('tabbar');
-  if (tb) tb.addEventListener('click', function (e) {
-    var b = e.target.closest('.tab'); if (!b) return;
-    curTab = b.dataset.t; store.set('cg_tab', curTab); render();
-    window.scrollTo({ top: 0 });
-  });
-  var ss = document.getElementById('siteSwitch');
-  if (ss) ss.addEventListener('click', function (e) {
-    var b = e.target.closest('.sw-btn'); if (!b) return;
-    curSite = b.dataset.v; store.set('cg_site', curSite); kwFilter = ''; render();
-  });
-  var ms = document.getElementById('mktSwitch');
-  if (ms) ms.addEventListener('click', function (e) {
-    var b = e.target.closest('.sw-btn'); if (!b) return;
-    curMarket = b.dataset.v; store.set('cg_market', curMarket); render();
-  });
-  var f = document.getElementById('kwFilter');
-  if (f) {
-    f.addEventListener('input', function () {
-      kwFilter = f.value.trim().toLowerCase();
-      var at = f.selectionStart;
-      render();
-      var nf = document.getElementById('kwFilter');
-      if (nf) { nf.focus(); try { nf.setSelectionRange(at, at); } catch (e) {} }
-    });
-  }
-}
-
-fetch('data.json', { cache: 'no-store' })
-  .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
-  .then(function (d) {
-    D = d; M = derive(d);
-    var saved = store.get('cg_site', null);
-    curSite = (saved && M.byKey[saved]) ? saved : (M.rows[0] && M.rows[0].key);
-    var sm = store.get('cg_market', 'GCC');
-    if (['GCC', 'QA', 'SA', 'AE'].indexOf(sm) >= 0) curMarket = sm;
-    var st = store.get('cg_tab', 'search');
-    if (st === 'search' || st === 'blog') curTab = st;
-    render();
-  })
-  .catch(function (e) {
-    document.getElementById('msg').textContent =
-      'Could not load data.json — ' + e.message + '. If this page was just deployed it may be one build behind; reload in a minute.';
-  });
-</script>
-</body>
-</html>
+</script> </body> </html>

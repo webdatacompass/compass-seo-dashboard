@@ -82,11 +82,6 @@ jobs:
         run: |
           mkdir -p _site
           cp index.html data.json robots.txt _headers _site/
-          # The redesign needs the brand marks and the two self-hosted variable
-          # fonts. Without them the page still renders, but in fallback faces and
-          # with no wordmark -- a silent visual regression rather than an error,
-          # so they are copied here and asserted below.
-          cp -r assets fonts _site/
           # Fail loudly rather than quietly publishing something private if this
           # list is ever edited carelessly.
           for forbidden in keywords.json requirements.txt scripts .github; do
@@ -95,11 +90,9 @@ jobs:
               exit 1
             fi
           done
-          # Assert the additions arrived, for the same reason the forbidden list
-          # exists: a quiet omission here ships a broken-looking page.
-          for required in index.html data.json assets/mark-light.svg \
-                          assets/mark-ink.svg fonts/inter-latin-var.woff2 \
-                          fonts/inter-tight-latin-var.woff2; do
+          # Assert what the page actually requests, for the same reason the
+          # forbidden list exists.
+          for required in index.html data.json robots.txt _headers; do
             if [ ! -s "_site/$required" ]; then
               echo "REFUSING to deploy: _site is missing $required"
               exit 1
