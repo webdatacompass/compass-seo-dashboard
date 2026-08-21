@@ -216,10 +216,51 @@ position figure.
 
 ### Look and feel
 
-The light "Broadsheet" look: ink masthead and footer, Montserrat for headings and
-numerals, Archivo for body, **radius 0 everywhere**, and rule weights used
-semantically — hairline between rows, heavier between bands, ink under the table
-header.
+The light "Broadsheet" look: ink masthead and footer, **radius 0 everywhere**, and
+rule weights used semantically — hairline between rows, heavier between bands, ink
+under the table header.
+
+### Type is sized for a screen, not a page
+
+The design was drawn as a printed broadsheet, and its type scale was a print
+scale: 17 distinct sizes between 8.5px and 34px, with **80% of declarations at or
+below 13px**. That is legible at 300+ DPI on paper and not on a monitor,
+especially where it was tracked-out uppercase at 10.5px.
+
+Two things changed together, because either alone would not have fixed it.
+
+**The faces.** Montserrat is geometric with a small x-height for its cap height —
+handsome at 42px, poor at 10. It was chosen in the original brief to echo the
+Compass wordmark, which mattered more when the masthead carried the wordmark;
+the masthead is the monogram now. Body and data are **Inter**, which is designed
+for screen text and carries real tabular figures that this page leans on in every
+table. Display sizes are **Inter Tight**, keeping a display/text distinction
+without introducing a second voice. Both are self-hosted variable files, one per
+family, same as before.
+
+**The scale.** Consolidated to a ramp with a **12px floor** — nothing on a screen
+dashboard should be smaller, and tracked uppercase least of all:
+
+| Token | Size | Used for |
+| --- | --- | --- |
+| `--fs-micro` | 12px | uppercase labels, captions, table headers |
+| `--fs-small` | 13px | meta lines, chart hints |
+| `--fs-body` | 15px | body, table cells, lists |
+| `--fs-strong` | 17px | property names |
+| `--fs-sub` | 20px | denominators |
+| `--fs-row` / `--fs-alert` | 24px | row clicks, alert headline |
+| `--fs-metric` | 30px | KPI values |
+| `--fs-chart` | 38px | chart value |
+| headline / lead | `clamp` 32–48 / 56–76 | fluid |
+
+Letter-spacing on small uppercase was roughly halved (0.14–0.2em down to
+0.08–0.1em). Wide tracking is the other half of the problem: it breaks a word
+into loose letters at exactly the size where the word's shape is what you read.
+
+Numeric table columns were widened and every breakpoint moved up with the type
+(1400 / 1180 / 900 / 620), or the table would start colliding before it started
+shedding columns. Verified at 1600, 1300, 1100 and mobile: no cell clips, nothing
+wraps, and the page never scrolls sideways.
 
 The sheet **fills the window**. The original design was a fixed 1120px card on a
 grey desk, with a border and a shadow; on a real screen that reads as a window
