@@ -74,6 +74,13 @@ clamp(22-32px), with the supporting clause below it at 14px muted so it reads as
 support rather than competing. It was previously 16px sitting under two lines of
 metadata, which buried the one sentence the page exists to deliver.
 
+Beside the verdict sits the group position trend: 29 days, current value called
+out, a dashed trendline and the direction in words. It is explicitly labelled
+"All 6 properties, all markets — the mean of each one's own GCC series", because
+"average position" on its own invites the fair question "of what?", and it points
+down the page to the per-property and per-market trends rather than pretending to
+replace them.
+
 The at-a-glance row gives the first card -- clicks, the number every other figure
 qualifies -- double width and a 58px value against 26px for the rest. Five
 identical cards gave the eye nowhere to land. The hierarchy is size only: no new

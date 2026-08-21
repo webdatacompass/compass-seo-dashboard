@@ -5,7 +5,22 @@ header h1{margin:0 0 4px;font-size:22px;font-weight:700;padding-right:68px} head
   color:var(--txt);max-width:30ch;font-weight:700;text-wrap:pretty}
 .verdict .tail{display:block;margin-top:10px;font-size:14px;font-weight:400;
   line-height:1.55;color:var(--muted);max-width:70ch;letter-spacing:0}
-.lag{margin-top:6px;font-size:12px;color:var(--amber)} h2{font-size:16px;font-weight:600;margin:28px 0 12px;border-left:3px solid var(--accent);padding-left:10px} .panel{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:16px 18px;margin-bottom:14px} .glance{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px} .gcard{background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:14px 16px} .gcard .lbl{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.04em} .gcard .val{font-size:26px;font-weight:700;margin-top:4px}
+.lag{margin-top:6px;font-size:12px;color:var(--amber)}
+.hero{display:grid;grid-template-columns:1.5fr 1px minmax(260px,1fr);gap:26px;align-items:center;margin-top:4px}
+.hero-div{background:var(--border);align-self:stretch}
+.hero-chart .hc-lbl{display:flex;justify-content:space-between;gap:10px;color:var(--muted);
+  font-size:12px;text-transform:uppercase;letter-spacing:.05em}
+.hero-chart .hc-val{display:flex;align-items:baseline;gap:9px;margin:8px 0 2px}
+.hero-chart .hc-num{font-size:30px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.hero-chart .hc-from{font-size:12.5px;color:var(--muted)}
+.hero-chart .hc-scope{font-size:12px;color:var(--muted);margin:0 0 10px}
+.hero-chart .hc-foot{display:flex;justify-content:space-between;color:var(--muted);font-size:12px;margin-top:5px}
+.hero-chart .hc-note{font-size:12.5px;color:var(--muted);margin-top:8px;line-height:1.5}
+@media(max-width:900px){
+  .hero{grid-template-columns:1fr;gap:18px}
+  .hero-div{display:none}
+  .hero-chart{border-top:1px solid var(--border);padding-top:16px}
+} h2{font-size:16px;font-weight:600;margin:28px 0 12px;border-left:3px solid var(--accent);padding-left:10px} .panel{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:16px 18px;margin-bottom:14px} .glance{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px} .gcard{background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:14px 16px} .gcard .lbl{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.04em} .gcard .val{font-size:26px;font-weight:700;margin-top:4px}
 .gcard.lead{grid-column:span 2;background:linear-gradient(180deg,var(--panel2),var(--panel));
   display:flex;flex-direction:column;justify-content:center}
 .gcard.lead .val{font-size:clamp(40px,4.4vw,58px);line-height:1;letter-spacing:-.03em;margin-top:8px}
@@ -38,8 +53,11 @@ header h1{margin:0 0 4px;font-size:22px;font-weight:700;padding-right:68px} head
 .qlist li.next{color:var(--txt);font-weight:600}
 .emptyq{color:var(--red);font-size:13px}
 </style> </head> <body> <div class="wrap"> <header> <img class="brand" src="assets/mark-light.svg" alt="Compass Group"> <h1>Compass Group — SEO Performance Dashboard</h1> <p>Search Console (search visibility) + Google Analytics GA4 (on-site behaviour) · last 28 days · <span id="propcount">…</span></p> <p class="lag" id="genline"></p>
-<div class="vrule"></div>
-<p class="verdict" id="verdict"></p> </header>
+<div class="hero">
+  <div class="hero-say"><div class="vrule"></div><p class="verdict" id="verdict"></p></div>
+  <div class="hero-div"></div>
+  <div class="hero-chart" id="herochart"></div>
+</div> </header>
 <div class="tabbar" id="tabbar">
 <button class="tab-btn active" data-tab="seo">SEO analysis</button>
 <button class="tab-btn" data-tab="blog">Blog Pumper<span class="badge" id="blogbadge">–</span></button>
@@ -122,6 +140,44 @@ function bar(label,val,max,sub){ const w=Math.max(2,(val/max)*100); return '<div
 const FRACTIONS=[[100,'double'],[75,'three quarters'],[66.67,'two thirds'],[50,'a half'],
   [33.33,'a third'],[25,'a quarter'],[20,'a fifth'],[16.67,'a sixth'],[14.29,'a seventh']];
 function fraction(p){ for(const [v,w] of FRACTIONS){ if(Math.abs(p-v)<=0.5) return w; } return null; }
+function heroChart(){
+  const keys=Object.keys(SITES);
+  const withHist=keys.filter(k=>RANKHIST[k]&&RANKHIST[k].GCC&&RANKHIST[k].GCC.length);
+  const el=document.getElementById('herochart');
+  if(!withHist.length){ el.innerHTML='<div class="hc-note">No ranking history yet.</div>'; return; }
+  const series=RANKHIST[withHist[0]].GCC.map((p,i)=>{
+    const vals=withHist.map(k=>{const q=RANKHIST[k].GCC[i];return q?q[1]:null;}).filter(v=>v!=null);
+    return vals.length?{d:p[0],v:vals.reduce((a,b)=>a+b,0)/vals.length}:null;
+  }).filter(Boolean);
+  if(series.length<2){ el.innerHTML='<div class="hc-note">Not enough history yet.</div>'; return; }
+
+  const W=320,H=62,TOP=6,BOT=H-6;
+  const vals=series.map(p=>p.v);
+  let lo=Math.min(...vals), hi=Math.max(...vals);
+  const pad=(hi-lo)*0.15||1; lo-=pad; hi+=pad;
+  const y=v=>TOP+(v-lo)/(hi-lo)*(BOT-TOP);
+  const pts=series.map((p,i)=>((i/(series.length-1))*W).toFixed(1)+','+y(p.v).toFixed(1)).join(' ');
+  const f=fit(vals);
+  let dash='';
+  if(f){
+    const y0=Math.max(TOP,Math.min(BOT,y(f.at(0)))), y1=Math.max(TOP,Math.min(BOT,y(f.at(series.length-1))));
+    dash='<line x1="0" y1="'+y0.toFixed(1)+'" x2="'+W+'" y2="'+y1.toFixed(1)+
+      '" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="4 4" vector-effect="non-scaling-stroke"></line>';
+  }
+  const first=series[0], last=series[series.length-1];
+  const fmt=d=>new Date(d).toLocaleDateString('en-GB',{day:'numeric',month:'short'});
+  el.innerHTML=
+    '<div class="hc-lbl"><span>average position</span><span>lower is better</span></div>'+
+    '<div class="hc-val"><span class="hc-num">'+last.v.toFixed(1)+'</span>'+
+      '<span class="hc-from">from '+first.v.toFixed(1)+' on '+fmt(first.d)+'</span></div>'+
+    '<p class="hc-scope">All '+keys.length+' properties, all markets — the mean of each one\'s own GCC series.</p>'+
+    '<svg viewBox="0 0 '+W+' '+H+'" width="100%" height="'+H+'" preserveAspectRatio="none" style="display:block" '+
+      'role="img" aria-label="Group average position over '+series.length+' days">'+
+      dash+'<polyline points="'+pts+'" fill="none" stroke="var(--accent)" stroke-width="2" vector-effect="non-scaling-stroke"></polyline></svg>'+
+    '<div class="hc-foot"><span>'+fmt(first.d)+'</span><span>'+fmt(last.d)+'</span></div>'+
+    '<div class="hc-note">'+trendWords(series.map(p=>[p.d,p.v]),true)+
+      ' Per-property and per-market trends are further down.</div>';
+}
 function verdict(){
   const keys=Object.keys(SITES);
   const sum=f=>keys.reduce((t,k)=>t+(f(SITES[k])||0),0);
@@ -157,6 +213,7 @@ function verdict(){
 function init(){ (function(){ const pc=document.getElementById('propcount'); if(pc){ const n=Object.keys(SITES).length, g=Object.values(SITES).filter(s=>s.ga4).length; pc.textContent = n+' propert'+(n===1?'y':'ies')+(g<n?' · GA4 on '+g:''); } })(); (function(){ const v=verdict(); const el=document.getElementById('verdict');
     el.textContent=v.head;
     const t=document.createElement('span'); t.className='tail'; t.textContent=v.tail; el.appendChild(t); })();
+  heroChart();
   document.getElementById('genline').textContent='Search Console data lags ~2 days · dashboard generated '+new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}); buildGlance(); buildQuickWins(); buildOverview(); buildBlog(); initTabs(); const sel=document.getElementById('siteSel'); sel.innerHTML=Object.keys(SITES).map(k=>'<option value="'+k+'">'+k+' — '+SITES[k].label+'</option>').join(''); let saved=null; try{saved=localStorage.getItem('compass_seo_site');}catch(e){} if(saved&&SITES[saved])sel.value=saved; sel.addEventListener('change',()=>selectSite(sel.value)); try{const sc=localStorage.getItem('compass_seo_country'); if(sc&&CNAME[sc])curCountry=sc;}catch(e){} document.querySelectorAll('#ctrySwitch .ctry-btn').forEach(b=>b.addEventListener('click',()=>{ curCountry=b.dataset.c; try{localStorage.setItem('compass_seo_country',curCountry);}catch(e){} buildSERP(curKey); })); selectSite(sel.value); } fetch('data.json',{cache:'no-store'}).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();}).then(function(d){SITES=d.SITES;BACKLINKS=d.BACKLINKS;RANK=d.RANK;RANKHIST=d.RANKHIST;BLOG=d.BLOG||{};init();}).catch(function(e){var g=document.getElementById('genline');if(g)g.textContent='Could not load data.json - '+e.message;});  function runwayCls(w){ return w>=3 ? 'good' : (w>=1.5 ? 'warn' : 'bad'); }
 function blogLabel(k){ return (SITES[k]&&SITES[k].label) || (BLOG[k]&&BLOG[k].tab) || k; }
 function buildBlog(){
