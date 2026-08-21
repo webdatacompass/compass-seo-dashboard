@@ -146,6 +146,64 @@ Where it lands:
 
 `--focus` exists precisely so "important" and "bad" stop being the same signal.
 
+### Each property has its own colour
+
+Separate from status, and never mixed with it. A property keeps one colour in the
+table rail, the share-of-clicks bar, the property switcher, its detail band rule
+and its own charts, so it can be followed down the page without reading names.
+
+| Property | Light | Noir |
+| --- | --- | --- |
+| Compass Arabia | `#5c6118` olive | `#b9c266` |
+| Compass FM GCC | `#0f6357` teal | `#5fc0b0` |
+| Compass Waterproof | `#0a5aa8` blue | `#6fa8e8` |
+| Compass Logistics | `#4a4bc4` indigo | `#9a9bf0` |
+| Sunset Media | `#99306b` magenta | `#e07fb4` |
+| Compass ITS | `#4a5560` slate | `#9aa8b4` |
+
+These were picked against two constraints, not by eye: each must be distinct
+from the others (closest pair is dE 26 in Lab, comfortably above the ~20 needed)
+**and** from all four status colours (closest is dE 22). Arabia is olive rather
+than its brand bronze because bronze sat dE 13 from the warn amber that the
+runway column immediately beside it uses — the two would have been confusable in
+exactly the spot where confusion costs most. Minimum contrast on the ground is
+5.6:1 in light and 7.1:1 in noir.
+
+If a property is added without a colour, it falls back to `--focus` rather than
+rendering colourless.
+
+### Two grounds
+
+Everything from the property table down sits on `--ground` (`#f1ece7`), a
+slightly deeper paper than the sheet above it, so the summary you read first and
+the detail you dig through separate at a glance. Panels that are tinted on the
+sheet invert inside that region — they become the lighter colour — so they still
+read as raised rather than sunken.
+
+### Charts
+
+Each line chart carries a **numeric y axis** and a **dashed least-squares
+trendline**, and states the trend in words underneath ("the trend is improving,
+about 2.2 over the period"). Eyeballing direction on a 28-point line that wobbles
+is exactly where people guess wrong, so the chart says it rather than implying it.
+
+Two implementation points that are easy to get wrong:
+
+- **The axis labels are HTML, not SVG text.** The plot is stretched horizontally
+  with `preserveAspectRatio="none"`, which would distort any text inside it.
+  Vertical scale is 1:1, so a viewBox y is a CSS pixel y, and the labels are
+  positioned absolutely in a gutter beside the plot. Gridlines are drawn at the
+  same computed values, so ticks and lines cannot drift apart.
+- **Tick values are rounded to human numbers** (12 / 13 / 14, not 12.37 /
+  13.44). The first pass biased toward coarse steps and drew only two gridlines
+  across a four-point span; the thresholds now favour a finer step.
+
+Direction markers survive from the original design and follow the metric:
+position charts read Better at the top, and the backlinks chart — where more is
+better — inverts to Worse at the top. The axis numbers alone would not prevent a
+misread, since "lower is better" is not obvious to everyone looking at a
+position figure.
+
 ### Look and feel
 
 The light "Broadsheet" look: ink masthead and footer, Montserrat for headings and

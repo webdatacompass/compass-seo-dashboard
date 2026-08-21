@@ -53,6 +53,13 @@
   --warn:        #8a5a10;   /* not wrong yet, but close */
   --focus:       #1f4e79;   /* look here — no judgement implied */
   --bad-wash:    #f9ece8;   /* row ground for the act-on block */
+  --ground:      #f1ece7;   /* everything from the property table down */
+  --co-arabia:     #5c6118;
+  --co-fm:         #0f6357;
+  --co-waterproof: #0a5aa8;
+  --co-logistics:  #4a4bc4;
+  --co-sunset:     #99306b;
+  --co-its:        #4a5560;
   --good-wash:   #eef4ef;
   /* One padding token, so every band lines up and widens together. */
   --pad: clamp(20px, 3.2vw, 60px);
@@ -82,6 +89,13 @@
   --warn:        #e0a63c;
   --focus:       #7fb3e6;
   --bad-wash:    #241511;
+  --ground:      #0e0b0a;
+  --co-arabia:     #b9c266;
+  --co-fm:         #5fc0b0;
+  --co-waterproof: #6fa8e8;
+  --co-logistics:  #9a9bf0;
+  --co-sunset:     #e07fb4;
+  --co-its:        #9aa8b4;
   --good-wash:   #16201a;
 }
 
@@ -217,14 +231,29 @@ img, div, span, table, input, button { border-radius: 0; }
 .chart-value-row { display: flex; align-items: baseline; gap: 8px; margin: 10px 0 16px; }
 .chart-value { font-weight: 700; font-size: 34px; line-height: 1; letter-spacing: -0.03em; }
 .chart-from { font-size: 12px; color: var(--body); }
-.chart-grid { display: grid; grid-template-columns: 40px 1fr; gap: 10px; }
+.chart-grid { display: grid; grid-template-columns: 52px 1fr; gap: 10px; }
 /* Not decoration: average position improves as the number falls, so without
    these the rising line reads as the metric getting worse. */
-.chart-gutter {
-  display: flex; flex-direction: column; justify-content: space-between;
-  font-size: 9.5px; letter-spacing: 0.1em; text-transform: uppercase;
-  color: var(--muted); text-align: right; padding: 2px 0 16px;
+/* The axis labels sit in HTML, not in the SVG: the plot is stretched
+   horizontally with preserveAspectRatio="none", which would distort any text
+   inside it. Vertical scale is 1:1, so a viewBox y is a CSS pixel y. */
+.chart-gutter { position: relative; }
+.tick {
+  position: absolute; right: 0; transform: translateY(-50%);
+  font-size: 10px; color: var(--muted); font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
+.axis-end {
+  position: absolute; right: 0; font-size: 8.5px; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--muted);
+}
+.chart-legend {
+  display: flex; gap: 14px; align-items: center; margin-top: 8px;
+  font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted);
+}
+.chart-legend i { display: inline-block; width: 16px; height: 0; margin-right: 5px; vertical-align: middle; }
+.chart-legend .solid { border-top: 2px solid var(--accent); }
+.chart-legend .dash { border-top: 2px dashed var(--muted); }
 .chart-dates {
   display: flex; justify-content: space-between; font-size: 10.5px;
   letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-top: 8px;
@@ -273,19 +302,21 @@ img, div, span, table, input, button { border-radius: 0; }
 .group.steady .group-tick { background: var(--good); }
 .group-name { font-weight: 600; font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); }
 .group.steady .group-name { color: var(--good); }
-.prow { padding: 11px 0; border-bottom: 1px solid var(--hair); }
-.prow.act {
-  background: var(--bad-wash);
-  box-shadow: -3px 0 0 0 var(--bad), inset 0 0 0 0 transparent;
-  padding-left: 10px; margin-left: -13px; padding-right: 10px; margin-right: -10px;
+/* Every row carries its company's colour as a left rail, so a property is
+   identifiable without reading its name. The act-on wash is separate, so
+   identity and status never compete for the same channel. */
+.prow {
+  padding: 11px 0 11px 12px; border-bottom: 1px solid var(--hair);
+  border-left: 4px solid transparent; margin-left: -16px;
+  padding-right: 12px; margin-right: -12px;
 }
+.prow.act { background: var(--bad-wash); }
 .prow:last-child { border-bottom: 0; }
 .pname { font-size: 15px; font-weight: 600; }
 .psub { font-size: 12px; color: var(--muted); margin-top: 2px; }
 .psub-extra { display: none; }
 .track { height: 7px; background: var(--hair); }
 .fill { height: 7px; background: var(--focus); }
-.fill.acting { background: var(--bad); }
 .pclicks { font-weight: 600; font-size: 22px; letter-spacing: -0.02em; }
 .pfig { font-size: 13px; color: var(--body); }
 .pvs { font-size: 13px; font-weight: 600; color: var(--body); }
@@ -295,6 +326,13 @@ img, div, span, table, input, button { border-radius: 0; }
 .pqueue.ok   { color: var(--good); }
 .pqueue.warn { color: var(--warn); }
 .pqueue.thin { color: var(--bad); }
+
+/* Everything from the property table down sits on a slightly deeper paper, so
+   the summary you read first and the detail you dig through are separable at a
+   glance. Panels that were tinted invert inside it, to stay readable. */
+.lower { background: var(--ground); border-top: 1px solid var(--divider); }
+.lower .panel-r,
+.lower .subpanel.tinted { background: var(--sheet); }
 
 /* --- generic panels -------------------------------------------------- */
 .panels { display: grid; grid-template-columns: 1fr 1px 1fr; }
@@ -353,6 +391,11 @@ img, div, span, table, input, button { border-radius: 0; }
 .sw-btn.active { background: var(--ink); color: var(--on-ink); border-color: var(--ink); }
 :root[data-theme="noir"] .sw-btn.active { background: var(--strong); color: var(--ink); border-color: var(--strong); }
 .sw-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.sw-btn .swatch {
+  display: inline-block; width: 9px; height: 9px; margin-right: 7px;
+  vertical-align: baseline;
+}
+.sw-btn.active { border-color: currentColor; }
 .filter {
   border: 1px solid var(--divider); background: var(--sheet); color: var(--text);
   font-family: 'Archivo', system-ui, sans-serif; font-size: 12.5px; padding: 6px 10px;
@@ -453,6 +496,18 @@ var posClass = function (p) {
   if (p == null) return 'dim';
   return p <= 3 ? 'pos-1' : p <= 10 ? 'pos-2' : p <= 20 ? 'pos-3' : 'pos-4';
 };
+// Identity, not status. A property keeps the same colour in the table rail, the
+// switcher and its own charts, so it can be tracked down the page.
+var CO = {
+  'compass-arabia.com':    'var(--co-arabia)',
+  'compassfmgcc.com':      'var(--co-fm)',
+  'compasswaterproof.com': 'var(--co-waterproof)',
+  'compass-lg.com':        'var(--co-logistics)',
+  'sunsetmediame.com':     'var(--co-sunset)',
+  'compass-its.com':       'var(--co-its)'
+};
+var coOf = function (key) { return CO[key] || 'var(--focus)'; };
+
 var store = {
   get: function (k, d) { try { return localStorage.getItem(k) || d; } catch (e) { return d; } },
   set: function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
@@ -580,7 +635,8 @@ function chartNote(m) {
   return 'The group mean ' + dir + ' from ' + f.value.toFixed(1) + ' to ' + l.value.toFixed(1) +
          ' across ' + m.series.length + ' days. ' + better + ' of ' + comparable +
          ' properties improved their own 28-day average. Only ' + m.ranking + ' of ' + m.tracked +
-         ' tracked keywords return a result at all.';
+         ' tracked keywords return a result at all.' +
+         (trendWord(m.series, true) ? ' Across the whole window ' + trendWord(m.series, true) + '.' : '');
 }
 
 function alertContent(m) {
@@ -625,26 +681,101 @@ function alertContent(m) {
 
 /* ---------- chart + component helpers ---------- */
 
-function lineChart(series, opts) {
+// Round tick values for a domain, so the axis reads 12 / 13 / 14 rather than
+// 12.37 / 13.44 / 14.51.
+function niceTicks(lo, hi, count) {
+  var raw = (hi - lo) / Math.max(1, count - 1);
+  if (!isFinite(raw) || raw <= 0) return [lo];
+  var mag = Math.pow(10, Math.floor(Math.log10(raw)));
+  var norm = raw / mag;
+  var step = (norm <= 1.5 ? 1 : norm <= 3 ? 2 : norm <= 7 ? 5 : 10) * mag;
+  var out = [];
+  for (var v = Math.ceil(lo / step) * step; v <= hi + 1e-9; v += step) out.push(Math.round(v * 1e6) / 1e6);
+  return out.length ? out : [lo];
+}
+
+// Least-squares fit. Reported as well as drawn: "is this going the right way"
+// is the question the chart exists to answer, and eyeballing a 28-point line
+// that wobbles is exactly where people guess wrong.
+function trend(series) {
+  var n = series.length;
+  if (n < 3) return null;
+  var sx = 0, sy = 0, sxy = 0, sxx = 0;
+  for (var i = 0; i < n; i++) { sx += i; sy += series[i].value; sxy += i * series[i].value; sxx += i * i; }
+  var d = n * sxx - sx * sx;
+  if (!d) return null;
+  var slope = (n * sxy - sx * sy) / d;
+  return { slope: slope, at: function (i) { return (sy - slope * sx) / n + slope * i; } };
+}
+
+// Returns the whole chart block: numeric axis in a gutter, plot, date row and
+// legend. opts.lowerBetter flips the "better/worse" end markers.
+function axisChart(series, opts) {
   opts = opts || {};
   if (!series || series.length < 2) return '<div class="chart-from">Not enough history yet.</div>';
   var W = 420, H = opts.height || 132, TOP = 12, BOT = H - 14;
+  var colour = opts.colour || 'var(--accent)';
   var vals = series.map(function (p) { return p.value; });
   var lo = Math.min.apply(null, vals), hi = Math.max.apply(null, vals);
-  var pad = (hi - lo) * 0.12 || 1;
+  var pad = (hi - lo) * 0.12 || Math.max(1, Math.abs(hi) * 0.05);
   lo -= pad; hi += pad;
-  // y grows with the position number, so a falling number climbs the chart.
-  var pts = series.map(function (p, i) {
-    var x = i / (series.length - 1) * W;
-    var y = TOP + (p.value - lo) / (hi - lo) * (BOT - TOP);
-    return x.toFixed(1) + ',' + y.toFixed(1);
-  }).join(' ');
-  return '<svg viewBox="0 0 ' + W + ' ' + H + '" width="100%" height="' + H + '" preserveAspectRatio="none" ' +
-    'style="display:block" role="img" aria-label="' + esc(opts.label || 'trend') + ' over ' + series.length + ' days">' +
-    '<line x1="0" y1="0" x2="' + W + '" y2="0" stroke="var(--hair-tint)" stroke-width="1"></line>' +
-    '<line x1="0" y1="' + (H / 2).toFixed(0) + '" x2="' + W + '" y2="' + (H / 2).toFixed(0) + '" stroke="var(--hair-tint)" stroke-width="1"></line>' +
-    '<line x1="0" y1="' + (H - 1) + '" x2="' + W + '" y2="' + (H - 1) + '" stroke="var(--divider)" stroke-width="1"></line>' +
-    '<polyline points="' + pts + '" fill="none" stroke="var(--accent)" stroke-width="2" vector-effect="non-scaling-stroke"></polyline></svg>';
+  var y = function (v) { return TOP + (v - lo) / (hi - lo) * (BOT - TOP); };
+  var x = function (i) { return i / (series.length - 1) * W; };
+
+  var ticks = niceTicks(lo, hi, 5);
+  var grid = ticks.map(function (t) {
+    return '<line x1="0" y1="' + y(t).toFixed(1) + '" x2="' + W + '" y2="' + y(t).toFixed(1) +
+      '" stroke="var(--hair-tint)" stroke-width="1"></line>';
+  }).join('');
+
+  var pts = series.map(function (p, i) { return x(i).toFixed(1) + ',' + y(p.value).toFixed(1); }).join(' ');
+  var tr = trend(series);
+  var trLine = '';
+  if (tr) {
+    var y0 = Math.max(TOP, Math.min(BOT, y(tr.at(0))));
+    var y1 = Math.max(TOP, Math.min(BOT, y(tr.at(series.length - 1))));
+    trLine = '<line x1="0" y1="' + y0.toFixed(1) + '" x2="' + W + '" y2="' + y1.toFixed(1) +
+      '" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="5 4" vector-effect="non-scaling-stroke"></line>';
+  }
+
+  var svg = '<svg viewBox="0 0 ' + W + ' ' + H + '" width="100%" height="' + H + '" preserveAspectRatio="none" ' +
+    'style="display:block" role="img" aria-label="' + esc(opts.label || 'trend') + ' over ' + series.length + ' points">' +
+    grid + '<line x1="0" y1="' + (H - 1) + '" x2="' + W + '" y2="' + (H - 1) +
+    '" stroke="var(--divider)" stroke-width="1"></line>' + trLine +
+    '<polyline points="' + pts + '" fill="none" stroke="' + colour + '" stroke-width="2" vector-effect="non-scaling-stroke"></polyline></svg>';
+
+  var dec = (hi - lo) < 4 ? 1 : 0;
+  var gutter = '<div class="chart-gutter" style="height:' + H + 'px">' +
+    ticks.map(function (t) {
+      return '<span class="tick" style="top:' + y(t).toFixed(1) + 'px">' + t.toFixed(dec) + '</span>';
+    }).join('') +
+    // Direction markers survive from the original design: average position
+    // improves as the number falls, so the axis alone can still be misread.
+    (opts.lowerBetter === undefined ? '' :
+      '<span class="axis-end" style="top:0">' + (opts.lowerBetter ? 'Better' : 'Worse') + '</span>' +
+      '<span class="axis-end" style="bottom:14px">' + (opts.lowerBetter ? 'Worse' : 'Better') + '</span>') +
+  '</div>';
+
+  var dates = opts.dates === false ? '' :
+    '<div class="chart-dates"><span>' + fmtDate(series[0].date) + '</span><span>' +
+    fmtDate(series[series.length - 1].date) + '</span></div>';
+
+  var legend = '<div class="chart-legend"><span><i class="solid" style="border-top-color:' + colour +
+    '"></i>' + esc(opts.seriesName || 'Actual') + '</span>' +
+    (tr ? '<span><i class="dash"></i>Trend</span>' : '') + '</div>';
+
+  return '<div class="chart-grid">' + gutter + '<div>' + svg + dates + legend + '</div></div>';
+}
+
+// Plain-language direction, for the note under a chart.
+function trendWord(series, lowerBetter) {
+  var tr = trend(series);
+  if (!tr) return null;
+  var per = tr.slope * (series.length - 1);
+  if (Math.abs(per) < 0.15) return 'the trend is flat';
+  var improving = lowerBetter ? per < 0 : per > 0;
+  return 'the trend is ' + (improving ? 'improving' : 'worsening') +
+    ', about ' + Math.abs(per).toFixed(1) + ' over the period';
 }
 
 // state: 'good' | 'bad' | 'warn' | null. Booleans only ever said "bad or
@@ -666,8 +797,10 @@ function barRow(label, value, max, sub, accent) {
 
 function switcher(id, items, active) {
   return '<div class="switch" id="' + id + '">' + items.map(function (it) {
+    var sw = it.colour ? '<span class="swatch" style="background:' + it.colour + '"></span>' : '';
+    var style = (it.colour && it.value === active) ? ' style="color:' + it.colour + '"' : '';
     return '<button type="button" class="sw-btn' + (it.value === active ? ' active' : '') +
-      '" data-v="' + esc(it.value) + '">' + esc(it.label) + '</button>';
+      '" data-v="' + esc(it.value) + '"' + style + '>' + sw + esc(it.label) + '</button>';
   }).join('') + '</div>';
 }
 
@@ -682,15 +815,16 @@ function runwayClass(w) {
 
 function bandProperties(m) {
   function row(r, isLast) {
-    return '<div class="trow prow' + (r.acting ? ' act' : '') + '">' +
+    return '<div class="trow prow' + (r.acting ? ' act' : '') +
+      '" style="border-left-color:' + coOf(r.key) + '">' +
       '<div><div class="pname">' + esc(r.label) + '</div><div class="psub">' +
         (r.sessions == null ? 'no GA4' : n0(r.sessions) + ' sessions') +
         ' · ' + r.ranking + ' of ' + r.tracked + ' keywords ranking' +
         '<span class="psub-extra"> · ' + n0(r.impr) + ' impr · pos ' +
           (r.pos == null ? '—' : r.pos) + (r.weeks != null ? ' · ' + r.weeks.toFixed(1) + ' wk queue' : '') + '</span>' +
       '</div></div>' +
-      '<div class="col-share"><div class="track"><div class="fill' + (r.acting ? ' acting' : '') +
-        '" style="width:' + r.share + '%"></div></div></div>' +
+      '<div class="col-share"><div class="track"><div class="fill" style="width:' + r.share +
+        '%;background:' + coOf(r.key) + '"></div></div></div>' +
       '<div class="pclicks mono num right">' + n0(r.clicks) + '</div>' +
       '<div class="pvs num right' + dirClass(r.vs) + '">' + pctStr(r.vs) + '</div>' +
       '<div class="pfig num right col-impr">' + n0(r.impr) + '</div>' +
@@ -749,7 +883,8 @@ function bandBlog(m) {
     '<th class="right">Published</th><th>Next up</th></tr></thead><tbody>' +
     rows.slice().sort(function (a, b) { return a.blog.weeks - b.blog.weeks; }).map(function (r) {
       var b = r.blog;
-      return '<tr><td>' + esc(r.label) + '</td>' +
+      return '<tr><td><span class="swatch" style="display:inline-block;width:9px;height:9px;margin-right:8px;background:' +
+        coOf(r.key) + '"></span>' + esc(r.label) + '</td>' +
         '<td class="right num">' + n0(b.pending) + '</td>' +
         '<td class="right num' + (b.weeks < 3.5 ? ' pos-4' : b.weeks < 5 ? ' pos-3' : ' pos-1') + '" style="font-weight:600">' + b.weeks.toFixed(1) + ' wk</td>' +
         '<td class="right num">' + n0(b.live) + '</td>' +
@@ -802,9 +937,11 @@ function bandDetail(m, d) {
   var q = s.queries || [], pages = s.pages || [], ga4 = s.ga4, bl = r.backlinks;
 
   var h = '<div class="band">' +
-    '<div class="band-head"><div><div class="rule-accent" style="margin-bottom:12px"></div>' +
+    '<div class="band-head"><div><div class="rule-accent" style="margin-bottom:12px;background:' + coOf(curSite) + '"></div>' +
       '<div class="band-title mono">Per-property detail</div></div>' +
-      switcher('siteSwitch', m.rows.map(function (x) { return { value: x.key, label: x.short }; }), curSite) +
+      switcher('siteSwitch', m.rows.map(function (x) {
+        return { value: x.key, label: x.short, colour: coOf(x.key) };
+      }), curSite) +
     '</div>';
 
   /* -- Search Console -- */
@@ -899,10 +1036,10 @@ function bandDetail(m, d) {
       '</div>' +
       '<div class="panels" style="margin-top:18px"><div style="padding-right:22px">' +
         '<div class="panel-title mono">Average position over time</div>' +
-        '<div class="chart-grid"><div class="chart-gutter"><span>Better</span><span>Worse</span></div>' +
-          '<div>' + lineChart(mSeries, { label: 'Average position in ' + curMarket }) +
-          (mSeries.length ? '<div class="chart-dates"><span>' + fmtDate(mSeries[0].date) + '</span><span>' +
-            fmtDate(mSeries[mSeries.length - 1].date) + '</span></div>' : '') + '</div></div>' +
+        axisChart(mSeries, { label: 'Average position in ' + curMarket, lowerBetter: true,
+          colour: coOf(curSite), seriesName: 'Position' }) +
+        (trendWord(mSeries, true) ? '<div class="chart-note">In ' + esc(curMarket) + ', ' +
+          esc(trendWord(mSeries, true)) + '.</div>' : '') +
       '</div><div class="divider"></div><div style="padding-left:22px">' +
         '<div class="panel-title mono">Targeted keywords · ' + curMarket + '</div>' +
         '<div class="scrollx"><table class="dt"><thead><tr><th>Keyword</th><th class="right">Pos</th>' +
@@ -967,11 +1104,11 @@ function bandDetail(m, d) {
       '</div>' +
       '<div class="panels" style="margin-top:18px"><div style="padding-right:22px">' +
         '<div class="panel-title mono">Total over time</div>' +
-        (hist.length > 1 ? lineChart(hist, { label: 'Backlinks', height: 110 }) +
-          '<div class="chart-dates"><span>' + fmtDate(hist[0].date) + '</span><span>' +
-          fmtDate(hist[hist.length - 1].date) + '</span></div>'
+        (hist.length > 1 ? axisChart(hist, { label: 'Backlinks', height: 118, lowerBetter: false,
+          colour: coOf(curSite), seriesName: 'Backlinks' })
         : '<div class="chart-from">Not enough history yet.</div>') +
-        '<div class="chart-note">This series counts up, so a rising line is good here — the opposite of the position charts.</div>' +
+        '<div class="chart-note">This series counts up, so a rising line is good here — the opposite of the position charts' +
+        (trendWord(hist, false) ? ', and ' + esc(trendWord(hist, false)) : '') + '.</div>' +
       '</div><div class="divider"></div><div style="padding-left:22px">' +
         '<div class="panel-title mono">Top linking domains</div>' +
         '<div class="scrollx"><table class="dt"><thead><tr><th>Domain</th><th class="right">Links</th></tr></thead><tbody>' +
@@ -1036,10 +1173,8 @@ function render() {
       (series.length ?
         '<div class="chart-value-row"><span class="chart-value mono num">' + last.value.toFixed(1) + '</span>' +
           '<span class="chart-from">from ' + first.value.toFixed(1) + ' on ' + fmtDate(first.date) + '</span></div>' +
-        '<div class="chart-grid"><div class="chart-gutter"><span>Better</span><span>Worse</span></div>' +
-          '<div>' + lineChart(series, { label: 'Group average position' }) +
-            '<div class="chart-dates"><span>' + fmtDate(first.date) + '</span><span>' + fmtDate(last.date) + '</span></div>' +
-          '</div></div>' : '<div class="chart-from">No ranking history yet.</div>') +
+        axisChart(series, { label: 'Group average position', lowerBetter: true, seriesName: 'Position' })
+        : '<div class="chart-from">No ranking history yet.</div>') +
       '<div class="chart-note">' + esc(chartNote(m)) + '</div>' +
     '</div></div>';
 
@@ -1057,6 +1192,7 @@ function render() {
         }).join('') + '</div></div></div>';
   }
 
+  h += '<div class="lower">';
   h += '<div class="band">' + bandProperties(m) + '</div>';
 
   h += '<div class="split split-even band"><div class="panel-l">' +
@@ -1077,8 +1213,10 @@ function render() {
     '</div></div>';
 
   h += bandDetail(m, d);
+  h += '</div>';                       // close .lower
   h += '</div>';                       // close #tab-search
-  h += '<div id="tab-blog"' + (curTab === 'blog' ? '' : ' hidden') + '>' + bandBlog(m) + '</div>';
+  h += '<div id="tab-blog"' + (curTab === 'blog' ? '' : ' hidden') + '><div class="lower">' +
+    bandBlog(m) + '</div></div>';
 
   h += '<div class="foot">' +
     '<span>Search Console · GA4 on ' + m.sitesWithGa4 + ' of ' + m.siteCount + ' properties · ' +
