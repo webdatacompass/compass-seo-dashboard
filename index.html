@@ -29,7 +29,6 @@
    is regularly exported as an image and the export should not depend on whose
    laptop rendered it. */
 :root {
-  --desk:        #d5d1ce;
   --sheet:       #fbf9f7;
   --tint:        #f6f3f0;
   --alert:       #f9ece8;
@@ -44,16 +43,15 @@
   --muted:       #6f6862;
   --muted-alert: #665f5a;
   --divider:     #cdc6c1;
-  --sheet-edge:  #c7c0bb;
   --hair:        #e9e4e0;
   --hair-tint:   #e2ddd8;
   --bar-neutral: #a89e97;
   --tick-steady: #c2b9b3;
   --accent:      #c02a10;
-  --shadow:      0 18px 48px rgba(32,28,26,0.16);
+  /* One padding token, so every band lines up and widens together. */
+  --pad: clamp(20px, 3.2vw, 60px);
 }
 :root[data-theme="noir"] {
-  --desk:        #0b0908;
   --sheet:       #14100e;
   --tint:        #1d1512;
   --alert:       #1d1512;
@@ -68,41 +66,39 @@
   --muted:       #8a7f75;
   --muted-alert: #8a7f75;
   --divider:     #3a322c;
-  --sheet-edge:  #3a322c;
   --hair:        #262019;
   --hair-tint:   #262019;
   --bar-neutral: #4a4038;
   --tick-steady: #4a4038;
   --accent:      #ff4a2b;
-  --shadow:      none;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
+html, body { min-height: 100%; }
 body {
   margin: 0;
-  background: var(--desk);
+  background: var(--sheet);
   color: var(--text);
   font-family: 'Archivo', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font-size: 14px;
   -webkit-font-smoothing: antialiased;
 }
 /* Radius 0 everywhere. Load-bearing to the aesthetic — do not soften. */
-img, div, span, table { border-radius: 0; }
+img, div, span, table, input, button { border-radius: 0; }
 
-.sheet {
-  width: 1120px;
-  margin: 36px auto;
-  background: var(--sheet);
-  border: 1px solid var(--sheet-edge);
-  box-shadow: var(--shadow);
-}
+/* The sheet fills the window: no desk, no border, no shadow. The broadsheet
+   grammar is carried by the ink bands and rule weights, not by a card. */
+.sheet { width: 100%; background: var(--sheet); }
 .mono  { font-family: 'Montserrat', system-ui, sans-serif; }
 .num   { font-variant-numeric: tabular-nums; }
 .right { text-align: right; }
+.pad   { padding-left: var(--pad); padding-right: var(--pad); }
 
 /* --- masthead -------------------------------------------------------- */
 .masthead {
   display: flex; align-items: center; justify-content: space-between;
-  gap: 24px; padding: 16px 36px; background: var(--ink);
+  gap: 24px; padding: 16px var(--pad); background: var(--ink);
+  position: sticky; top: 0; z-index: 5;
 }
 .masthead-left { display: flex; align-items: center; gap: 16px; min-width: 0; }
 .masthead-left img { height: 40px; display: block; flex: none; }
@@ -122,46 +118,54 @@ img, div, span, table { border-radius: 0; }
   font-weight: 600; white-space: nowrap; border: 0;
 }
 
-/* --- hero ------------------------------------------------------------ */
-.split {
-  display: grid; grid-template-columns: 1.48fr 1px 1fr;
-  position: relative; overflow: hidden;
-}
+/* --- band scaffolding ------------------------------------------------- */
+.split { display: grid; grid-template-columns: 1.48fr 1px 1fr; position: relative; }
+.split-even { grid-template-columns: 1fr 1px 1fr; }
 .divider { background: var(--divider); }
-.hero { border-bottom: 1px solid var(--divider); }
+.band { border-bottom: 1px solid var(--divider); }
+.band-head {
+  display: flex; align-items: baseline; justify-content: space-between;
+  gap: 16px; flex-wrap: wrap;
+  padding: 22px var(--pad) 0;
+}
+.band-title { font-weight: 700; font-size: 15px; letter-spacing: 0.01em; }
+.band-sub {
+  font-weight: 400; color: var(--muted); font-size: 12px;
+  padding: 6px var(--pad) 0; max-width: 92ch; text-wrap: pretty;
+}
+.rule-accent { width: 44px; height: 3px; background: var(--accent); }
+
+/* --- hero ------------------------------------------------------------ */
+.hero { overflow: hidden; }
 .watermark {
-  position: absolute; right: 30%; top: -90px; width: 380px;
+  position: absolute; right: 26%; top: -90px; width: 380px;
   opacity: 0.05; pointer-events: none;
 }
 :root[data-theme="noir"] .watermark { opacity: 0.045; }
-.hero-left  { position: relative; padding: 32px 36px 26px; }
-.hero-right { position: relative; padding: 32px 36px 26px; background: var(--tint); }
-
+.hero-left  { position: relative; padding: 32px var(--pad) 26px; }
+.hero-right { position: relative; padding: 32px var(--pad) 26px; background: var(--tint); }
 .kicker { width: 44px; height: 3px; background: var(--accent); margin-bottom: 18px; }
 .headline {
-  font-weight: 700; font-size: 42px; line-height: 1.06;
-  letter-spacing: -0.024em; max-width: 17ch; text-wrap: pretty;
+  font-weight: 700; font-size: clamp(30px, 3.1vw, 46px); line-height: 1.06;
+  letter-spacing: -0.024em; max-width: 19ch; text-wrap: pretty;
 }
 .metrics {
-  display: flex; align-items: flex-end; gap: 30px;
+  display: flex; align-items: flex-end; gap: 30px; flex-wrap: wrap;
   margin-top: 26px; padding-top: 20px; border-top: 1px solid var(--divider);
 }
 .lead-row { display: flex; align-items: flex-start; gap: 10px; }
-.lead {
-  font-weight: 700; font-size: 68px; line-height: 0.86; letter-spacing: -0.04em;
-}
+.lead { font-weight: 700; font-size: clamp(52px, 4.8vw, 72px); line-height: 0.86; letter-spacing: -0.04em; }
 .delta-chip {
   background: var(--ink); color: var(--sheet); font-size: 11px; font-weight: 600;
   letter-spacing: 0.04em; padding: 3px 7px; margin-top: 4px; white-space: nowrap;
 }
-:root[data-theme="noir"] .delta-chip { background: var(--strong); color: var(--sheet); }
+:root[data-theme="noir"] .delta-chip { background: var(--strong); color: var(--ink); }
 .caption {
   font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase;
   color: var(--muted); margin-top: 12px;
 }
-.secondaries { display: flex; padding-bottom: 4px; }
+.secondaries { display: flex; flex-wrap: wrap; padding-bottom: 4px; }
 .secondary { padding: 0 20px; border-left: 1px solid var(--hair-tint); }
-.secondary:last-child { padding-right: 0; }
 .secondary-val {
   font-weight: 600; font-size: 27px; line-height: 1;
   letter-spacing: -0.022em; color: var(--strong);
@@ -169,21 +173,16 @@ img, div, span, table { border-radius: 0; }
 .secondary-den { font-size: 17px; color: var(--muted); }
 .secondary .caption { margin-top: 7px; }
 
-/* --- position chart -------------------------------------------------- */
-.chart-head {
-  display: flex; align-items: baseline; justify-content: space-between;
-  margin-bottom: 4px;
-}
-.chart-label {
-  font-weight: 600; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
-}
+/* --- charts ---------------------------------------------------------- */
+.chart-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 4px; }
+.chart-label { font-weight: 600; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; }
 .chart-hint { font-size: 11px; color: var(--muted); }
 .chart-value-row { display: flex; align-items: baseline; gap: 8px; margin: 10px 0 16px; }
 .chart-value { font-weight: 700; font-size: 34px; line-height: 1; letter-spacing: -0.03em; }
 .chart-from { font-size: 12px; color: var(--body); }
 .chart-grid { display: grid; grid-template-columns: 40px 1fr; gap: 10px; }
-/* These two labels are not decoration: average position improves as the number
-   falls, so without them the rising line reads as the metric getting worse. */
+/* Not decoration: average position improves as the number falls, so without
+   these the rising line reads as the metric getting worse. */
 .chart-gutter {
   display: flex; flex-direction: column; justify-content: space-between;
   font-size: 9.5px; letter-spacing: 0.1em; text-transform: uppercase;
@@ -199,36 +198,28 @@ img, div, span, table { border-radius: 0; }
 }
 
 /* --- alert band ------------------------------------------------------ */
-.alert { background: var(--alert); border-bottom: 1px solid var(--divider); }
+.alert { background: var(--alert); }
 .alert .divider { background: var(--alert-div); }
-.alert-left { display: flex; gap: 18px; padding: 20px 36px; }
+.alert-left { display: flex; gap: 18px; padding: 20px var(--pad); }
 .alert-bar { width: 3px; background: var(--accent); flex: none; }
 .alert-label {
   font-weight: 600; font-size: 10.5px; letter-spacing: 0.18em;
   text-transform: uppercase; color: var(--accent); margin-bottom: 8px;
 }
-.alert-headline {
-  font-weight: 600; font-size: 21px; line-height: 1.32;
-  letter-spacing: -0.014em; text-wrap: pretty;
-}
+.alert-headline { font-weight: 600; font-size: 21px; line-height: 1.32; letter-spacing: -0.014em; text-wrap: pretty; }
 .alert-meta { font-size: 12px; color: var(--muted-alert); margin-top: 9px; }
-.alert-right {
-  padding: 20px 36px; display: flex; flex-direction: column;
-  justify-content: center; gap: 10px;
-}
-.watch-label {
-  font-weight: 600; font-size: 10.5px; letter-spacing: 0.18em;
-  text-transform: uppercase; color: var(--muted-alert);
-}
+.alert-right { padding: 20px var(--pad); display: flex; flex-direction: column; justify-content: center; gap: 10px; }
+.watch-label { font-weight: 600; font-size: 10.5px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted-alert); }
 .watch-list { display: flex; flex-direction: column; gap: 8px; font-size: 12.5px; line-height: 1.5; color: var(--body); }
 .watch-row { display: flex; gap: 9px; }
 .watch-dash { color: var(--accent); font-weight: 700; }
 .watch-name { color: var(--text); font-weight: 600; }
 
 /* --- property table -------------------------------------------------- */
-.table { padding: 0 36px; }
+.table { padding: 0 var(--pad) 26px; }
 .trow {
-  display: grid; grid-template-columns: 1fr 150px 84px 78px 96px;
+  display: grid;
+  grid-template-columns: minmax(200px, 1fr) 130px 78px 74px 92px 78px 88px 92px;
   gap: 16px; align-items: center;
 }
 .thead {
@@ -243,99 +234,136 @@ img, div, span, table { border-radius: 0; }
 .group.steady { padding-top: 18px; }
 .group-tick { width: 18px; height: 2px; background: var(--accent); }
 .group.steady .group-tick { background: var(--tick-steady); }
-.group-name {
-  font-weight: 600; font-size: 10px; letter-spacing: 0.16em;
-  text-transform: uppercase; color: var(--accent);
-}
+.group-name { font-weight: 600; font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); }
 .group.steady .group-name { color: var(--muted); }
 .prow { padding: 11px 0; border-bottom: 1px solid var(--hair); }
 .prow:last-child { border-bottom: 0; }
 .pname { font-size: 15px; font-weight: 600; }
 .psub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.psub-extra { display: none; }
 .track { height: 7px; background: var(--hair); }
 .fill { height: 7px; background: var(--bar-neutral); }
 .fill.acting { background: var(--accent); }
 .pclicks { font-weight: 600; font-size: 22px; letter-spacing: -0.02em; }
+.pfig { font-size: 13px; color: var(--body); }
 .pvs { font-size: 13px; font-weight: 600; color: var(--body); }
 .pvs.bad { color: var(--accent); }
 .pqueue { font-size: 12px; color: var(--muted); }
 .pqueue.thin { color: var(--accent); font-weight: 600; }
 
-/* --- footer panels --------------------------------------------------- */
-.panels {
-  display: grid; grid-template-columns: 1fr 1px 1fr;
-  margin-top: 24px; border-top: 1px solid var(--divider);
+/* --- generic panels -------------------------------------------------- */
+.panels { display: grid; grid-template-columns: 1fr 1px 1fr; }
+.panel-l { padding: 22px var(--pad) 26px; }
+.panel-r { padding: 22px var(--pad) 26px; background: var(--tint); }
+.panel-title { font-weight: 600; font-size: 10.5px; letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 14px; }
+.subpanel { padding: 22px var(--pad) 26px; }
+.subpanel.tinted { background: var(--tint); }
+
+/* --- kpi strip ------------------------------------------------------- */
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0; }
+.kpi { padding: 0 20px; border-left: 1px solid var(--hair-tint); }
+.kpi:first-child { padding-left: 0; border-left: 0; }
+.kpi-lbl { font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+.kpi-val { font-weight: 600; font-size: 25px; line-height: 1.1; letter-spacing: -0.02em; color: var(--strong); margin-top: 6px; }
+.kpi-sub { font-size: 11.5px; color: var(--muted); margin-top: 5px; }
+.kpi-sub.bad { color: var(--accent); font-weight: 600; }
+
+/* --- bar rows -------------------------------------------------------- */
+.bars { display: flex; flex-direction: column; gap: 11px; }
+.bar-head { display: flex; justify-content: space-between; gap: 12px; font-size: 12.5px; margin-bottom: 5px; }
+.bar-lbl { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bar-val { color: var(--muted); white-space: nowrap; }
+.bar-track { height: 7px; background: var(--hair-tint); }
+.bar-fill { height: 7px; background: var(--bar-neutral); }
+.bar-fill.accent { background: var(--accent); }
+
+/* --- data tables ----------------------------------------------------- */
+.dt { width: 100%; border-collapse: collapse; font-size: 13px; }
+.dt th {
+  text-align: left; font-family: 'Montserrat', system-ui, sans-serif;
+  font-weight: 600; font-size: 9.5px; letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--muted); padding: 0 10px 8px 0; border-bottom: 1px solid var(--ink);
+  white-space: nowrap;
 }
-.panel-l { padding: 22px 36px 26px; }
-.panel-r { padding: 22px 36px 26px; background: var(--tint); }
-.panel-title {
-  font-weight: 600; font-size: 10.5px; letter-spacing: 0.18em;
-  text-transform: uppercase; margin-bottom: 14px;
+:root[data-theme="noir"] .dt th { border-bottom-color: var(--divider); }
+.dt td { padding: 9px 10px 9px 0; border-bottom: 1px solid var(--hair); vertical-align: top; }
+.dt tr:last-child td { border-bottom: 0; }
+.dt .kw { max-width: 42ch; overflow-wrap: anywhere; }
+.dt a { color: var(--accent); text-decoration: none; }
+.dt a:hover { text-decoration: underline; }
+.scrollx { overflow-x: auto; }
+
+/* --- switchers ------------------------------------------------------- */
+.switch { display: flex; gap: 6px; flex-wrap: wrap; }
+.sw-btn {
+  background: var(--sheet); color: var(--muted); border: 1px solid var(--divider);
+  padding: 6px 13px; font-family: 'Archivo', system-ui, sans-serif; font-size: 12.5px;
+  cursor: pointer; line-height: 1.2;
 }
-.wins { display: flex; flex-direction: column; gap: 11px; }
-.win {
-  display: grid; grid-template-columns: 20px 1fr auto;
-  align-items: baseline; gap: 12px; font-size: 13px;
+.sw-btn:hover { color: var(--text); }
+.sw-btn.active { background: var(--ink); color: var(--on-ink); border-color: var(--ink); }
+:root[data-theme="noir"] .sw-btn.active { background: var(--strong); color: var(--ink); border-color: var(--strong); }
+.sw-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.filter {
+  border: 1px solid var(--divider); background: var(--sheet); color: var(--text);
+  font-family: 'Archivo', system-ui, sans-serif; font-size: 12.5px; padding: 6px 10px;
+  min-width: 200px;
 }
-.win-rank { font-weight: 600; font-size: 11px; color: var(--accent); }
-.win-fig { color: var(--muted); white-space: nowrap; }
-.sources { display: flex; flex-direction: column; gap: 11px; }
-.source-head {
-  display: flex; justify-content: space-between; font-size: 12.5px; margin-bottom: 5px;
-}
-.source-val { color: var(--muted); }
-.source-track { height: 7px; background: var(--hair-tint); }
-/* Organic is the only channel search work moves, so it is the only one coloured. */
-.source-fill { height: 7px; background: var(--bar-neutral); }
-.source-fill.organic { background: var(--accent); }
+.filter:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+/* --- pills / small ---------------------------------------------------- */
+.pos-pill { font-weight: 600; font-variant-numeric: tabular-nums; }
+.pos-1 { color: #2e7d32; } .pos-2 { color: #6b8e23; }
+.pos-3 { color: #b26a00; } .pos-4 { color: var(--accent); }
+:root[data-theme="noir"] .pos-1 { color: #7ec97e; }
+:root[data-theme="noir"] .pos-2 { color: #b6cf6a; }
+:root[data-theme="noir"] .pos-3 { color: #e0a63c; }
+.dim { color: var(--muted); }
+.qlist { margin: 0; padding-left: 18px; font-size: 12.5px; color: var(--body); }
+.qlist li { margin: 3px 0; }
+.qlist li.next { color: var(--text); font-weight: 600; }
+.emptyq { color: var(--accent); font-size: 12.5px; }
 
 /* --- footer ---------------------------------------------------------- */
 .foot {
   display: flex; align-items: center; justify-content: space-between; gap: 20px;
-  padding: 12px 36px; background: var(--ink); font-size: 10.5px;
-  letter-spacing: 0.1em; text-transform: uppercase; color: var(--on-ink-mute);
+  flex-wrap: wrap; padding: 12px var(--pad); background: var(--ink);
+  font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--on-ink-mute);
 }
-.psub-queue { display: none; }
 .stale { color: var(--accent); font-weight: 600; }
-
-/* --- states ---------------------------------------------------------- */
-.msg { padding: 40px 36px; font-size: 13px; color: var(--body); }
+.msg { padding: 60px var(--pad); font-size: 13px; color: var(--body); }
 
 /* --- responsive ------------------------------------------------------ */
-@media (max-width: 1180px) {
-  .sheet { width: auto; max-width: 1120px; margin: 20px 16px; }
+@media (max-width: 1240px) {
+  .trow { grid-template-columns: minmax(180px, 1fr) 110px 72px 70px 84px 72px 84px; }
+  .trow > .col-sessions { display: none; }
 }
-@media (max-width: 1000px) {
-  /* Hero and alert go single column; the chart sits under the headline. */
-  .split { grid-template-columns: 1fr; }
-  .split > .divider { display: none; }
+@media (max-width: 1040px) {
+  .split, .panels { grid-template-columns: 1fr; }
+  .split > .divider, .panels > .divider { display: none; }
   .hero-right, .panel-r { border-top: 1px solid var(--divider); }
   .watermark { right: -40px; }
-  .headline { font-size: 34px; }
-  .lead { font-size: 56px; }
-  .panels { grid-template-columns: 1fr; }
+  .trow { grid-template-columns: minmax(160px, 1fr) 72px 70px 84px 92px; }
+  .trow > .col-share, .trow > .col-pos { display: none; }
 }
-@media (max-width: 900px) {
-  /* Share of clicks is the first thing to go: it is a comparison aid, not data
-     you cannot get elsewhere on the row. */
-  .trow { grid-template-columns: 1fr 84px 78px; }
-  .trow > .col-share { display: none; }
-  .trow > .col-queue { display: none; }
-  .psub-queue { display: inline; }
-  .secondaries { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 0; }
-  .secondary { border-left: 0; padding: 0 20px 0 0; }
+@media (max-width: 780px) {
+  .trow { grid-template-columns: 1fr 72px 70px; }
+  .trow > .col-impr, .trow > .col-queue { display: none; }
+  .psub-extra { display: inline; }
   .metrics { flex-direction: column; align-items: flex-start; gap: 22px; }
+  .secondaries { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 0; }
+  .secondary { border-left: 0; padding: 0 16px 0 0; }
+  .kpi { padding: 0 14px; }
 }
-@media (max-width: 620px) {
+@media (max-width: 560px) {
   .masthead, .foot { flex-direction: column; align-items: flex-start; gap: 12px; }
-  .headline { font-size: 28px; }
-  .lead { font-size: 44px; }
-  .table, .hero-left, .hero-right, .panel-l, .panel-r,
-  .alert-left, .alert-right, .masthead, .foot { padding-left: 20px; padding-right: 20px; }
+  .masthead { position: static; }
+  .kpis { grid-template-columns: 1fr 1fr; gap: 18px 0; }
+  .kpi, .kpi:first-child { border-left: 0; padding: 0 12px 0 0; }
 }
 @media print {
-  body { background: #fff; }
-  .sheet { margin: 0; width: auto; border: 0; box-shadow: none; }
+  .masthead { position: static; }
+  .switch, .filter { display: none; }
 }
 </style>
 </head>
@@ -347,12 +375,13 @@ img, div, span, table { border-radius: 0; }
 <script>
 'use strict';
 
-/* Every figure on this sheet is derived here from data.json. Nothing is typed
-   into the markup, including the editorial sentences — the design's power is
-   that it states a conclusion, and a hardcoded conclusion is a lie the moment
-   the data moves. */
+/* Every figure and every sentence on this page is derived here from data.json.
+   Nothing is typed into the markup, the editorial copy included — the design's
+   power is that it states a conclusion, and a hardcoded conclusion is a lie the
+   moment the data moves. */
 
-var D = null;
+var D = null, M = null;
+var curSite = null, curMarket = 'GCC', kwFilter = '';
 
 var esc = function (s) {
   return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
@@ -361,28 +390,35 @@ var esc = function (s) {
 };
 var sum = function (a) { return a.reduce(function (x, y) { return x + y; }, 0); };
 var n0 = function (v) { return v == null ? '—' : Number(v).toLocaleString('en-US'); };
-var pctStr = function (v) { return (v > 0 ? '+' : v < 0 ? '−' : '') + Math.abs(v) + '%'; };
-var shortName = function (label) { return String(label).replace(/^Compass\s+/, ''); };
+var pctStr = function (v) { return v == null ? '—' : (v > 0 ? '+' : v < 0 ? '−' : '') + Math.abs(v) + '%'; };
+var short = function (l) { return String(l).replace(/^Compass\s+/, ''); };
 var fmtDate = function (iso) {
-  var d = new Date(iso + 'T00:00:00Z');
-  return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', timeZone: 'UTC' });
+  return new Date(iso + 'T00:00:00Z').toLocaleDateString('en-GB', { day: 'numeric', month: 'short', timeZone: 'UTC' });
+};
+var posClass = function (p) {
+  if (p == null) return 'dim';
+  return p <= 3 ? 'pos-1' : p <= 10 ? 'pos-2' : p <= 20 ? 'pos-3' : 'pos-4';
+};
+var store = {
+  get: function (k, d) { try { return localStorage.getItem(k) || d; } catch (e) { return d; } },
+  set: function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
 };
 
 /* ---------- derivation ---------- */
 
 function derive(d) {
-  var S = d.SITES || {}, B = d.BLOG || {}, RH = d.RANKHIST || {};
+  var S = d.SITES || {}, B = d.BLOG || {}, RH = d.RANKHIST || {}, BL = d.BACKLINKS || {};
   var keys = Object.keys(S);
 
   var clicks = sum(keys.map(function (k) { return (S[k].cur && S[k].cur.clicks) || 0; }));
   var prevClicks = sum(keys.map(function (k) { return (S[k].prev && S[k].prev.clicks) || 0; }));
   var impr = sum(keys.map(function (k) { return (S[k].cur && S[k].cur.impr) || 0; }));
   var sessions = sum(keys.map(function (k) { return (S[k].ga4 && S[k].ga4.sessions) || 0; }));
+  var users = sum(keys.map(function (k) { return (S[k].ga4 && S[k].ga4.users) || 0; }));
   var ranking = sum(keys.map(function (k) { return (S[k].queries || []).filter(function (q) { return q[4] != null; }).length; }));
   var tracked = sum(keys.map(function (k) { return (S[k].queries || []).length; }));
   var delta = prevClicks ? (clicks - prevClicks) / prevClicks * 100 : null;
 
-  // Mean position across the properties that have history, per date.
   var withHist = keys.filter(function (k) { return RH[k] && RH[k].GCC && RH[k].GCC.length; });
   var dates = withHist.length ? RH[withHist[0]].GCC.map(function (p) { return p[0]; }) : [];
   var series = dates.map(function (date, i) {
@@ -400,7 +436,7 @@ function derive(d) {
     var weeks = B[k] ? B[k].weeks : null;
     var vs = prev ? Math.round((cur - prev) / prev * 100) : null;
     return {
-      key: k, label: s.label || k, short: shortName(s.label || k),
+      key: k, label: s.label || k, short: short(s.label || k),
       clicks: cur, prevClicks: prev, vs: vs,
       impr: (s.cur && s.cur.impr) || 0, prevImpr: s.prev ? s.prev.impr : null,
       ctr: s.cur ? s.cur.ctr : null, prevCtr: s.prev ? s.prev.ctr : null,
@@ -408,7 +444,8 @@ function derive(d) {
       share: Math.round(cur / maxClicks * 100),
       ranking: rank, tracked: q.length,
       sessions: s.ga4 ? s.ga4.sessions : null,
-      weeks: weeks,
+      users: s.ga4 ? s.ga4.users : null,
+      weeks: weeks, blog: B[k] || null, backlinks: BL[k] || null,
       // Act on a property that is losing clicks, about to run out of content,
       // or invisible for every keyword it targets.
       acting: (vs != null && vs < 0) || (weeks != null && weeks < 3.5) || rank === 0
@@ -417,35 +454,35 @@ function derive(d) {
 
   var wins = keys.reduce(function (acc, k) {
     (S[k].queries || []).forEach(function (q) {
-      if (q[4] != null && q[4] >= 4 && q[4] <= 20) acc.push({ q: q[0], impr: q[2], pos: q[4] });
+      if (q[4] != null && q[4] >= 4 && q[4] <= 20) acc.push({ q: q[0], impr: q[2], pos: q[4], site: short(S[k].label || k) });
     });
     return acc;
-  }, []).sort(function (a, b) { return b.impr - a.impr; }).slice(0, 4);
+  }, []).sort(function (a, b) { return b.impr - a.impr; }).slice(0, 6);
 
   var chAgg = {};
   keys.forEach(function (k) {
-    ((S[k].ga4 && S[k].ga4.channels) || []).forEach(function (c) {
-      chAgg[c[0]] = (chAgg[c[0]] || 0) + c[1];
-    });
+    ((S[k].ga4 && S[k].ga4.channels) || []).forEach(function (c) { chAgg[c[0]] = (chAgg[c[0]] || 0) + c[1]; });
   });
   // Percentages are of total sessions, not of the channel sum: GA4's channel
   // breakdown does not reconcile with its own session total.
   var channels = Object.keys(chAgg).map(function (name) {
     return { name: name, sessions: chAgg[name], pct: sessions ? chAgg[name] / sessions * 100 : 0 };
-  }).sort(function (a, b) { return b.sessions - a.sessions; }).slice(0, 4);
+  }).sort(function (a, b) { return b.sessions - a.sessions; });
+
+  var blTotal = sum(keys.map(function (k) { return (BL[k] && BL[k].total) || 0; }));
 
   return {
     clicks: clicks, prevClicks: prevClicks, delta: delta, impr: impr, sessions: sessions,
-    ranking: ranking, tracked: tracked, series: series, rows: rows, wins: wins,
-    channels: channels, sitesWithGa4: keys.filter(function (k) { return S[k].ga4; }).length,
-    siteCount: keys.length, generated: d.generated
+    users: users, ranking: ranking, tracked: tracked, series: series, rows: rows,
+    wins: wins, channels: channels, blTotal: blTotal,
+    ctr: impr ? clicks / impr * 100 : 0,
+    sitesWithGa4: keys.filter(function (k) { return S[k].ga4; }).length,
+    siteCount: keys.length, generated: d.generated,
+    byKey: rows.reduce(function (o, r) { o[r.key] = r; return o; }, {})
   };
 }
 
-/* ---------- generated copy ----------
-   Kept to phrasings that cannot become false: a fraction is only named when the
-   number really is within half a point of it, and every claim is a figure from
-   the file rather than a characterisation of it. */
+/* ---------- generated copy ---------- */
 
 var FRACTIONS = [
   [100, 'double'], [75, 'three quarters'], [66.67, 'two thirds'], [50, 'a half'],
@@ -460,7 +497,7 @@ function fraction(pct) {
 
 function headline(m) {
   var a;
-  if (m.delta == null) { a = 'Clicks at ' + n0(m.clicks); }
+  if (m.delta == null) a = 'Clicks at ' + n0(m.clicks);
   else {
     var mag = Math.abs(m.delta), f = fraction(mag);
     var dir = m.delta > 0 ? 'up' : m.delta < 0 ? 'down' : 'flat';
@@ -469,7 +506,6 @@ function headline(m) {
     else if (f) a = 'Clicks ' + dir + ' ' + f;
     else a = 'Clicks ' + dir + ' ' + Math.round(mag) + '%';
   }
-
   var blind = m.rows.filter(function (r) { return r.ranking === 0 && r.tracked > 0; });
   var falling = m.rows.filter(function (r) { return r.vs != null && r.vs <= -20; });
   var thin = m.rows.filter(function (r) { return r.weeks != null && r.weeks < 3.5; });
@@ -478,28 +514,25 @@ function headline(m) {
   else if (blind.length > 1) b = 'and nothing ranks at ' + blind.length + ' of ' + m.siteCount + ' properties';
   else if (falling.length) b = 'but ' + falling[0].short + ' fell ' + Math.abs(falling[0].vs) + '%';
   else if (thin.length) b = 'and ' + thin[0].short + ' is ' + thin[0].weeks.toFixed(1) + ' weeks from an empty queue';
-
   return b ? a + ', ' + b : a;
 }
 
 function chartNote(m) {
   if (!m.series.length) return 'No ranking history yet.';
-  var first = m.series[0], last = m.series[m.series.length - 1];
-  var dir = last.value < first.value ? 'improved' : last.value > first.value ? 'slipped' : 'held';
-  var s1 = 'The group mean ' + dir + ' from ' + first.value.toFixed(1) + ' to ' + last.value.toFixed(1) +
-           ' across ' + m.series.length + ' days.';
+  var f = m.series[0], l = m.series[m.series.length - 1];
+  var dir = l.value < f.value ? 'improved' : l.value > f.value ? 'slipped' : 'held';
   var better = m.rows.filter(function (r) { return r.pos != null && r.prevPos != null && r.pos < r.prevPos; }).length;
   var comparable = m.rows.filter(function (r) { return r.pos != null && r.prevPos != null; }).length;
-  var s2 = better + ' of ' + comparable + ' properties improved their own 28-day average.';
-  var s3 = 'Only ' + m.ranking + ' of ' + m.tracked + ' tracked keywords return a result at all.';
-  return s1 + ' ' + s2 + ' ' + s3;
+  return 'The group mean ' + dir + ' from ' + f.value.toFixed(1) + ' to ' + l.value.toFixed(1) +
+         ' across ' + m.series.length + ' days. ' + better + ' of ' + comparable +
+         ' properties improved their own 28-day average. Only ' + m.ranking + ' of ' + m.tracked +
+         ' tracked keywords return a result at all.';
 }
 
 function alertContent(m) {
   var blind = m.rows.filter(function (r) { return r.ranking === 0 && r.tracked > 0; });
   var primary = blind[0] || m.rows.filter(function (r) { return r.vs != null && r.vs < 0; })[0] || null;
   if (!primary) return null;
-
   var head, meta = [];
   if (primary.ranking === 0) {
     head = primary.label + ' was shown ' + n0(primary.impr) + ' times, clicked ' + n0(primary.clicks) +
@@ -513,127 +546,409 @@ function alertContent(m) {
 
   var watch = [];
   m.rows.forEach(function (r) {
-    if (r === primary || watch.length >= 2) return;
-    // Impressions climbing while clicks do not is a CTR problem, not a
+    if (r === primary || watch.length >= 3) return;
+    // Impressions climbing while clicks do not is a CTR problem rather than a
     // visibility one, and it is the failure most easily missed.
     if (r.prevImpr && r.impr / r.prevImpr >= 1.25 && r.vs != null && r.vs <= 5 && r.ctr != null && r.prevCtr) {
-      watch.push({
-        name: r.short,
-        text: 'impressions ' + pctStr(Math.round((r.impr - r.prevImpr) / r.prevImpr * 100)) +
-              ', clicks ' + (Math.abs(r.vs) <= 2 ? 'flat' : pctStr(r.vs)) +
-              '; CTR ' + (r.ctr < r.prevCtr ? 'fell' : 'rose') + ' from ' + r.prevCtr + '% to ' + r.ctr + '%.'
-      });
+      watch.push({ name: r.short, text: 'impressions ' + pctStr(Math.round((r.impr - r.prevImpr) / r.prevImpr * 100)) +
+        ', clicks ' + (Math.abs(r.vs) <= 2 ? 'flat' : pctStr(r.vs)) +
+        '; CTR ' + (r.ctr < r.prevCtr ? 'fell' : 'rose') + ' from ' + r.prevCtr + '% to ' + r.ctr + '%.' });
     }
   });
   var thinnest = m.rows.filter(function (r) { return r.weeks != null && r !== primary; })
                        .sort(function (a, b) { return a.weeks - b.weeks; })[0];
-  if (thinnest && watch.length < 2 && thinnest.weeks < 4) {
+  if (thinnest && watch.length < 3 && thinnest.weeks < 4) {
     watch.push({ name: thinnest.short, text: thinnest.weeks.toFixed(1) + ' weeks of queue left, thinnest in the group.' });
   }
   m.rows.forEach(function (r) {
-    if (watch.length >= 2 || r === primary) return;
-    if (r.ranking / Math.max(1, r.tracked) < 0.15) {
+    if (watch.length >= 3 || r === primary) return;
+    if (r.tracked && r.ranking / r.tracked < 0.15) {
       watch.push({ name: r.short, text: 'only ' + r.ranking + ' of ' + r.tracked + ' tracked keywords rank.' });
     }
   });
-
   return { head: head, meta: meta.join(' · '), watch: watch };
 }
 
-/* ---------- chart ---------- */
+/* ---------- chart + component helpers ---------- */
 
-function chartSvg(series) {
-  if (series.length < 2) return '';
-  var W = 420, H = 132, TOP = 12, BOT = 118;
+function lineChart(series, opts) {
+  opts = opts || {};
+  if (!series || series.length < 2) return '<div class="chart-from">Not enough history yet.</div>';
+  var W = 420, H = opts.height || 132, TOP = 12, BOT = H - 14;
   var vals = series.map(function (p) { return p.value; });
   var lo = Math.min.apply(null, vals), hi = Math.max.apply(null, vals);
   var pad = (hi - lo) * 0.12 || 1;
   lo -= pad; hi += pad;
   // y grows with the position number, so a falling number climbs the chart.
-  // The Better/Worse gutter is what makes that legible.
   var pts = series.map(function (p, i) {
-    var x = series.length === 1 ? 0 : i / (series.length - 1) * W;
+    var x = i / (series.length - 1) * W;
     var y = TOP + (p.value - lo) / (hi - lo) * (BOT - TOP);
     return x.toFixed(1) + ',' + y.toFixed(1);
   }).join(' ');
-  return '<svg viewBox="0 0 ' + W + ' ' + H + '" width="100%" height="' + H + '" ' +
-         'preserveAspectRatio="none" style="display:block" role="img" ' +
-         'aria-label="Average position over ' + series.length + ' days">' +
-         '<line x1="0" y1="0" x2="' + W + '" y2="0" stroke="var(--hair-tint)" stroke-width="1"></line>' +
-         '<line x1="0" y1="66" x2="' + W + '" y2="66" stroke="var(--hair-tint)" stroke-width="1"></line>' +
-         '<line x1="0" y1="131" x2="' + W + '" y2="131" stroke="var(--divider)" stroke-width="1"></line>' +
-         '<polyline points="' + pts + '" fill="none" stroke="var(--accent)" stroke-width="2" ' +
-         'vector-effect="non-scaling-stroke"></polyline></svg>';
+  return '<svg viewBox="0 0 ' + W + ' ' + H + '" width="100%" height="' + H + '" preserveAspectRatio="none" ' +
+    'style="display:block" role="img" aria-label="' + esc(opts.label || 'trend') + ' over ' + series.length + ' days">' +
+    '<line x1="0" y1="0" x2="' + W + '" y2="0" stroke="var(--hair-tint)" stroke-width="1"></line>' +
+    '<line x1="0" y1="' + (H / 2).toFixed(0) + '" x2="' + W + '" y2="' + (H / 2).toFixed(0) + '" stroke="var(--hair-tint)" stroke-width="1"></line>' +
+    '<line x1="0" y1="' + (H - 1) + '" x2="' + W + '" y2="' + (H - 1) + '" stroke="var(--divider)" stroke-width="1"></line>' +
+    '<polyline points="' + pts + '" fill="none" stroke="var(--accent)" stroke-width="2" vector-effect="non-scaling-stroke"></polyline></svg>';
 }
 
-/* ---------- render ---------- */
+function kpi(label, value, sub, bad) {
+  return '<div class="kpi"><div class="kpi-lbl">' + esc(label) + '</div>' +
+    '<div class="kpi-val mono num">' + value + '</div>' +
+    (sub ? '<div class="kpi-sub' + (bad ? ' bad' : '') + '">' + sub + '</div>' : '') + '</div>';
+}
 
-function render(d) {
-  var m = derive(d);
-  var alert = alertContent(m);
-  var series = m.series;
-  var first = series[0], last = series[series.length - 1];
+function barRow(label, value, max, sub, accent) {
+  var w = Math.max(1, Math.min(100, max ? value / max * 100 : 0));
+  return '<div><div class="bar-head"><span class="bar-lbl" title="' + esc(label) + '">' + esc(label) + '</span>' +
+    '<span class="bar-val num">' + sub + '</span></div>' +
+    '<div class="bar-track"><div class="bar-fill' + (accent ? ' accent' : '') + '" style="width:' + w.toFixed(1) + '%"></div></div></div>';
+}
 
-  var genDate = new Date(m.generated + 'T00:00:00Z');
-  var ageDays = Math.floor((Date.now() - genDate.getTime()) / 86400000);
-  var stale = ageDays > 8;
+function switcher(id, items, active) {
+  return '<div class="switch" id="' + id + '">' + items.map(function (it) {
+    return '<button type="button" class="sw-btn' + (it.value === active ? ' active' : '') +
+      '" data-v="' + esc(it.value) + '">' + esc(it.label) + '</button>';
+  }).join('') + '</div>';
+}
 
-  var acting = m.rows.filter(function (r) { return r.acting; });
-  var steady = m.rows.filter(function (r) { return !r.acting; });
+/* ---------- bands ---------- */
 
-  function rowHtml(r, isLast) {
-    return '<div class="trow prow' + (isLast ? ' last' : '') + '">' +
+function bandProperties(m) {
+  function row(r, isLast) {
+    return '<div class="trow prow">' +
       '<div><div class="pname">' + esc(r.label) + '</div><div class="psub">' +
         (r.sessions == null ? 'no GA4' : n0(r.sessions) + ' sessions') +
         ' · ' + r.ranking + ' of ' + r.tracked + ' keywords ranking' +
-        (r.weeks != null ? '<span class="psub-queue"> · ' + r.weeks.toFixed(1) + ' wk queue</span>' : '') +
+        '<span class="psub-extra"> · ' + n0(r.impr) + ' impr · pos ' +
+          (r.pos == null ? '—' : r.pos) + (r.weeks != null ? ' · ' + r.weeks.toFixed(1) + ' wk queue' : '') + '</span>' +
       '</div></div>' +
       '<div class="col-share"><div class="track"><div class="fill' + (r.acting ? ' acting' : '') +
         '" style="width:' + r.share + '%"></div></div></div>' +
       '<div class="pclicks mono num right">' + n0(r.clicks) + '</div>' +
-      '<div class="pvs num right' + (r.vs != null && r.vs < 0 ? ' bad' : '') + '">' +
-        (r.vs == null ? '—' : pctStr(r.vs)) + '</div>' +
+      '<div class="pvs num right' + (r.vs != null && r.vs < 0 ? ' bad' : '') + '">' + pctStr(r.vs) + '</div>' +
+      '<div class="pfig num right col-impr">' + n0(r.impr) + '</div>' +
+      '<div class="pfig num right col-pos">' + (r.pos == null ? '—' : r.pos) + '</div>' +
+      '<div class="pfig num right col-sessions">' + (r.sessions == null ? '<span class="dim">no GA4</span>' : n0(r.sessions)) + '</div>' +
       '<div class="pqueue num right col-queue' + (r.weeks != null && r.weeks < 3.5 ? ' thin' : '') + '">' +
         (r.weeks == null ? '—' : r.weeks.toFixed(1) + ' wk') + '</div>' +
     '</div>';
   }
+  var acting = m.rows.filter(function (r) { return r.acting; });
+  var steady = m.rows.filter(function (r) { return !r.acting; });
+  var h = '<div class="table">' +
+    '<div class="trow thead"><div>Property</div><div class="col-share">Share of clicks</div>' +
+      '<div class="right">Clicks</div><div class="right">vs prev</div>' +
+      '<div class="right col-impr">Impressions</div><div class="right col-pos">Avg pos</div>' +
+      '<div class="right col-sessions">Sessions</div><div class="right col-queue">Queue left</div></div>';
+  if (acting.length) {
+    h += '<div class="group"><span class="group-tick"></span><span class="group-name mono">Acting on</span></div>' +
+      acting.map(function (r) { return row(r); }).join('');
+  }
+  if (steady.length) {
+    h += '<div class="group steady"><span class="group-tick"></span><span class="group-name mono">Steady</span></div>' +
+      steady.map(function (r) { return row(r); }).join('');
+  }
+  return h + '</div>';
+}
 
-  var html = '';
+function bandBlog(m) {
+  var rows = m.rows.filter(function (r) { return r.blog; });
+  if (!rows.length) {
+    return '<div class="band"><div class="band-head"><div class="band-title mono">Blog Pumper — publishing pipeline</div></div>' +
+      '<div class="band-sub">No queue data. Most likely this page is one build behind: a deploy takes a minute or two and the CDN caches for ten, so reload before assuming anything is broken. If it is still empty after the next daily refresh, the Blog Topics sheet is no longer readable by the dashboard service account.</div>' +
+      '<div style="height:22px"></div></div>';
+  }
+  var totalPending = sum(rows.map(function (r) { return r.blog.pending || 0; }));
+  var totalLive = sum(rows.map(function (r) { return r.blog.live || 0; }));
+  var thinnest = rows.slice().sort(function (a, b) { return a.blog.weeks - b.blog.weeks; })[0];
+  var lowCount = rows.filter(function (r) { return r.blog.weeks < 3.5; }).length;
 
-  html += '<div class="masthead">' +
-    '<div class="masthead-left">' +
-      '<img src="assets/wordmark-light.svg" alt="Compass Group">' +
-      '<div class="vrule"></div>' +
-      '<div class="masthead-title mono">Search performance</div>' +
-    '</div>' +
-    '<div class="chips">' +
-      '<span class="chip">' + m.siteCount + ' properties</span>' +
-      '<span class="chip">last 28 days</span>' +
-      '<span class="chip-date">' + genDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' }) + '</span>' +
+  var h = '<div class="band">' +
+    '<div class="band-head"><div class="band-title mono">Blog Pumper — publishing pipeline</div>' +
+      '<div class="chart-hint">two posts per property per week · Tuesdays and Fridays</div></div>' +
+    '<div class="band-sub">Read from the same Blog Topics sheet the publisher works from. It reports and never writes: topping the queue up is the SEO specialist\'s job, and a thin queue is a fact to surface rather than something this page should fix. Compass Furniture is on hold in the publisher and deliberately absent.</div>' +
+    '<div class="subpanel"><div class="kpis">' +
+      kpi('Topics queued', n0(totalPending), 'across ' + rows.length + ' properties') +
+      kpi('Published to date', n0(totalLive), 'rows marked Live in the sheet') +
+      kpi('Weekly output', rows.length + ' posts', '1 per property per run, 2 runs a week') +
+      kpi('Thinnest queue', thinnest.blog.weeks.toFixed(1) + ' wks', esc(thinnest.short), thinnest.blog.weeks < 3.5) +
+      kpi('Needs topics', n0(lowCount), lowCount ? 'under 3.5 weeks of runway' : 'every queue has runway', lowCount > 0) +
     '</div></div>';
 
-  html += '<div class="split hero">' +
-    '<img class="watermark" src="assets/mark-ink.svg" alt="">' +
-    '<div class="hero-left">' +
-      '<div class="kicker"></div>' +
-      '<div class="headline mono">' + esc(headline(m)) + '</div>' +
-      '<div class="metrics">' +
-        '<div><div class="lead-row">' +
-          '<div class="lead mono num">' + n0(m.clicks) + '</div>' +
-          (m.delta == null ? '' : '<div class="delta-chip">' + pctStr(Math.round(m.delta)) + '</div>') +
-        '</div>' +
-        '<div class="caption">Search clicks · ' + n0(m.prevClicks) + ' prior</div></div>' +
-        '<div class="secondaries">' +
-          '<div class="secondary"><div class="secondary-val mono num">' + n0(m.impr) + '</div>' +
-            '<div class="caption">Impressions</div></div>' +
-          '<div class="secondary"><div class="secondary-val mono num">' + n0(m.sessions) + '</div>' +
-            '<div class="caption">Sessions</div></div>' +
-          '<div class="secondary"><div class="secondary-val mono num">' + m.ranking +
-            '<span class="secondary-den">/' + m.tracked + '</span></div>' +
-            '<div class="caption">Keywords ranking</div></div>' +
-        '</div>' +
+  h += '<div class="subpanel" style="padding-top:0"><div class="scrollx"><table class="dt">' +
+    '<thead><tr><th>Property</th><th class="right">Pending</th><th class="right">Runway</th>' +
+    '<th class="right">Published</th><th>Next up</th></tr></thead><tbody>' +
+    rows.slice().sort(function (a, b) { return a.blog.weeks - b.blog.weeks; }).map(function (r) {
+      var b = r.blog;
+      return '<tr><td>' + esc(r.label) + '</td>' +
+        '<td class="right num">' + n0(b.pending) + '</td>' +
+        '<td class="right num' + (b.weeks < 3.5 ? ' pos-4' : '') + '" style="font-weight:600">' + b.weeks.toFixed(1) + ' wk</td>' +
+        '<td class="right num">' + n0(b.live) + '</td>' +
+        '<td>' + (b.queue && b.queue.length ? esc(b.queue[0]) : '<span class="emptyq">nothing queued — site will be skipped</span>') + '</td></tr>';
+    }).join('') + '</tbody></table></div></div>';
+
+  h += '<div class="panels"><div class="panel-l"><div class="panel-title mono">Queued topics</div>' +
+    rows.map(function (r) {
+      var q = (r.blog.queue || []);
+      return '<div style="margin-bottom:14px"><div style="font-size:12.5px;font-weight:600;margin-bottom:4px">' + esc(r.label) +
+        ' <span class="dim" style="font-weight:400">' + n0(r.blog.pending) + ' queued</span></div>' +
+        (q.length ? '<ol class="qlist">' + q.slice(0, 5).map(function (t, i) {
+          return '<li' + (i === 0 ? ' class="next"' : '') + '>' + esc(t) + '</li>';
+        }).join('') + '</ol>' : '<div class="emptyq">nothing queued</div>') + '</div>';
+    }).join('') + '</div><div class="divider"></div>' +
+    '<div class="panel-r"><div class="panel-title mono">Recently published</div>' +
+    rows.map(function (r) {
+      var rec = (r.blog.recent || []);
+      if (!rec.length) return '';
+      return '<div style="margin-bottom:14px"><div style="font-size:12.5px;font-weight:600;margin-bottom:4px">' + esc(r.label) + '</div>' +
+        '<ul class="qlist">' + rec.map(function (p) {
+          return '<li>' + (p[1] ? '<a href="' + esc(p[1]) + '" target="_blank" rel="noopener">' + esc(p[0]) + '</a>' : esc(p[0])) + '</li>';
+        }).join('') + '</ul></div>';
+    }).join('') || '<div class="chart-from">Nothing marked Live yet.</div>' +
+    '</div></div>';
+
+  return h + '</div>';
+}
+
+function positionBuckets(queries) {
+  var b = { '1–3': 0, '4–10': 0, '11–20': 0, '21+': 0 };
+  // Non-ranking keywords are excluded. The previous dashboard used `p <= 3`,
+  // and null <= 3 is true in JS, so every keyword that did not rank was counted
+  // into the best bucket.
+  queries.forEach(function (q) {
+    var p = q[4];
+    if (p == null) return;
+    if (p <= 3) b['1–3'] += q[2];
+    else if (p <= 10) b['4–10'] += q[2];
+    else if (p <= 20) b['11–20'] += q[2];
+    else b['21+'] += q[2];
+  });
+  return b;
+}
+
+function bandDetail(m, d) {
+  var r = m.byKey[curSite];
+  var s = (d.SITES || {})[curSite];
+  if (!r || !s) return '';
+  var q = s.queries || [], pages = s.pages || [], ga4 = s.ga4, bl = r.backlinks;
+
+  var h = '<div class="band">' +
+    '<div class="band-head"><div><div class="rule-accent" style="margin-bottom:12px"></div>' +
+      '<div class="band-title mono">Per-property detail</div></div>' +
+      switcher('siteSwitch', m.rows.map(function (x) { return { value: x.key, label: x.short }; }), curSite) +
+    '</div>';
+
+  /* -- Search Console -- */
+  var ctrDelta = (r.ctr != null && r.prevCtr) ? Math.round((r.ctr - r.prevCtr) / r.prevCtr * 100) : null;
+  h += '<div class="subpanel"><div class="chart-head"><div class="chart-label mono">Search Console — search visibility</div>' +
+      '<div class="chart-hint">last 28 days, against the 28 before it</div></div>' +
+    '<div class="kpis" style="margin-top:14px">' +
+      kpi('Clicks', n0(r.clicks), pctStr(r.vs) + ' · ' + n0(r.prevClicks) + ' prior', r.vs != null && r.vs < 0) +
+      kpi('Impressions', n0(r.impr), r.prevImpr ? pctStr(Math.round((r.impr - r.prevImpr) / r.prevImpr * 100)) + ' · ' + n0(r.prevImpr) + ' prior' : '') +
+      kpi('CTR', (r.ctr == null ? '—' : r.ctr + '%'), r.prevCtr ? pctStr(ctrDelta) + ' · ' + r.prevCtr + '% prior' : '', ctrDelta != null && ctrDelta < 0) +
+      kpi('Avg position', (r.pos == null ? '—' : r.pos), r.prevPos ? (r.pos < r.prevPos ? 'better than ' : 'worse than ') + r.prevPos : '', r.prevPos != null && r.pos > r.prevPos) +
+      kpi('Keywords ranking', r.ranking + '<span class="secondary-den">/' + r.tracked + '</span>', 'targeted keywords with a result', r.ranking === 0) +
+      kpi('Backlinks', bl ? n0(bl.total) : '—', bl ? 'discovered by Search Console' : 'no data yet') +
+    '</div></div>';
+
+  /* -- top queries + impressions by position -- */
+  var byClicks = q.slice().sort(function (a, b) { return b[1] - a[1]; });
+  var useClicks = byClicks.length && byClicks[0][1] > 0;
+  var topQ = (useClicks ? byClicks : q.slice().sort(function (a, b) { return b[2] - a[2]; })).slice(0, 8);
+  var maxQ = topQ.length ? (useClicks ? topQ[0][1] : topQ[0][2]) : 1;
+  var buckets = positionBuckets(q);
+  var maxB = Math.max.apply(null, Object.keys(buckets).map(function (k) { return buckets[k]; }).concat([1]));
+
+  h += '<div class="panels"><div class="panel-l">' +
+      '<div class="panel-title mono">Top queries by ' + (useClicks ? 'clicks' : 'impressions') + '</div>' +
+      (useClicks ? '' : '<div class="chart-hint" style="margin:-8px 0 12px">No clicks yet — showing impressions.</div>') +
+      '<div class="bars">' + (topQ.length ? topQ.map(function (x) {
+        return barRow(x[0], useClicks ? x[1] : x[2], maxQ, (useClicks ? n0(x[1]) + ' clk' : n0(x[2]) + ' imp'), useClicks);
+      }).join('') : '<div class="chart-from">No query data.</div>') + '</div>' +
+    '</div><div class="divider"></div><div class="panel-r">' +
+      '<div class="panel-title mono">Impressions by ranking position</div>' +
+      '<div class="bars">' + Object.keys(buckets).map(function (k) {
+        return barRow('Position ' + k, buckets[k], maxB, n0(buckets[k]) + ' imp', k === '1–3' || k === '4–10');
+      }).join('') + '</div>' +
+      '<div class="chart-note">Keywords with no impressions in the period are excluded, so these four add up to the impressions this property actually earned.</div>' +
+    '</div></div>';
+
+  /* -- keywords table + top pages -- */
+  var filtered = q.filter(function (x) { return !kwFilter || x[0].toLowerCase().indexOf(kwFilter) >= 0; })
+                  .sort(function (a, b) {
+                    if ((a[4] == null) !== (b[4] == null)) return a[4] == null ? 1 : -1;
+                    return (a[4] || 0) - (b[4] || 0);
+                  });
+  h += '<div class="panels"><div class="panel-l">' +
+      '<div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px">' +
+        '<div class="panel-title mono" style="margin:0">Keywords · ' + filtered.length + ' of ' + q.length + '</div>' +
+        '<input class="filter" id="kwFilter" type="text" placeholder="Filter keywords…" value="' + esc(kwFilter) + '">' +
       '</div>' +
-    '</div>' +
+      '<div class="scrollx"><table class="dt"><thead><tr><th>Query</th><th class="right">Clicks</th>' +
+        '<th class="right">Impr</th><th class="right">CTR</th><th class="right">Pos</th></tr></thead><tbody>' +
+        (filtered.length ? filtered.map(function (x) {
+          return '<tr><td class="kw">' + esc(x[0]) + '</td><td class="right num">' + n0(x[1]) + '</td>' +
+            '<td class="right num">' + n0(x[2]) + '</td><td class="right num">' + (x[3] || 0) + '%</td>' +
+            '<td class="right"><span class="pos-pill ' + posClass(x[4]) + '">' +
+              (x[4] == null ? '—' : x[4]) + '</span></td></tr>';
+        }).join('') : '<tr><td colspan="5" class="dim">Nothing matches that filter.</td></tr>') +
+      '</tbody></table></div>' +
+      '<div class="chart-note">A dash means the keyword is tracked but returned no impressions in the period — tracked, not ranking.</div>' +
+    '</div><div class="divider"></div><div class="panel-r">' +
+      '<div class="panel-title mono">Top pages · Search Console</div>' +
+      '<div class="scrollx"><table class="dt"><thead><tr><th>Page</th><th class="right">Clicks</th>' +
+        '<th class="right">Impr</th><th class="right">CTR</th><th class="right">Pos</th></tr></thead><tbody>' +
+        (pages.length ? pages.slice(0, 10).map(function (p) {
+          var path = String(p[0]).replace(/^https?:\/\/[^/]+/, '') || '/';
+          return '<tr><td class="kw"><a href="' + esc(p[0]) + '" target="_blank" rel="noopener">' + esc(path) + '</a></td>' +
+            '<td class="right num">' + n0(p[1]) + '</td><td class="right num">' + n0(p[2]) + '</td>' +
+            '<td class="right num">' + (p[3] || 0) + '%</td><td class="right num">' + (p[4] == null ? '—' : p[4]) + '</td></tr>';
+        }).join('') : '<tr><td colspan="5" class="dim">No page data.</td></tr>') +
+      '</tbody></table></div></div></div>';
+
+  /* -- SERP by market -- */
+  var RK = (d.RANK || {})[curSite] || {};
+  var RHm = ((d.RANKHIST || {})[curSite] || {});
+  var mk = RK[curMarket] || null;
+  var mSeries = (RHm[curMarket] || []).map(function (p) { return { date: p[0], value: p[1] }; })
+                                      .filter(function (p) { return p.value != null; });
+  var MARKETS = [{ value: 'GCC', label: 'GCC / all' }, { value: 'QA', label: 'Qatar' },
+                 { value: 'SA', label: 'Saudi' }, { value: 'AE', label: 'UAE' }];
+  h += '<div class="subpanel tinted">' +
+    '<div class="chart-head"><div class="chart-label mono">SERP rankings by market</div>' +
+      switcher('mktSwitch', MARKETS, curMarket) + '</div>' +
+    '<div class="band-sub" style="padding:8px 0 0">Where this property ranks for its targeted keywords in the selected market. A dash means tracked but not ranking. This is Search Console\'s averaged position per market, not a live SERP check.</div>';
+  if (mk) {
+    h += '<div class="kpis" style="margin-top:16px">' +
+        kpi('Clicks', n0(mk.clicks), curMarket === 'GCC' ? 'all markets' : 'in ' + curMarket) +
+        kpi('Impressions', n0(mk.impr), '') +
+        kpi('CTR', (mk.ctr == null ? '—' : mk.ctr + '%'), '') +
+        kpi('Avg position', (mk.pos == null ? '—' : mk.pos.toFixed ? mk.pos.toFixed(1) : mk.pos), mk.pos == null ? 'nothing ranking' : 'impression-weighted', mk.pos == null) +
+      '</div>' +
+      '<div class="panels" style="margin-top:18px"><div style="padding-right:22px">' +
+        '<div class="panel-title mono">Average position over time</div>' +
+        '<div class="chart-grid"><div class="chart-gutter"><span>Better</span><span>Worse</span></div>' +
+          '<div>' + lineChart(mSeries, { label: 'Average position in ' + curMarket }) +
+          (mSeries.length ? '<div class="chart-dates"><span>' + fmtDate(mSeries[0].date) + '</span><span>' +
+            fmtDate(mSeries[mSeries.length - 1].date) + '</span></div>' : '') + '</div></div>' +
+      '</div><div class="divider"></div><div style="padding-left:22px">' +
+        '<div class="panel-title mono">Targeted keywords · ' + curMarket + '</div>' +
+        '<div class="scrollx"><table class="dt"><thead><tr><th>Keyword</th><th class="right">Pos</th>' +
+          '<th class="right">Clicks</th><th class="right">Impr</th></tr></thead><tbody>' +
+          ((mk.kw || []).length ? mk.kw.slice().sort(function (a, b) {
+            if ((a[1] == null) !== (b[1] == null)) return a[1] == null ? 1 : -1;
+            return (a[1] || 0) - (b[1] || 0);
+          }).map(function (k) {
+            return '<tr><td class="kw">' + esc(k[0]) + '</td>' +
+              '<td class="right"><span class="pos-pill ' + posClass(k[1]) + '">' + (k[1] == null ? '—' : k[1]) + '</span></td>' +
+              '<td class="right num">' + n0(k[2]) + '</td><td class="right num">' + n0(k[3]) + '</td></tr>';
+          }).join('') : '<tr><td colspan="4" class="dim">No keywords tracked for this market.</td></tr>') +
+        '</tbody></table></div></div></div>';
+  } else {
+    h += '<div class="chart-from" style="margin-top:14px">No market breakdown for this property.</div>';
+  }
+  h += '</div>';
+
+  /* -- GA4 -- */
+  h += '<div class="subpanel">' +
+    '<div class="chart-head"><div class="chart-label mono">Google Analytics — on-site behaviour</div>' +
+      '<div class="chart-hint">what visitors do once they arrive</div></div>';
+  if (ga4) {
+    var chMax = Math.max.apply(null, (ga4.channels || []).map(function (c) { return c[1]; }).concat([1]));
+    var pgMax = Math.max.apply(null, (ga4.topPages || []).map(function (p) { return p[1]; }).concat([1]));
+    h += '<div class="kpis" style="margin-top:14px">' +
+        kpi('Users', n0(ga4.users), '') +
+        kpi('Sessions', n0(ga4.sessions), '') +
+        kpi('Engagement rate', (ga4.engRate == null ? '—' : ga4.engRate + '%'), '') +
+        kpi('Avg engaged', esc(ga4.avgEng || '—'), 'per session') +
+        kpi('Events', n0(ga4.events), '') +
+        kpi('Key events', n0(ga4.keyEvents), 'conversions') +
+      '</div>' +
+      '<div class="panels" style="margin-top:18px"><div style="padding-right:22px">' +
+        '<div class="panel-title mono">Sessions by channel</div><div class="bars">' +
+        ((ga4.channels || []).length ? ga4.channels.slice(0, 8).map(function (c) {
+          return barRow(c[0], c[1], chMax, n0(c[1]) + ' · ' + c[2].toFixed(1) + '%', /organic search/i.test(c[0]));
+        }).join('') : '<div class="chart-from">No channel data.</div>') + '</div>' +
+      '</div><div class="divider"></div><div style="padding-left:22px">' +
+        '<div class="panel-title mono">Top pages by views</div><div class="bars">' +
+        ((ga4.topPages || []).length ? ga4.topPages.slice(0, 8).map(function (p) {
+          return barRow(p[0], p[1], pgMax, n0(p[1]) + ' views · ' + n0(p[2]) + ' users', false);
+        }).join('') : '<div class="chart-from">No page data.</div>') + '</div>' +
+      '</div></div>';
+  } else {
+    h += '<div class="chart-from" style="margin-top:14px">This property has no GA4 property connected, so nothing after the click is measured. Search Console figures above are unaffected.</div>';
+  }
+  h += '</div>';
+
+  /* -- backlinks -- */
+  h += '<div class="subpanel tinted">' +
+    '<div class="chart-head"><div class="chart-label mono">Backlinks</div>' +
+      '<div class="chart-hint">counts are approximate and update in irregular batches</div></div>';
+  if (bl) {
+    var hist = (bl.history || []).map(function (p) { return { date: p[0], value: p[1] }; })
+                                 .filter(function (p) { return p.value != null; });
+    var change = hist.length > 1 ? hist[hist.length - 1].value - hist[0].value : null;
+    h += '<div class="kpis" style="margin-top:14px">' +
+        kpi('Total backlinks', n0(bl.total), 'discovered by Search Console') +
+        kpi('Change', (change == null ? '—' : (change > 0 ? '+' : '') + n0(change)), hist.length ? 'since ' + fmtDate(hist[0].date) : '') +
+        kpi('Linking domains', n0((bl.topSites || []).length), 'in the top list') +
+      '</div>' +
+      '<div class="panels" style="margin-top:18px"><div style="padding-right:22px">' +
+        '<div class="panel-title mono">Total over time</div>' +
+        (hist.length > 1 ? lineChart(hist, { label: 'Backlinks', height: 110 }) +
+          '<div class="chart-dates"><span>' + fmtDate(hist[0].date) + '</span><span>' +
+          fmtDate(hist[hist.length - 1].date) + '</span></div>'
+        : '<div class="chart-from">Not enough history yet.</div>') +
+        '<div class="chart-note">This series counts up, so a rising line is good here — the opposite of the position charts.</div>' +
+      '</div><div class="divider"></div><div style="padding-left:22px">' +
+        '<div class="panel-title mono">Top linking domains</div>' +
+        '<div class="scrollx"><table class="dt"><thead><tr><th>Domain</th><th class="right">Links</th></tr></thead><tbody>' +
+        ((bl.topSites || []).length ? bl.topSites.map(function (t) {
+          return '<tr><td>' + esc(t[0]) + '</td><td class="right num">' + n0(t[1]) + '</td></tr>';
+        }).join('') : '<tr><td colspan="2" class="dim">No linking domains recorded.</td></tr>') +
+        '</tbody></table></div></div></div>';
+  } else {
+    h += '<div class="chart-from" style="margin-top:14px">No backlink data for this property yet.</div>';
+  }
+  return h + '</div></div>';
+}
+
+/* ---------- render ---------- */
+
+function render() {
+  var d = D, m = M;
+  var alert = alertContent(m);
+  var series = m.series, first = series[0], last = series[series.length - 1];
+  var genDate = new Date(m.generated + 'T00:00:00Z');
+  var ageDays = Math.floor((Date.now() - genDate.getTime()) / 86400000);
+  var stale = ageDays > 8;
+  var dateStr = genDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
+
+  var h = '';
+
+  h += '<div class="masthead">' +
+    '<div class="masthead-left"><img src="assets/wordmark-light.svg" alt="Compass Group">' +
+      '<div class="vrule"></div><div class="masthead-title mono">Search performance</div></div>' +
+    '<div class="chips"><span class="chip">' + m.siteCount + ' properties</span>' +
+      '<span class="chip">last 28 days</span><span class="chip-date">' + dateStr + '</span></div></div>';
+
+  h += '<div class="split hero band">' +
+    '<img class="watermark" src="assets/mark-ink.svg" alt="">' +
+    '<div class="hero-left"><div class="kicker"></div>' +
+      '<div class="headline mono">' + esc(headline(m)) + '</div>' +
+      '<div class="metrics"><div><div class="lead-row">' +
+        '<div class="lead mono num">' + n0(m.clicks) + '</div>' +
+        (m.delta == null ? '' : '<div class="delta-chip">' + pctStr(Math.round(m.delta)) + '</div>') +
+      '</div><div class="caption">Search clicks · ' + n0(m.prevClicks) + ' prior</div></div>' +
+      '<div class="secondaries">' +
+        '<div class="secondary"><div class="secondary-val mono num">' + n0(m.impr) + '</div><div class="caption">Impressions</div></div>' +
+        '<div class="secondary"><div class="secondary-val mono num">' + m.ctr.toFixed(1) + '%</div><div class="caption">Blended CTR</div></div>' +
+        '<div class="secondary"><div class="secondary-val mono num">' + n0(m.sessions) + '</div><div class="caption">Sessions</div></div>' +
+        '<div class="secondary"><div class="secondary-val mono num">' + m.ranking +
+          '<span class="secondary-den">/' + m.tracked + '</span></div><div class="caption">Keywords ranking</div></div>' +
+      '</div></div></div>' +
     '<div class="divider"></div>' +
     '<div class="hero-right">' +
       '<div class="chart-head"><div class="chart-label mono">Average position</div>' +
@@ -641,87 +956,95 @@ function render(d) {
       (series.length ?
         '<div class="chart-value-row"><span class="chart-value mono num">' + last.value.toFixed(1) + '</span>' +
           '<span class="chart-from">from ' + first.value.toFixed(1) + ' on ' + fmtDate(first.date) + '</span></div>' +
-        '<div class="chart-grid">' +
-          '<div class="chart-gutter"><span>Better</span><span>Worse</span></div>' +
-          '<div>' + chartSvg(series) +
+        '<div class="chart-grid"><div class="chart-gutter"><span>Better</span><span>Worse</span></div>' +
+          '<div>' + lineChart(series, { label: 'Group average position' }) +
             '<div class="chart-dates"><span>' + fmtDate(first.date) + '</span><span>' + fmtDate(last.date) + '</span></div>' +
-          '</div>' +
-        '</div>' : '<div class="chart-from">No ranking history yet.</div>') +
+          '</div></div>' : '<div class="chart-from">No ranking history yet.</div>') +
       '<div class="chart-note">' + esc(chartNote(m)) + '</div>' +
-    '</div>' +
-  '</div>';
+    '</div></div>';
 
   if (alert) {
-    html += '<div class="split alert">' +
+    h += '<div class="split alert band">' +
       '<div class="alert-left"><div class="alert-bar"></div><div>' +
         '<div class="alert-label mono">Needs attention</div>' +
         '<div class="alert-headline mono">' + esc(alert.head) + '</div>' +
         (alert.meta ? '<div class="alert-meta">' + esc(alert.meta) + '</div>' : '') +
-      '</div></div>' +
-      '<div class="divider"></div>' +
-      '<div class="alert-right"><div class="watch-label mono">Also watch</div>' +
-        '<div class="watch-list">' +
-          alert.watch.map(function (w) {
-            return '<div class="watch-row"><span class="watch-dash">—</span>' +
-              '<span><span class="watch-name">' + esc(w.name) + '</span> ' + esc(w.text) + '</span></div>';
-          }).join('') +
-        '</div></div>' +
-    '</div>';
+      '</div></div><div class="divider"></div>' +
+      '<div class="alert-right"><div class="watch-label mono">Also watch</div><div class="watch-list">' +
+        alert.watch.map(function (w) {
+          return '<div class="watch-row"><span class="watch-dash">—</span><span>' +
+            '<span class="watch-name">' + esc(w.name) + '</span> ' + esc(w.text) + '</span></div>';
+        }).join('') + '</div></div></div>';
   }
 
-  html += '<div class="table">' +
-    '<div class="trow thead mono"><div>Property</div><div class="col-share">Share of clicks</div>' +
-      '<div class="right">Clicks</div><div class="right">vs prev</div>' +
-      '<div class="right col-queue">Queue left</div></div>';
-  if (acting.length) {
-    html += '<div class="group"><span class="group-tick"></span>' +
-      '<span class="group-name mono">Acting on</span></div>';
-    html += acting.map(function (r) { return rowHtml(r, false); }).join('');
-  }
-  if (steady.length) {
-    html += '<div class="group steady"><span class="group-tick"></span>' +
-      '<span class="group-name mono">Steady</span></div>';
-    html += steady.map(function (r, i) { return rowHtml(r, i === steady.length - 1); }).join('');
-  }
-  html += '</div>';
+  h += '<div class="band">' + bandProperties(m) + '</div>';
 
-  html += '<div class="panels">' +
-    '<div class="panel-l"><div class="panel-title mono">Quick wins · position 4–20</div>' +
-      '<div class="wins">' +
-        (m.wins.length ? m.wins.map(function (w, i) {
-          return '<div class="win"><span class="win-rank mono">' + ('0' + (i + 1)).slice(-2) + '</span>' +
-            '<span>' + esc(w.q) + '</span>' +
-            '<span class="win-fig num">' + n0(w.impr) + ' impr · ' + w.pos + '</span></div>';
-        }).join('') : '<div class="chart-from">Nothing ranking between 4 and 20 yet.</div>') +
-      '</div></div>' +
-    '<div class="divider"></div>' +
-    '<div class="panel-r"><div class="panel-title mono">Where the sessions came from</div>' +
-      '<div class="sources">' +
-        m.channels.map(function (c) {
-          var organic = /organic search/i.test(c.name);
-          return '<div><div class="source-head"><span>' + esc(c.name) + '</span>' +
-            '<span class="source-val num">' + n0(c.sessions) + ' · ' + Math.round(c.pct) + '%</span></div>' +
-            '<div class="source-track"><div class="source-fill' + (organic ? ' organic' : '') +
-            '" style="width:' + Math.max(1, Math.min(100, c.pct)).toFixed(1) + '%"></div></div></div>';
-        }).join('') +
-      '</div></div>' +
-  '</div>';
+  h += '<div class="split split-even band"><div class="panel-l">' +
+      '<div class="panel-title mono">Quick wins · position 4–20</div><div class="bars">' +
+      (m.wins.length ? m.wins.map(function (w, i) {
+        return '<div style="display:grid;grid-template-columns:20px 1fr auto;gap:12px;align-items:baseline;font-size:13px">' +
+          '<span class="mono" style="font-weight:600;font-size:11px;color:var(--accent)">' + ('0' + (i + 1)).slice(-2) + '</span>' +
+          '<span>' + esc(w.q) + ' <span class="dim">· ' + esc(w.site) + '</span></span>' +
+          '<span class="bar-val num">' + n0(w.impr) + ' impr · ' + w.pos + '</span></div>';
+      }).join('') : '<div class="chart-from">Nothing ranking between 4 and 20 yet.</div>') +
+      '</div><div class="chart-note">Already on page one or close to it. Moving these is usually cheaper than ranking something new.</div>' +
+    '</div><div class="divider"></div><div class="panel-r">' +
+      '<div class="panel-title mono">Where the sessions came from</div><div class="bars">' +
+      m.channels.slice(0, 6).map(function (c) {
+        return barRow(c.name, c.pct, 100, n0(c.sessions) + ' · ' + Math.round(c.pct) + '%', /organic search/i.test(c.name));
+      }).join('') + '</div>' +
+      '<div class="chart-note">Percentages are of total sessions (' + n0(m.sessions) + '), not of the channel sum — GA4\'s breakdown does not reconcile with its own total. Organic is the only channel search work moves, so it is the only one coloured.</div>' +
+    '</div></div>';
 
-  html += '<div class="foot">' +
-    '<span>Search Console · GA4 on ' + m.sitesWithGa4 + ' of ' + m.siteCount + ' properties</span>' +
+  h += bandBlog(m);
+  h += bandDetail(m, d);
+
+  h += '<div class="foot">' +
+    '<span>Search Console · GA4 on ' + m.sitesWithGa4 + ' of ' + m.siteCount + ' properties · ' +
+      n0(m.blTotal) + ' backlinks</span>' +
     '<span>' + (stale ? '<span class="stale">Data is ' + ageDays + ' days old</span> · ' : 'Console data lags about three days · ') +
-      'generated ' + genDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' }) + '</span>' +
-  '</div>';
+      'generated ' + dateStr + '</span></div>';
 
-  document.getElementById('sheet').innerHTML = html;
+  document.getElementById('sheet').innerHTML = h;
+  wire();
+}
+
+function wire() {
+  var ss = document.getElementById('siteSwitch');
+  if (ss) ss.addEventListener('click', function (e) {
+    var b = e.target.closest('.sw-btn'); if (!b) return;
+    curSite = b.dataset.v; store.set('cg_site', curSite); kwFilter = ''; render();
+  });
+  var ms = document.getElementById('mktSwitch');
+  if (ms) ms.addEventListener('click', function (e) {
+    var b = e.target.closest('.sw-btn'); if (!b) return;
+    curMarket = b.dataset.v; store.set('cg_market', curMarket); render();
+  });
+  var f = document.getElementById('kwFilter');
+  if (f) {
+    f.addEventListener('input', function () {
+      kwFilter = f.value.trim().toLowerCase();
+      var at = f.selectionStart;
+      render();
+      var nf = document.getElementById('kwFilter');
+      if (nf) { nf.focus(); try { nf.setSelectionRange(at, at); } catch (e) {} }
+    });
+  }
 }
 
 fetch('data.json', { cache: 'no-store' })
   .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
-  .then(function (d) { D = d; render(d); })
+  .then(function (d) {
+    D = d; M = derive(d);
+    var saved = store.get('cg_site', null);
+    curSite = (saved && M.byKey[saved]) ? saved : (M.rows[0] && M.rows[0].key);
+    var sm = store.get('cg_market', 'GCC');
+    if (['GCC', 'QA', 'SA', 'AE'].indexOf(sm) >= 0) curMarket = sm;
+    render();
+  })
   .catch(function (e) {
     document.getElementById('msg').textContent =
-      'Could not load data.json — ' + e.message + '. If this page was just deployed, it may be one build behind; reload in a minute.';
+      'Could not load data.json — ' + e.message + '. If this page was just deployed it may be one build behind; reload in a minute.';
   });
 </script>
 </body>

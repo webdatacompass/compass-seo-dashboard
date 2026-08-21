@@ -37,8 +37,24 @@ publishing pipeline on schedule. The audience is mixed — the specialist doing 
 work, the person who owns it, and group leadership who do not do SEO — so the top
 of the page states a conclusion in words before any table appears.
 
-Bands, in order: masthead, hero (headline + metrics, position chart), alert band,
-property table, quick wins and session sources, footer.
+Bands, in order:
+
+| Band | Holds |
+| --- | --- |
+| Masthead | wordmark, property count, window, generation date |
+| Hero | generated headline, group metrics, group position chart |
+| Alert | the one property to act on, plus up to three to watch |
+| Property table | all properties, ordered by urgency |
+| Quick wins / Sessions | position 4–20 queries, traffic sources |
+| Blog Pumper | queue depth and runway per property, queued and published |
+| Per-property detail | Search Console, SERP by market, GA4, backlinks |
+| Footer | sources, freshness caveat |
+
+The last band carries everything that needs a property chosen first: Search
+Console KPIs against the prior period, top queries, impressions split by ranking
+position, the full keyword table with a filter, top pages, SERP position by
+market with its own trend, GA4 behaviour, and backlinks. Two switchers drive it —
+property and market — and both remember your choice.
 
 **The table is ordered by urgency, not by size.** A property lands in *Acting on*
 if it is losing clicks, has under 3.5 weeks of queue left, or ranks for none of
@@ -75,6 +91,13 @@ The derivations worth knowing:
 | Queue left | `BLOG[domain].weeks`, at two posts per property per week |
 | Quick wins | queries at position 4–20, by impressions |
 | Session sources | channels summed, as a percentage of **total sessions** |
+| Blended CTR | group clicks over group impressions |
+| Impressions by position | impressions bucketed 1–3 / 4–10 / 11–20 / 21+ |
+| Backlinks change | latest history point minus the first |
+
+The position buckets exclude keywords that did not rank. The previous dashboard
+bucketed with `p <= 3`, and `null <= 3` is true in JavaScript, so every tracked
+keyword with no impressions was counted into the best bucket.
 
 That last row is a real trap: GA4's channel breakdown does not reconcile with its
 own session total (1,879 against 1,829 on 2026-08-20). Percentages are of the
@@ -88,10 +111,18 @@ neither can drift back into being wrong.
 
 ### Look and feel
 
-The approved design is the light "Broadsheet" sheet: 1120px fixed, ink masthead
-and footer, Montserrat for headings and numerals, Archivo for body, **radius 0
-everywhere**, one shadow, and rule weights used semantically — hairline between
-rows, heavier between bands, ink under the table header.
+The light "Broadsheet" look: ink masthead and footer, Montserrat for headings and
+numerals, Archivo for body, **radius 0 everywhere**, and rule weights used
+semantically — hairline between rows, heavier between bands, ink under the table
+header.
+
+The sheet **fills the window**. The original design was a fixed 1120px card on a
+grey desk, with a border and a shadow; on a real screen that reads as a window
+inside a window, so the desk is gone. The broadsheet grammar is carried by the
+ink bands and the rule weights rather than by a card edge. One `--pad` token
+(`clamp(20px, 3.2vw, 60px)`) sets every band's side padding, so they all line up
+and widen together, and the headline and lead metric are clamped so they stop
+growing on very wide screens instead of stretching.
 
 Both font families are **self-hosted** in `fonts/` (one variable file each, latin
 subset). The page makes no third-party requests: it carries commercial figures
@@ -103,10 +134,17 @@ A dark variant of the same layout exists and is opt-in via
 exported as an image and the export should not depend on whose laptop rendered
 it.
 
-Below 1000px the hero and alert collapse to one column; below 900px the table
-drops Share of clicks and moves Queue left into the row subtitle; below 620px the
-masthead and footer stack. Brand assets are in `assets/` (wordmark and monogram,
-each in ink and off-white).
+The property table sheds columns as the window narrows, in order of how easily
+the figure is found elsewhere on the row: Sessions at 1240px, then Share of
+clicks and Avg pos at 1040px (where the two-column bands also collapse), then
+Impressions and Queue left at 780px. Everything dropped reappears in the row
+subtitle rather than disappearing — a mistake worth naming, because the reveal
+was written twice as an inline `display:none` that the media query cannot
+override, and both times the figures silently vanished on mobile instead.
+
+Wide tables scroll inside their own box, so the page itself never scrolls
+sideways. Brand assets are in `assets/` (wordmark and monogram, each in ink and
+off-white).
 
 ## Running it locally
 
