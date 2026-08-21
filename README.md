@@ -46,9 +46,14 @@ Bands, in order:
 | Alert | the one property to act on, plus up to three to watch |
 | Property table | all properties, ordered by urgency |
 | Quick wins / Sessions | position 4–20 queries, traffic sources |
-| Blog Pumper | queue depth and runway per property, queued and published |
 | Per-property detail | Search Console, SERP by market, GA4, backlinks |
 | Footer | sources, freshness caveat |
+
+Two tabs under the masthead: **Search performance** holds everything above, and
+**Blog Pumper** holds the publishing pipeline on its own — queue depth and runway
+per property (thinnest first), what is next up, and what has gone live. The tab
+carries the total queued as a count, so a thin pipeline is visible without
+switching. Both bars pin to the top as one unit; the choice is remembered.
 
 The last band carries everything that needs a property chosen first: Search
 Console KPIs against the prior period, top queries, impressions split by ranking
@@ -109,6 +114,38 @@ copy claimed "CTR halved" for a 40% fall and "every property except ITS improved
 its average position" when only two of six had; both are now generated, so
 neither can drift back into being wrong.
 
+### Colour has one meaning each
+
+The original palette gave a single accent two incompatible jobs — brand mark and
+alarm — so a gain, a highlight and a loss all rendered the same, and the page
+read as undifferentiated grey. The roles are now separate, and all four clear
+WCAG AA on the sheet, the tint and the alert ground:
+
+| Token | Means | Light | Noir |
+| --- | --- | --- | --- |
+| `--bad` | falling, broken, needs action | `#c02a10` | `#ff4a2b` |
+| `--good` | improved | `#276b32` | `#7ecb8c` |
+| `--warn` | not wrong yet, but close | `#8a5a10` | `#e0a63c` |
+| `--focus` | look here, no judgement implied | `#1f4e79` | `#7fb3e6` |
+
+Where it lands:
+
+- **Deltas** are green up, red down. Previously a gain was the same grey as "no
+  comparison available", so growth was invisible.
+- **Runway** grades red under 3.5 weeks, amber under 5, green beyond. A figure
+  that only turns red at the last moment gives no warning while there is still
+  time to commission topics.
+- **The act-on rows** carry a wash and a red edge, so the block that needs
+  attention is findable without reading a number.
+- **Steady** is green, because steady means fine.
+- **Share-of-clicks bars** are red where action is needed and focus-navy for
+  ordinary volume, replacing a neutral so pale the bar read as decoration.
+- **Organic search** is focus-navy, not red. It is the channel search work moves,
+  so it needs emphasis — but colouring it with the alarm made the most important
+  row look like the worst one.
+
+`--focus` exists precisely so "important" and "bad" stop being the same signal.
+
 ### Look and feel
 
 The light "Broadsheet" look: ink masthead and footer, Montserrat for headings and
@@ -144,7 +181,9 @@ override, and both times the figures silently vanished on mobile instead.
 
 Wide tables scroll inside their own box, so the page itself never scrolls
 sideways. Brand assets are in `assets/` (wordmark and monogram, each in ink and
-off-white).
+off-white). The masthead uses the **monogram**: the supplied wordmark is a
+stacked lockup, so at masthead height its "COMPASS GROUP" text rendered about
+10px tall and read as mush, and the band already says what this is in words.
 
 ## Running it locally
 
