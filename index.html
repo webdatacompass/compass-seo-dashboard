@@ -146,12 +146,7 @@ function trendWords(pts, lowerBetter){
 function bar(label,val,max,sub){ const w=Math.max(2,(val/max)*100); return '<div class="bar-row"><div class="bar-lbl" title="'+label.replace(/"/g,'&quot;')+'">'+label+'</div><div class="bar-track"><div class="bar-fill" style="width:'+w+'%"></div></div><div class="bar-val">'+sub+'</div></div>'; } function buildQChart(s){ const top=s.queries.filter(q=>q[1]>0).sort((a,b)=>b[1]-a[1]).slice(0,10); const data = top.length? top : s.queries.slice().sort((a,b)=>b[2]-a[2]).slice(0,10); const useClicks = top.length>0; const max=Math.max(1,...data.map(q=>useClicks?q[1]:q[2])); const el=document.getElementById('qchart'); if(!data.length){el.innerHTML='<div style="color:var(--muted)">No query data.</div>';return;} el.innerHTML=(useClicks?'':'<div style="color:var(--muted);font-size:12px;margin-bottom:6px">No clicks yet — showing impressions.</div>')+ data.map(q=>bar(q[0],useClicks?q[1]:q[2],max,(useClicks?q[1]+' clk':q[2]+' imp'))).join(''); } function buildPChart(s){ const buckets={"1–3":0,"4–10":0,"11–20":0,"21+":0}; s.queries.forEach(q=>{ const p=q[4]; if(p==null)return; if(p<=3)buckets["1–3"]+=q[2]; else if(p<=10)buckets["4–10"]+=q[2]; else if(p<=20)buckets["11–20"]+=q[2]; else buckets["21+"]+=q[2]; }); const max=Math.max(1,...Object.values(buckets)); document.getElementById('pchart').innerHTML=Object.keys(buckets).map(b=>bar("Position "+b,buckets[b],max,buckets[b]+' imp')).join(''); } function buildKwTable(s){ const tb=document.querySelector('#kwtable tbody'); const term=(document.getElementById('kwsearch').value||'').toLowerCase(); let rows=s.queries.filter(q=>q[0].toLowerCase().includes(term)); const k=kwSort.k; rows.sort((a,b)=>{ if(k===0)return kwSort.asc?a[0].localeCompare(b[0]):b[0].localeCompare(a[0]); const av=a[k]==null?(kwSort.asc?Infinity:-Infinity):a[k]; const bv=b[k]==null?(kwSort.asc?Infinity:-Infinity):b[k]; return kwSort.asc?av-bv:bv-av; }); tb.innerHTML=rows.map(q=> '<tr><td>'+q[0]+'</td><td class="num">'+q[1]+'</td><td class="num">'+q[2]+'</td><td class="num">'+q[3]+'%</td><td class="num">'+posPill(q[4])+'</td></tr>' ).join(''); } document.querySelectorAll('#kwtable th').forEach(th=>{ th.addEventListener('click',()=>{ const k=parseInt(th.dataset.k); if(kwSort.k===k)kwSort.asc=!kwSort.asc; else {kwSort.k=k;kwSort.asc=(k===0);} buildKwTable(curSite); }); }); document.getElementById('kwsearch').addEventListener('input',()=>buildKwTable(curSite)); function buildPgTable(s){ const tb=document.querySelector('#pgtable tbody'); tb.innerHTML=s.pages.map(p=>{ const short=p[0].replace(s.base,'/').replace(/^\/\//,'/'); return '<tr><td><a href="'+p[0]+'" target="_blank" title="'+p[0]+'">'+ (short==='/'? '/ (home)':short) +'</a></td><td class="num">'+p[1]+'</td><td class="num">'+p[2]+'</td><td class="num">'+p[3]+'%</td><td class="num">'+posPill(p[4])+'</td></tr>'; }).join(''); } function buildGA4(s){ const g=s.ga4; const kp=document.getElementById('ga4kpis'); const ch=document.getElementById('ga4chart'); const tb=document.querySelector('#ga4pages tbody'); if(!g){kp.innerHTML='<div style="color:var(--muted)">No GA4 data for this property.</div>';ch.innerHTML='';tb.innerHTML='';return;} function k4(lbl,val,sub){ return '<div class="kpi ga4k"><div class="lbl">'+lbl+'</div><div class="val">'+val+'</div><div class="prev">'+sub+'</div></div>'; } kp.innerHTML= k4("Users", g.users, "active users (GA4)")+ k4("Sessions", g.sessions, "visits in last 28 days")+ k4("Engagement rate", g.engRate.toFixed(2)+"%", "engaged / total sessions")+ k4("Avg engagement", g.avgEng, "per session")+ k4("Key events", g.keyEvents, g.keyEvents===0?"none configured in GA4":"conversions"); const maxC=Math.max(1,...g.channels.map(c=>c[1])); ch.innerHTML=g.channels.map(c=> '<div class="bar-row"><div class="bar-lbl" title="'+c[0]+'">'+c[0]+'</div><div class="bar-track"><div class="bar-fill ga4" style="width:'+Math.max(2,(c[1]/maxC)*100)+'%"></div></div><div class="bar-val">'+c[1]+' ('+c[2].toFixed(1)+'%)</div></div>' ).join(''); tb.innerHTML=g.topPages.map(p=>{ const full=s.base.replace(/\/$/,'')+p[0]; return '<tr><td><a href="'+full+'" target="_blank" title="'+full+'">'+(p[0]==='/'? '/ (home)':p[0])+'</a></td><td class="num">'+p[1]+'</td><td class="num">'+p[2]+'</td></tr>'; }).join(''); } function blDelta(hist, days){ if(!hist || hist.length<2) return null; const last=hist[hist.length-1]; const lastDate=new Date(last[0]); const target=new Date(lastDate.getTime()-days*86400000); let base=null; for(let i=hist.length-1;i>=0;i--){ if(new Date(hist[i][0])<=target){ base=hist[i]; break; } } if(base===null) base=hist[0]; /* not enough history yet — compare to earliest */ if(base[1]===null || last[1]===null) return null; return last[1]-base[1]; } function buildBacklinks(k){ const b=BACKLINKS[k]; const kp=document.getElementById('blkpis'); const ch=document.getElementById('blchart'); const tb=document.querySelector('#bltable tbody'); if(!b || b.total===null){ kp.innerHTML='<div class="kpi blk"><div class="lbl">Backlinks</div><div class="val">—</div><div class="prev">'+((b&&b.note)?b.note:'no data yet')+'</div></div>'; ch.innerHTML='<div style="color:var(--muted)">No backlink history yet.</div>'; tb.innerHTML=''; return; } function dcard(lbl,d){ if(d===null) return '<div class="kpi blk"><div class="lbl">'+lbl+'</div><div class="val">—</div><div class="prev">building history</div></div>'; const cls=d>0?'pos':(d<0?'neg':'neu'); const sym=d>0?'▲ +':(d<0?'▼ ':'– '); return '<div class="kpi blk"><div class="lbl">'+lbl+'</div><div class="val">'+(d>0?'+':'')+d+'</div><div class="prev '+cls+'">'+sym+Math.abs(d)+' links</div></div>'; } kp.innerHTML= '<div class="kpi blk"><div class="lbl">Total backlinks</div><div class="val">'+b.total+'</div><div class="prev">external links (GSC)</div></div>'+ dcard("Added · 1 day", blDelta(b.history,1))+ dcard("Added · 7 days", blDelta(b.history,7))+ dcard("Added · 30 days", blDelta(b.history,30)); if(!b.history.length){ ch.innerHTML='<div style="color:var(--muted)">No history yet.</div>'; } else { const hist=b.history.filter(h=>h[1]!=null);
    ch.innerHTML=trendChart(hist,{lowerBetter:false,unit:'links'})+
      '<div class="tnote">More is better here, the opposite of the position charts. '+trendWords(hist,false)+'</div>'; } tb.innerHTML = b.topSites.length ? b.topSites.map(s=>'<tr><td>'+s[0]+'</td><td class="num">'+s[1]+'</td></tr>').join('') : '<tr><td colspan="2" style="color:var(--muted)">No linking domains reported.</td></tr>'; } let curCountry='GCC', curKey=null; const CNAME={GCC:"GCC / all",QA:"Qatar",SA:"Saudi Arabia",AE:"UAE"}; function posColor(p){ if(p==null) return 'var(--muted)'; if(p<=3) return 'var(--green)'; if(p<=10) return 'var(--lime)'; if(p<=20) return 'var(--amber)'; return 'var(--red)'; } function serpData(k,c){ const r=RANK[k]&&RANK[k][c]; return r?{clicks:r.clicks,impr:r.impr,ctr:r.ctr,pos:r.pos,kw:r.kw.slice()}:{clicks:0,impr:0,ctr:0,pos:null,kw:[]}; } function buildSERP(k){ document.querySelectorAll('#ctrySwitch .ctry-btn').forEach(b=>b.classList.toggle('active',b.dataset.c===curCountry)); const d=serpData(k,curCountry), cn=CNAME[curCountry]; document.getElementById('serpkpis').innerHTML= '<div class="kpi"><div class="lbl">Avg position · '+cn+'</div><div class="val" style="color:'+posColor(d.pos)+'">'+(d.pos==null?'—':d.pos.toFixed(1))+'</div><div class="prev">'+(d.impr?'lower is better':'no impressions here')+'</div></div>'+ '<div class="kpi"><div class="lbl">Clicks</div><div class="val">'+d.clicks+'</div><div class="prev">in '+cn+'</div></div>'+ '<div class="kpi"><div class="lbl">Impressions</div><div class="val">'+fmt(d.impr)+'</div><div class="prev">in '+cn+'</div></div>'+ '<div class="kpi"><div class="lbl">CTR</div><div class="val">'+d.ctr+'%</div><div class="prev">in '+cn+'</div></div>'; const hist=(RANKHIST[k]&&RANKHIST[k][curCountry])||[]; const pts=hist.filter(h=>h[1]!=null); const tr=document.getElementById('serptrend'); if(!pts.length){ tr.innerHTML='<div style="color:var(--muted)">No ranking in '+cn+' yet.</div>'; } else { tr.innerHTML=trendChart(pts,{lowerBetter:true,unit:'position'})+
-   '<div class="tnote">In '+cn+'. '+trendWords(pts,true)+'</div>'; } const tb=document.querySelector('#serptable tbody'); tb.innerHTML = d.kw.length ? d.kw.slice(0,15).map(q=>'<tr><td>'+q[0]+'</td><td class="num">'+posPill(q[1])+'</td><td class="num">'+q[2]+'</td><td class="num">'+q[3]+'</td></tr>').join('') : '<tr><td colspan="4" style="color:var(--muted)">No keywords ranking in '+cn+'.</td></tr>'; } function selectSite(k){ curSite=SITES[k]; curKey=k; buildKpis(curSite,k); buildQChart(curSite); buildPChart(curSite); buildKwTable(curSite); buildPgTable(curSite); buildGA4(curSite); buildBacklinks(k); buildSERP(k); try{localStorage.setItem('compass_seo_site',k);}catch(e){} } // Only names a fraction when the figure really is within half a point of it,
-// so the phrasing can never overstate the movement.
-const FRACTIONS=[[100,'double'],[75,'three quarters'],[66.67,'two thirds'],[50,'a half'],
-  [33.33,'a third'],[25,'a quarter'],[20,'a fifth'],[16.67,'a sixth'],[14.29,'a seventh']];
-function fraction(p){ for(const [v,w] of FRACTIONS){ if(Math.abs(p-v)<=0.5) return w; } return null; }
-function heroChart(){
+   '<div class="tnote">In '+cn+'. '+trendWords(pts,true)+'</div>'; } const tb=document.querySelector('#serptable tbody'); tb.innerHTML = d.kw.length ? d.kw.slice(0,15).map(q=>'<tr><td>'+q[0]+'</td><td class="num">'+posPill(q[1])+'</td><td class="num">'+q[2]+'</td><td class="num">'+q[3]+'</td></tr>').join('') : '<tr><td colspan="4" style="color:var(--muted)">No keywords ranking in '+cn+'.</td></tr>'; } function selectSite(k){ curSite=SITES[k]; curKey=k; buildKpis(curSite,k); buildQChart(curSite); buildPChart(curSite); buildKwTable(curSite); buildPgTable(curSite); buildGA4(curSite); buildBacklinks(k); buildSERP(k); try{localStorage.setItem('compass_seo_site',k);}catch(e){} } function heroChart(){
   const keys=Object.keys(SITES);
   const withHist=keys.filter(k=>RANKHIST[k]&&RANKHIST[k].GCC&&RANKHIST[k].GCC.length);
   const el=document.getElementById('herochart');
@@ -189,37 +184,68 @@ function heroChart(){
     '<div class="hc-note">'+trendWords(series.map(p=>[p.d,p.v]),true)+
       ' Per-property and per-market trends are further down.</div>';
 }
+/* One sentence naming the single most severe finding, picked off a ranked
+   ladder. The group total deliberately stays out of the headline: it is
+   already the lead figure in the strip directly below, so repeating it here
+   would spend the largest type on the page saying nothing new.
+
+   Two things the previous version got wrong. It ran the percentage through a
+   lookup table of fractions, so +17% became "up a sixth" -- and with a half-
+   point tolerance, 16.2% and 15.9% came out in different registers. And it
+   joined the two clauses with "and still", which asserts that the group
+   clicks rise should have moved one property’s keyword coverage. They are
+   unrelated numbers. Each fact now gets its own sentence. */
 function verdict(){
   const keys=Object.keys(SITES);
   const sum=f=>keys.reduce((t,k)=>t+(f(SITES[k])||0),0);
   const cur=sum(s=>s.cur&&s.cur.clicks), prev=sum(s=>s.prev&&s.prev.clicks);
+  const trk=k=>(SITES[k].queries||[]).length;
+  const rnk=k=>(SITES[k].queries||[]).filter(q=>q[4]!=null).length;
   const ranking=sum(s=>(s.queries||[]).filter(q=>q[4]!=null).length);
   const tracked=sum(s=>(s.queries||[]).length);
-  let a;
-  if(!prev){ a='Search clicks at '+cur.toLocaleString('en-US'); }
-  else {
-    const d=(cur-prev)/prev*100, mag=Math.abs(d), f=fraction(mag);
-    const dir=d>0?'up':d<0?'down':'flat';
-    if(dir==='flat') a='Clicks flat at '+cur.toLocaleString('en-US');
-    else if(f==='double') a='Clicks '+(d>0?'doubled':'halved');
-    else if(f) a='Clicks '+dir+' '+f;
-    else a='Clicks '+dir+' '+Math.round(mag)+'%';
+
+  /* A rate on its own does not earn the headline -- at this volume 3 clicks
+     becoming 1 is -67% and means nothing. Require real clicks lost too. */
+  const collapse=keys.filter(k=>SITES[k].prev&&SITES[k].prev.clicks)
+    .map(k=>({k, pc:(SITES[k].cur.clicks-SITES[k].prev.clicks)/SITES[k].prev.clicks*100,
+      lost:SITES[k].prev.clicks-SITES[k].cur.clicks}))
+    .filter(d=>d.pc<=-40&&d.lost>=8).sort((a,b)=>a.pc-b.pc);
+  /* "ranks for none of its tracked keywords", not "nothing ranks" -- a site
+     with no tracked keyword ranking can still take clicks from queries that
+     are not on the list, which is exactly the case at compass-its.com. */
+  const blind=keys.filter(k=>trk(k)&&rnk(k)===0);
+  const sparse=keys.filter(k=>trk(k)&&rnk(k)>0&&rnk(k)/trk(k)<0.2)
+    .sort((a,b)=>rnk(a)/trk(a)-rnk(b)/trk(b));
+  const dry=BLOG?keys.filter(k=>BLOG[k]&&BLOG[k].weeks!=null&&BLOG[k].weeks<3.5)
+    .sort((a,b)=>BLOG[a].weeks-BLOG[b].weeks):[];
+
+  let head;
+  if(collapse.length){ const k=collapse[0].k;
+    head=k+" is down to "+SITES[k].cur.clicks+" clicks, from "+SITES[k].prev.clicks+".";
+  } else if(blind.length===1){
+    head=blind[0]+" ranks for none of its "+trk(blind[0])+" tracked keywords.";
+  } else if(blind.length>1){
+    head=blind.length+" properties rank for none of their tracked keywords.";
+  } else if(sparse.length){ const k=sparse[0];
+    head=k+" ranks for "+rnk(k)+" of its "+trk(k)+" tracked keywords.";
+  } else if(dry.length){ const k=dry[0], w=BLOG[k].weeks;
+    head=k+" has "+(w%1===0?w:w.toFixed(1))+" weeks of posts left in the queue.";
+  } else {
+    const withList=keys.filter(k=>trk(k));
+    head=withList.length
+      ? "Every tracked property ranks for at least "+
+        Math.min.apply(null,withList.map(rnk))+" of its keywords."
+      : "No keywords are being tracked yet.";
   }
-  const short=k=>(SITES[k].label||k).replace(/^Compass\s+/,'');
-  const blind=keys.filter(k=>(SITES[k].queries||[]).length && !(SITES[k].queries||[]).some(q=>q[4]!=null));
-  const falling=keys.filter(k=>SITES[k].prev&&SITES[k].prev.clicks&&
-    (SITES[k].cur.clicks-SITES[k].prev.clicks)/SITES[k].prev.clicks<=-0.2)
-    .sort((x,y)=>(SITES[x].cur.clicks/SITES[x].prev.clicks)-(SITES[y].cur.clicks/SITES[y].prev.clicks));
-  const thin=keys.filter(k=>BLOG[k]&&BLOG[k].weeks!=null&&BLOG[k].weeks<3.5)
-    .sort((x,y)=>BLOG[x].weeks-BLOG[y].weeks);
-  let b=null;
-  if(blind.length===1) b='and still nothing ranks at '+short(blind[0]);
-  else if(blind.length>1) b='and nothing ranks at '+blind.length+' of '+keys.length+' properties';
-  else if(falling.length){ const k=falling[0];
-    b='but '+short(k)+' fell '+Math.round(Math.abs((SITES[k].cur.clicks-SITES[k].prev.clicks)/SITES[k].prev.clicks*100))+'%'; }
-  else if(thin.length) b='and '+short(thin[0])+' is '+BLOG[thin[0]].weeks.toFixed(1)+' weeks from an empty queue';
-  const head=(b?a+', '+b:a)+'.';
-  return {head:head, tail:'Only '+ranking+' of '+tracked+' tracked keywords return a result at all.'};
+
+  const num=v=>v.toLocaleString("en-US");
+  const cov=num(ranking)+" of "+num(tracked)+" keywords rank";
+  let tail;
+  if(!prev) tail=num(cur)+" group clicks · "+cov;
+  else if(cur===prev) tail="Group clicks flat at "+num(cur)+" · "+cov;
+  else tail="Group clicks "+(cur>prev?"up":"down")+" "+
+    Math.abs(Math.round((cur-prev)/prev*100))+"% to "+num(cur)+" · "+cov;
+  return {head:head, tail:tail};
 }
 function init(){ (function(){ const pc=document.getElementById('propcount'); if(pc){ const n=Object.keys(SITES).length, g=Object.values(SITES).filter(s=>s.ga4).length; pc.textContent = n+' propert'+(n===1?'y':'ies')+(g<n?' · GA4 on '+g:''); } })(); (function(){ const v=verdict(); const el=document.getElementById('verdict');
     el.textContent=v.head;
