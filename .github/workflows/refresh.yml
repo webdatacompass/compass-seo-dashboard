@@ -1,6 +1,9 @@
 name: Refresh dashboard data
 
 on:
+  push:
+    branches: [main]
+    paths: [index.html]     # a page edit reaches Compass Hub without waiting for the daily run
   workflow_dispatch:        # allows manual runs from the Actions tab (used for testing)
   schedule:
     - cron: '0 6 * * *'     # daily at 06:00 UTC (~09:00 Arabia time)
@@ -35,6 +38,26 @@ jobs:
         env:
           GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/sa.json
         run: python scripts/fetch_data.py
+
+      # Compass Hub serves this dashboard behind its login (Hub → SEO). Send it the fresh data and
+      # the page. Inert until both secrets exist; a Hub outage never fails the data refresh.
+      - name: Send data and page to Compass Hub
+        env:
+          HUB_URL: ${{ secrets.HUB_URL }}
+          HUB_SEO_TOKEN: ${{ secrets.HUB_SEO_TOKEN }}
+        run: |
+          if [ -z "$HUB_URL" ] || [ -z "$HUB_SEO_TOKEN" ]; then
+            echo "::notice title=Compass Hub not configured::Set HUB_URL and HUB_SEO_TOKEN repo secrets to send this dashboard to Compass Hub."
+            exit 0
+          fi
+          for f in data:data.json page:index.html; do
+            kind="${f%%:*}"; file="${f#*:}"
+            code=$(curl -sS -o /tmp/hub.out -w '%{http_code}' -X POST \
+              -H "Authorization: Bearer $HUB_SEO_TOKEN" -H "Content-Type: application/octet-stream" \
+              --data-binary "@$file" "$HUB_URL/api/seo/upload?file=$kind" || echo 000)
+            echo "$file -> Hub: HTTP $code $(cat /tmp/hub.out 2>/dev/null)"
+            [ "$code" = "200" ] || echo "::warning title=Compass Hub upload failed::$file returned HTTP $code"
+          done
 
       - name: Commit updated data.json
         run: |
